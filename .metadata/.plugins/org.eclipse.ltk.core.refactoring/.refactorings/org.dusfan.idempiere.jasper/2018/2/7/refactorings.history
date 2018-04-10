@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;ZZ_CustomerBalances.jrxml&apos; to &apos;jasper&apos;&#x0A;- Original project: &apos;org.dusfan.idempiere.jasper&apos;&#x0A;- Destination element: &apos;jasper&apos;&#x0A;- Original element: &apos;ZZ_CustomerBalances.jrxml&apos;" description="Copy file" element1="META-INF/data/jasper/ZZ_CustomerBalances.jrxml" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1518434734746" target="/org.dusfan.idempiere.jasper/META-INF/data/jasper" units="0" version="1.0"/>
+</session>

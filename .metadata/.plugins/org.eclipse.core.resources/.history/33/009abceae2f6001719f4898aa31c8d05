@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CompanyHeader" pageWidth="535" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e1bf818f-f7b4-427c-b6f7-9081e19b1fb0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia4.1"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="770"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BASE_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="image_file_name" class="java.lang.String"/>
+	<parameter name="RESOURCE_DIR" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_ORG_ID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select a.Name as ClientName,
+	c.address1 AS ADDR1,
+	c.address2 AS ADDR2,
+	c.address3 AS ADDR3,
+	c.address4 AS ADDR4,
+	c.postal AS PCODE,
+        o.phone,
+        o.Phone2,
+        o.fax,
+        o.email,
+        o.taxid,
+        y.Name AS country
+from ad_orginfo o LEFT JOIN c_location c ON o.C_Location_ID=c.C_Location_ID
+INNER JOIN C_Country y ON y.C_Country_ID=c.C_Country_ID
+INNER JOIN AD_Client a ON a.AD_Client_ID=o.AD_Client_ID
+where
+o.ad_org_id=$P{AD_ORG_ID} and
+o.ad_client_id=$P{AD_CLIENT_ID}]]>
+	</queryString>
+	<field name="clientname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="clientname"/>
+	</field>
+	<field name="addr1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="addr1"/>
+	</field>
+	<field name="addr2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="addr2"/>
+	</field>
+	<field name="addr3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="addr3"/>
+	</field>
+	<field name="addr4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="addr4"/>
+	</field>
+	<field name="pcode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pcode"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+	</field>
+	<field name="phone2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone2"/>
+	</field>
+	<field name="fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fax"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+	</field>
+	<field name="taxid" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="taxid"/>
+	</field>
+	<field name="country" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="country"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="124" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField>
+				<reportElement x="145" y="0" width="215" height="18" uuid="a6f3f8d4-d774-4e7c-b087-47403cd0758d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="21" width="306" height="16" uuid="2e58e6e1-84e9-4c2b-baed-bf7c6a0b9c91">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{addr1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="37" width="306" height="16" uuid="bfce3cf3-bca4-43a8-a959-6713438b2c9e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tel. : " + $F{phone} + " / " + $F{phone2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="53" width="207" height="16" uuid="85dc3aa8-0992-45b5-813a-ddb1e1de333a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fax : " + $F{fax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="69" width="306" height="16" uuid="84dab84c-51e0-4ff3-b89f-5e4b5d4a37dd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA["e-mail : " + $F{email} + "  Web : " + $F{addr2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="145" y="85" width="306" height="16" uuid="00eaa508-c50c-43ba-a9c4-706e94e67d8e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RC. N°  : " + $F{addr3} + "  Mle Fisc. N°  : " +  $F{addr4}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="30" y="10" width="90" height="80" uuid="0e1d0b6a-e25e-4730-9ef8-e9f7f0e8425e"/>
+				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/Logo-Numidia.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="145" y="101" width="306" height="16" uuid="b12da289-e619-4e95-a0b7-961fb30749c6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Art. Imp. N° : " +$F{taxid}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

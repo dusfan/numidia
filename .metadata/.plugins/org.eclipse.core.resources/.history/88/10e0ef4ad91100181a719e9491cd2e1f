@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ZZ_CustomerBalancesNumidia" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="2f7efed5-a658-47a1-95c4-d92c9bdf0ea8">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="47"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="295"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="698"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="StartDate" class="java.util.Date"/>
+	<parameter name="EndDate" class="java.util.Date"/>
+	<parameter name="AD_Client_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer("1000002")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CURRENT_LANG" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["fr_FR"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="RESOURCE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_Org_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select * from (select i.ad_org_id as ad_org_id, sum(i.GRANDTOTAL) as suminv,0 as sumdzdpaycash,0 as sumdzdpayother,0 as sumdevisepay,0 as sumpaytotal,
+i.C_BPartnerRelation_ID as C_BPartnerRelation_ID, (select value||'-'||name from c_bpartner where c_bpartner_id = i.C_BPartnerRelation_ID) as codeclient,
+getnbromraclientcode(current_date,current_date,1000002,i.C_BPartnerRelation_ID) as nbr
+from C_INVOICE i
+INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
+AND d.DocBaseType='ARI'
+WHERE trunc(i.dateinvoiced) >= trunc(current_date )
+and trunc(i.dateinvoiced) <= trunc(current_date )
+and i.ISSOTRX = 'Y'
+and i.docstatus in ('CO', 'CL') and i.ad_client_id = 1000002
+group by i.C_BPartnerRelation_ID, i.ad_org_id
+union 
+select p.ad_org_id as ad_org_id, 0 as suminv,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumdzdpaycash,0,0,0,
+p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0 from C_PAYMENT p
+where trunc(p.DATETRX) >= trunc(current_date )
+and trunc(p.DATETRX) <= trunc(current_date )
+and p.docstatus in ('CO', 'CL') and p.tendertype='X'
+and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000002 group by p.C_BPartnerRelation_ID, p.ad_org_id
+union
+select p.ad_org_id as ad_org_id, 0 as suminv,0,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumdzdpayother,0,0,
+p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0 from C_PAYMENT p
+where trunc(p.DATETRX) >= trunc(current_date )
+and trunc(p.DATETRX) <= trunc(current_date )
+and p.docstatus in ('CO', 'CL') and p.tendertype <> 'X'
+and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000002 group by p.C_BPartnerRelation_ID, p.ad_org_id
+union
+select p.ad_org_id as ad_org_id, 0 as suminv,0,0, (sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)) as sumdevisepay,0,
+p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient
+,0 from C_PAYMENT p
+where trunc(p.DATETRX) >= trunc(current_date )
+and trunc(p.DATETRX) <= trunc(current_date )
+and p.docstatus in ('CO', 'CL')
+and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (235) and p.ad_client_id = 1000002 group by p.C_BPartnerRelation_ID, p.ad_org_id
+union
+select p.ad_org_id as ad_org_id, 0 as suminv,0,0, 0,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumpaytotal,
+p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0 from C_PAYMENT p
+where trunc(p.DATETRX) >= trunc(current_date )
+and trunc(p.DATETRX) <= trunc(current_date )
+and p.docstatus in ('CO', 'CL')
+and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000002 group by p.C_BPartnerRelation_ID, p.ad_org_id) balance order by C_BPartnerRelation_ID]]>
+	</queryString>
+	<field name="ad_org_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+	</field>
+	<field name="suminv" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="suminv"/>
+	</field>
+	<field name="sumdzdpaycash" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumdzdpaycash"/>
+	</field>
+	<field name="sumdzdpayother" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumdzdpayother"/>
+	</field>
+	<field name="sumdevisepay" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumdevisepay"/>
+	</field>
+	<field name="sumpaytotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumpaytotal"/>
+	</field>
+	<field name="c_bpartnerrelation_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="c_bpartnerrelation_id"/>
+	</field>
+	<field name="codeclient" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
+	</field>
+	<field name="nbr" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="nbr"/>
+	</field>
+	<variable name="TINV" class="java.math.BigDecimal" resetType="Group" resetGroup="lines" incrementType="Group" incrementGroup="lines" calculation="Sum">
+		<variableExpression><![CDATA[$V{TINV}.add(($V{STINV}== null) ? BigDecimal.ZERO : $V{STINV})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="TREC" class="java.math.BigDecimal" resetType="Group" resetGroup="lines" incrementType="Group" incrementGroup="lines" calculation="Sum">
+		<variableExpression><![CDATA[$V{TREC}.add(($V{STPAYTOTAL} == null) ? BigDecimal.ZERO : $V{STPAYTOTAL})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="STINV" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{suminv}]]></variableExpression>
+	</variable>
+	<variable name="STPAYCASH" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumdzdpaycash}]]></variableExpression>
+	</variable>
+	<variable name="STPAYTOTAL" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumpaytotal}]]></variableExpression>
+	</variable>
+	<variable name="STNBR" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{nbr}]]></variableExpression>
+	</variable>
+	<variable name="STPAYOTHER" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumdzdpayother}]]></variableExpression>
+	</variable>
+	<variable name="STPAYDEVISE" class="java.math.BigDecimal" resetType="Group" resetGroup="Group  par clientCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumdevisepay}]]></variableExpression>
+	</variable>
+	<variable name="TPAYMENT" class="java.math.BigDecimal" resetType="Group" resetGroup="lines" incrementType="Group" incrementGroup="lines" calculation="Sum">
+		<variableExpression><![CDATA[$V{TPAYMENT}.add(($V{STPAYTOTAL} == null) ? BigDecimal.ZERO : $V{STPAYTOTAL})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="TNBR" class="java.math.BigDecimal" resetType="Group" resetGroup="lines" incrementType="Group" incrementGroup="lines" calculation="Sum">
+		<variableExpression><![CDATA[$V{TNBR}.add(($V{STNBR}== null) ? BigDecimal.ZERO : $V{STNBR})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="TINVOICE" class="java.math.BigDecimal" resetType="Group" resetGroup="lines" calculation="Sum">
+		<variableExpression><![CDATA[$V{TINVOICE}.add($V{STINV})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="lines" isResetPageNumber="true" minHeightToStartNewPage="15">
+		<groupExpression><![CDATA[null]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="18" splitType="Stretch">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement key="textField" positionType="Float" stretchType="RelativeToTallestObject" x="541" y="0" width="120" height="15" uuid="08a64ef5-5ba8-4834-93a1-5dccb4c16222"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TPAYMENT}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement key="textField" positionType="Float" stretchType="RelativeToTallestObject" x="661" y="0" width="120" height="15" uuid="2b93dc09-0e68-4655-bc3b-dc3ededd10c6"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TINV}.subtract($V{TPAYMENT})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="staticText-8" positionType="Float" stretchType="RelativeToTallestObject" x="3" y="0" width="298" height="15" uuid="0fa8a190-3027-41db-bdfd-30f65dbbdd70"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="301" y="1" width="120" height="15" uuid="e55d2b16-9009-4b08-a57a-67655d6d6c98">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{TINVOICE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group  par clientCode" minHeightToStartNewPage="16">
+		<groupExpression><![CDATA[$F{c_bpartnerrelation_id}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22" splitType="Stretch">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[($F{suminv}==null&&$F{sumpaytotal}==null)?Boolean.FALSE:Boolean.TRUE]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
+					<reportElement x="2" y="0" width="118" height="17" uuid="26bae0e0-c458-4f36-a26d-9c57d2dd41a9"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="152" y="0" width="58" height="17" uuid="ec3bd9b6-28b6-4fa1-8ded-8d6431549858"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STINV}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="384" y="0" width="58" height="17" uuid="30054a4a-2c50-4829-a6a3-9508b108b24d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STPAYTOTAL}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="442" y="0" width="58" height="17" uuid="9bc7aa4e-84e9-4d53-9f56-c58dd84ec326"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STINV}.subtract($V{STPAYTOTAL})]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="120" y="0" width="32" height="17" uuid="443645b3-7b68-405e-b4ff-508f6958c2a6"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STNBR}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="210" y="0" width="58" height="17" uuid="f3d7c6d5-7391-4fe2-9852-f09750ad7892"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STPAYCASH}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="268" y="0" width="58" height="17" uuid="05b5d10b-ebaf-422a-8473-a8a0fe3a8514"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STPAYDEVISE}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="326" y="0" width="58" height="17" uuid="0802afd1-6569-4218-b227-1ae479284592"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{STPAYOTHER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="529" height="40" uuid="64a4818c-e7fd-41e6-9494-bec9c83f66ba">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="AD_CLIENT_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_Client_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="AD_ORG_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="RESOURCE_DIR">
+					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"CompanyHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-6" x="3" y="26" width="779" height="20" uuid="27824de8-fb7a-40f8-859b-72d8c5d4942b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La période : "  + new SimpleDateFormat("dd/MM/yyyy").format($P{StartDate}) +  " à "  + new SimpleDateFormat("dd/MM/yyyy").format($P{EndDate})]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-6" x="4" y="0" width="779" height="20" uuid="c59c9bd0-1966-4dd8-8e1f-3c61e7110a3f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Etat des clients  "+"Numidia"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="210" y="0" width="58" height="34" uuid="35d75ebe-2ea0-4b22-93c1-73cb77a4a159"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Espèces"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="29" height="34" uuid="61d90fa9-249e-4557-8d53-f54746ec6aca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["GRT"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="722" y="1" width="29" height="33" uuid="1e13cab0-cd1e-42b2-98c0-b4bf10949f4e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["CHD"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="384" y="0" width="58" height="34" uuid="b0ca34c3-a5ba-4434-adcf-0bad6752a248"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="589" y="17" width="31" height="17" uuid="d61468d4-dd73-4370-82dc-d1eaeba07286"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Dbl"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="751" y="1" width="30" height="33" uuid="c1bbff2d-8d91-46c5-8d80-3b7cc1fc0be7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["INF"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="50" height="34" uuid="4b96e1c5-e240-4030-a3d9-132be3d86e3f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["NBR"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="152" y="0" width="58" height="34" uuid="6f30712e-3d5c-431d-aad0-d484b8e17fcc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Facture"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="687" y="1" width="35" height="33" uuid="93154e22-1743-45f3-a9bf-63d035e8b980"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["CHD+LIT"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="559" y="0" width="128" height="17" uuid="b3d7e747-5bae-45af-8940-4dcf380534e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Chambre"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="0" width="58" height="34" uuid="44d7e64e-20f2-4d61-b704-16a90e267b1e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Devise"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="560" y="17" width="29" height="17" uuid="d4c87399-e953-4b99-af70-474e6886270a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Sing"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="653" y="17" width="34" height="17" uuid="5de35465-20f9-40fc-ae87-f174f4876a62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Quad"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="0" width="100" height="34" uuid="8f12cd1c-9ab0-4f79-98fc-e281c05e0c34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Code Client"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="529" y="0" width="30" height="34" uuid="add99ec1-e1e4-42ca-a10d-c762238f3f22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["MDJ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="620" y="17" width="33" height="17" uuid="d26df48a-bdfc-4c3d-a252-22f7c88a6afa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Trip"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="0" width="58" height="34" uuid="af4000f3-5d94-437c-97eb-702f1cf71540"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Balance"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="0" width="58" height="34" uuid="af6614f1-f5e9-45d6-adf9-c1c3b4d1b11f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Chq/Virement"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[Boolean.FALSE]]></printWhenExpression>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="19" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-2" x="569" y="0" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="06486b70-65d7-4988-babd-4ce201d5e45d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-3" x="743" y="0" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="735966f0-af42-4983-839a-96311147873a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-4" x="3" y="0" width="380" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="724b7b43-363d-41b9-829b-46bbcbace38f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date d'impression: "  + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

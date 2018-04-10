@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="testpayment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a6e7fbf7-771c-4fa2-9252-fa5dbe9a5b71">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test"/>
+	<parameter name="RECORD_ID" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select ad_org_id, ad_client_id, documentno
+from c_payment where c_payment_id = $P{RECORD_ID}]]>
+	</queryString>
+	<field name="ad_org_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+	</field>
+	<field name="ad_client_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="ad_client_id"/>
+	</field>
+	<field name="documentno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="documentno"/>
+	</field>
+	<group name="ad_org_id">
+		<groupExpression><![CDATA[$F{ad_org_id}]]></groupExpression>
+	</group>
+	<group name="ad_client_id">
+		<groupExpression><![CDATA[$F{ad_client_id}]]></groupExpression>
+	</group>
+	<group name="documentno">
+		<groupExpression><![CDATA[$F{documentno}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="210" y="20" width="100" height="30" uuid="e867a0a2-90df-4ab1-b579-5a8e3d2cf525">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dc00e577-c69b-4e3c-843b-8ee5b6674f71"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["OMRA"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="20" width="100" height="30" uuid="21387e4c-0d54-4a44-bd5f-78c6e9e1bf55">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="819d6c5b-20ed-422c-a247-b24de3cfb411"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ad_org_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="20" width="100" height="30" uuid="26edcf48-0153-4d40-a5ba-ddc1ca615b8b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dc00e577-c69b-4e3c-843b-8ee5b6674f71"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

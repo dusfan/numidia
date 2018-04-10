@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//META-INF/data/jasper/CustomerStatement.jrxml=UTF-8
+encoding//META-INF/data/jasper/InvoicesAndPaymentsAndOpeningBal_Cust.jrxml=UTF-8
+encoding//META-INF/data/jasper/SupplierStatement.jrxml=UTF-8
+encoding//META-INF/data/jasper/ZZ_CustomerBalances.jrxml=UTF-8
+encoding//META-INF/data/jasper/invoice.jrxml=UTF-8
+encoding//META-INF/data/jasper/shipment.jrxml=UTF-8
+encoding/<project>=ISO-8859-1
+separateDerivedEncodings=true

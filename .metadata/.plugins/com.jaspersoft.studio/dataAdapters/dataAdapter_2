@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>Numidia-Test</name><driver>org.postgresql.Driver</driver><username>adempiere</username><password>SmartDB</password><savePassword>true</savePassword><url>jdbc:postgresql://192.168.100.245:5432/erpsa</url><database/><serverAddress/></jdbcDataAdapter>

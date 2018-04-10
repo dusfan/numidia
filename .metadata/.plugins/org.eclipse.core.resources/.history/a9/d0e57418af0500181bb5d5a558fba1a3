@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentnumidia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test"/>
+	<queryString language="SQL">
+		<![CDATA[select c.ad_client_id, c.ad_org_id, c.documentno, bp.value, bp.name , bp.name2 , bp.birthcity,
+loc.address1 || ',' || loc.address2 || ',' || loc.city || ',' || loc.postal as adresse,
+bp.birth_date, bp.phone, bp.phone2, bp.datestart, bp.enddate,
+p.h_mekha, case
+ when c.docstatus in ('CO','CL') then invoiceOpen(c.c_invoice_id,null)
+ when c.docstatus = 'DR' then (invoiceOpen(c.c_invoice_id,null) - c.payamt) end  as openamt,
+i.grandtotal,
+ROUND(c.payamt,2) as  payamt ,
+case
+ when c.docstatus in ('CO','CL') then (grandtotal - invoiceOpen(c.c_invoice_id,null))
+ when c.docstatus = 'DR' then ((grandtotal - invoiceOpen(c.c_invoice_id,null)) + c.payamt) end  as totalpayment
+from c_payment c
+inner join c_bpartner bp on bp.c_bpartner_id = c.c_bpartner_id
+inner join c_bpartner_location bploc on bploc.c_bpartner_id = bp.c_bpartner_id
+inner join c_location loc on loc.c_location_id = bploc.c_location_id
+left join c_invoice i on i.c_invoice_id = c.c_invoice_id
+left join c_invoiceline l on l.c_invoice_id = i.c_invoice_id
+left join m_product p on p.m_product_id = l.m_product_id
+where c.c_payment_id = 1000003
+AND c.docstatus in ('CO', 'CL', 'DR') limit 1]]>
+	</queryString>
+	<field name="ad_client_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ad_client_id"/>
+	</field>
+	<field name="ad_org_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+	</field>
+	<field name="documentno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="documentno"/>
+	</field>
+	<field name="value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="value"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="name2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name2"/>
+	</field>
+	<field name="birthcity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="birthcity"/>
+	</field>
+	<field name="adresse" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="adresse"/>
+	</field>
+	<field name="birth_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="birth_date"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+	</field>
+	<field name="phone2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone2"/>
+	</field>
+	<field name="datestart" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datestart"/>
+	</field>
+	<field name="enddate" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="enddate"/>
+	</field>
+	<field name="h_mekha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="h_mekha"/>
+	</field>
+	<field name="openamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="openamt"/>
+	</field>
+	<field name="grandtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="grandtotal"/>
+	</field>
+	<field name="payamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="payamt"/>
+	</field>
+	<field name="totalpayment" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="totalpayment"/>
+	</field>
+	<group name="ad_client_id">
+		<groupExpression><![CDATA[$F{ad_client_id}]]></groupExpression>
+	</group>
+	<group name="ad_org_id">
+		<groupExpression><![CDATA[$F{ad_org_id}]]></groupExpression>
+	</group>
+	<group name="documentno">
+		<groupExpression><![CDATA[$F{documentno}]]></groupExpression>
+	</group>
+	<group name="value">
+		<groupExpression><![CDATA[$F{value}]]></groupExpression>
+	</group>
+	<group name="name">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+	</group>
+	<group name="name2">
+		<groupExpression><![CDATA[$F{name2}]]></groupExpression>
+	</group>
+	<group name="birthcity">
+		<groupExpression><![CDATA[$F{birthcity}]]></groupExpression>
+	</group>
+	<group name="adresse">
+		<groupExpression><![CDATA[$F{adresse}]]></groupExpression>
+	</group>
+	<group name="birth_date">
+		<groupExpression><![CDATA[$F{birth_date}]]></groupExpression>
+	</group>
+	<group name="phone">
+		<groupExpression><![CDATA[$F{phone}]]></groupExpression>
+	</group>
+	<group name="phone2">
+		<groupExpression><![CDATA[$F{phone2}]]></groupExpression>
+	</group>
+	<group name="datestart">
+		<groupExpression><![CDATA[$F{datestart}]]></groupExpression>
+	</group>
+	<group name="enddate">
+		<groupExpression><![CDATA[$F{enddate}]]></groupExpression>
+	</group>
+	<group name="h_mekha">
+		<groupExpression><![CDATA[$F{h_mekha}]]></groupExpression>
+	</group>
+	<group name="openamt">
+		<groupExpression><![CDATA[$F{openamt}]]></groupExpression>
+	</group>
+	<group name="grandtotal">
+		<groupExpression><![CDATA[$F{grandtotal}]]></groupExpression>
+	</group>
+	<group name="payamt">
+		<groupExpression><![CDATA[$F{payamt}]]></groupExpression>
+	</group>
+	<group name="totalpayment">
+		<groupExpression><![CDATA[$F{totalpayment}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

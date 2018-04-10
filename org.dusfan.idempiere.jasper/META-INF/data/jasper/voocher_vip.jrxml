@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="voocher_vip" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cc119be7-1e94-4d2d-9c80-ea48cff01d6b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="127"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="862"/>
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer"/>
+	<parameter name="RECORD_ID" class="java.lang.Integer"/>
+	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select distinct v.ad_org_id, v.du_vallocation_id, v.value as numvch, bp.name, bp.name2,
+hk.name as mekha, hd.name as medina, v.nrvk, v.nrvd,
+case when v.typeroom='10' then 'CHAMBRE SINGLE'
+when v.typeroom='20' then 'CHAMBRE DOUBLE'
+when v.typeroom='30' then 'CHAMBRE TRIPLE'
+when v.typeroom='40' then 'CHAMBRE QUADRIPLE'
+when v.typeroom='50' then 'CHAMBRE CINQ'
+end as typeroom, bp.sexe,
+v.dateentremk, v.datesortiemk, v.dateentremd, v.datesortiemd,
+array_to_string(array(select p.name from m_product p 
+inner join c_orderline l on l.m_product_id = p.m_product_id and p.typeservice='6'  where l.c_order_id=vl.c_order_id), ', ') as prestation
+from du_vallocation v
+inner join du_vallocationline vl on v.du_vallocation_id = vl.du_vallocation_id
+inner join c_bpartner bp on bp.c_bpartner_id = vl.c_bpartner_id
+left join du_hotel hk on hk.du_hotel_id = v.du_hotel_id
+left join du_hotel hd on hd.du_hotel_id = v.du_hotelmd_id
+where v.du_vol_id = $P{RECORD_ID} and v.isvip = 'Y' order by bp.sexe]]>
+	</queryString>
+	<field name="ad_org_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+	</field>
+	<field name="du_vallocation_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="du_vallocation_id"/>
+	</field>
+	<field name="numvch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numvch"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="name2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name2"/>
+	</field>
+	<field name="mekha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="mekha"/>
+	</field>
+	<field name="medina" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="medina"/>
+	</field>
+	<field name="nrvk" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nrvk"/>
+	</field>
+	<field name="nrvd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nrvd"/>
+	</field>
+	<field name="typeroom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="typeroom"/>
+	</field>
+	<field name="sexe" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sexe"/>
+	</field>
+	<field name="dateentremk" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="dateentremk"/>
+	</field>
+	<field name="datesortiemk" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datesortiemk"/>
+	</field>
+	<field name="dateentremd" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="dateentremd"/>
+	</field>
+	<field name="datesortiemd" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datesortiemd"/>
+	</field>
+	<field name="prestation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prestation"/>
+	</field>
+	<group name="voocherpervip" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{du_vallocation_id}]]></groupExpression>
+		<groupHeader>
+			<band height="246">
+				<subreport isUsingCache="true">
+					<reportElement key="subreport-11" x="0" y="0" width="550" height="60" uuid="b3274134-fb49-45d6-ae9d-b5de1db56e2f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<subreportParameter name="AD_ORG_ID">
+						<subreportParameterExpression><![CDATA[$F{ad_org_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="AD_CLIENT_ID">
+						<subreportParameterExpression><![CDATA[$P{AD_CLIENT_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="RESOURCE_DIR">
+						<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"CompanyHeader.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="221" y="137" width="112" height="30" uuid="e5c4babd-5d4b-4fd0-8574-088d147654ac"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[VOOCHER VIP]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="19" y="201" width="227" height="20" uuid="6fae3469-c845-4889-a3cb-da41ec12597f"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["MR/Mme : "+$F{name} + " " + $F{name2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="19" y="224" width="227" height="20" uuid="45505908-f5ea-4901-954d-95bda3dac7ed"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{typeroom}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="19" y="176" width="227" height="20" uuid="a3ad24b6-fb6c-45a4-9ddb-3613d9ca0121"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["N° VOUCHER : " +$F{numvch}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="220">
+				<textField>
+					<reportElement x="20" y="16" width="110" height="20" uuid="d14fff1d-4f33-4a29-b4dc-eab0595ca6b1"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["HOTEL  MEDINE : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="116" width="110" height="20" uuid="c1fcd9bc-c714-46cc-986b-3b7944f95b6a"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["HOTEL  MEKKA : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="16" width="358" height="20" uuid="ef61506a-202d-486b-b683-f0beb586fbb1"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{medina}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="116" width="358" height="20" uuid="42fb64c6-53c3-43e5-9690-beea6c369614"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{mekha}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="61" width="90" height="20" uuid="111092e2-8d6a-46ea-ba60-479a5a8a5802"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Date d'entree : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="81" width="90" height="20" uuid="3d20f792-d789-4bf7-8d68-57f4b5631f0b"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Date de sortie : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="162" width="90" height="20" uuid="7c309204-481f-4323-9167-1bcb72a2b829"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Date d'entree : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="182" width="90" height="20" uuid="e7d29b1a-f085-45ea-84b7-95e22b6fb11a"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Date de sortie : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="41" width="139" height="20" uuid="e6858139-96c4-4c93-9458-1157ccf7123c"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Reservation N° : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="142" width="138" height="20" uuid="a1c5600e-5124-4621-ac4f-76abf8d53fe1"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["Reservation N° : "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="19" y="0" width="520" height="7" uuid="ce2339c5-b566-4825-9bda-44817091ae83">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+					</box>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="41" width="139" height="20" uuid="4cd692ce-e162-466f-875d-a57f6a79eb59"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nrvd}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="61" width="139" height="20" uuid="00a645d1-57c6-438e-a4c8-423bce5b848a"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{dateentremd})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="81" width="139" height="20" uuid="4b9e4400-b603-42f4-b5b1-759056dc277a"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{datesortiemd})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="182" width="139" height="20" uuid="8d2dff4f-5ea7-4a04-b641-4615c991d1e9"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{datesortiemk})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="162" width="139" height="20" uuid="4d83ea68-6ad7-4d69-bee0-fe35ca3b4098"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{dateentremk})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="180" y="142" width="139" height="20" uuid="2a96c4b4-70d1-46a4-811c-112854866453"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{nrvk}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="55" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="161" height="55" uuid="95bb79cd-c7f6-4a05-af2c-b699f5c9d49b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="170" height="55" uuid="7495b814-9341-44d5-aad7-70e2d5bd3594">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{name2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="188" height="55" uuid="7818358f-3404-44be-a637-7d84e5eb3bae">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA["Prestations : "+$F{prestation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

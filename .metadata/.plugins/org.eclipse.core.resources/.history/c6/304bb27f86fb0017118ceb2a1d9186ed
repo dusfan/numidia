@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3daafb6c-aa67-4f5e-a92b-20c8a92a38bd">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test"/>
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<parameter name="RESOURCE_DIR" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_ORG_ID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select * from c_payment]]>
+	</queryString>
+	<field name="c_payment_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="c_payment_id"/>
+	</field>
+	<field name="ad_client_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="ad_client_id"/>
+	</field>
+	<field name="ad_org_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+	</field>
+	<field name="documentno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="documentno"/>
+	</field>
+	<field name="datetrx" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="datetrx"/>
+	</field>
+	<field name="payamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="payamt"/>
+	</field>
+	<field name="writeoffamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="writeoffamt"/>
+	</field>
+	<group name="c_payment_id">
+		<groupExpression><![CDATA[$F{c_payment_id}]]></groupExpression>
+	</group>
+	<group name="ad_client_id">
+		<groupExpression><![CDATA[$F{ad_client_id}]]></groupExpression>
+	</group>
+	<group name="ad_org_id">
+		<groupExpression><![CDATA[$F{ad_org_id}]]></groupExpression>
+	</group>
+	<group name="documentno">
+		<groupExpression><![CDATA[$F{documentno}]]></groupExpression>
+	</group>
+	<group name="datetrx">
+		<groupExpression><![CDATA[$F{datetrx}]]></groupExpression>
+	</group>
+	<group name="payamt">
+		<groupExpression><![CDATA[$F{payamt}]]></groupExpression>
+	</group>
+	<group name="writeoffamt">
+		<groupExpression><![CDATA[$F{writeoffamt}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="550" height="46" uuid="1c3b8a05-427d-41be-9c5b-09fb706fbdfa"/>
+				<subreportParameter name="AD_CLIENT_ID">
+					<subreportParameterExpression><![CDATA[$F{ad_client_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="AD_ORG_ID">
+					<subreportParameterExpression><![CDATA[$F{ad_org_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="RESOURCE_DIR">
+					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"CompanyHeader.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="164" splitType="Stretch">
+			<staticText>
+				<reportElement x="206" y="5" width="152" height="20" uuid="f6263bde-7a33-4a04-b53b-5d55a8f9e85a"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[REÇU DE PAIEMENT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="407" y="17" width="133" height="20" uuid="f3cb06ae-a024-467a-bfce-cf339cc11bdd">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()) ]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="10" y="44" width="541" height="106" uuid="961c565f-c182-462d-a788-a233a22c29f1"/>
+			</rectangle>
+			<textField>
+				<reportElement x="19" y="47" width="100" height="17" uuid="662ecc1a-a2a5-4e7b-8f06-b581aa414356">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Client : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="65" width="100" height="17" uuid="ed3a7519-ccd4-4b1a-83e9-68be051d4cbf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Nom : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="83" width="100" height="17" uuid="3208a6f4-6a2b-4d98-b05e-4e75fe2caa82">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Adresse : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="119" width="100" height="17" uuid="73aa70b0-1b00-4e46-897c-e0ffa26345f8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Tel : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="199" y="47" width="100" height="17" uuid="ef7124b6-33f2-4308-b4e3-2e341d818bc2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["N° de reçu : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="199" y="65" width="100" height="17" uuid="c5f46693-7179-4d79-90b7-d25b2933c484">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Prénom : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="101" width="100" height="17" uuid="83dbad91-d8dc-4d3d-8147-1fdc9d2a5895">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Lieu et date de naissance : "]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

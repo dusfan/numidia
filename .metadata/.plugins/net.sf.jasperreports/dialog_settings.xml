@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="com.jaspersoft.studio.jface.dialogs.ImageSelectionDialog">
+		<item value="641" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="24" key="dialogY"/>
+		<item value="360" key="dialogX"/>
+		<item value="623" key="dialogHeight"/>
+		<item value="641" key="dialogWidth"/>
+		<item value="623" key="DIALOG_HEIGHT"/>
+		<item value="360" key="DIALOG_X_ORIGIN"/>
+		<item value="0" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="com.jaspersoft.studio.jface.dialogs.SubreportSelectionDialog">
+		<item value="663" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="118" key="dialogY"/>
+		<item value="349" key="dialogX"/>
+		<item value="400" key="dialogHeight"/>
+		<item value="663" key="dialogWidth"/>
+		<item value="400" key="DIALOG_HEIGHT"/>
+		<item value="349" key="DIALOG_X_ORIGIN"/>
+		<item value="94" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog">
+		<item value="1300" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="25" key="dialogY"/>
+		<item value="15" key="dialogX"/>
+		<item value="718" key="dialogHeight"/>
+		<item value="1300" key="dialogWidth"/>
+		<item value="718" key="DIALOG_HEIGHT"/>
+		<item value="15" key="DIALOG_X_ORIGIN"/>
+		<item value="0" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="com.jaspersoft.studio.property.descriptor.expression.dialog.JRExpressionEditor">
+		<item value="750" key="DIALOG_WIDTH"/>
+		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+		<item value="25" key="dialogY"/>
+		<item value="308" key="dialogX"/>
+		<item value="680" key="dialogHeight"/>
+		<item value="750" key="dialogWidth"/>
+		<item value="680" key="DIALOG_HEIGHT"/>
+		<item value="308" key="DIALOG_X_ORIGIN"/>
+		<item value="0" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

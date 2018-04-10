@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.launching.PREF_VM_XML=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<vmSettings defaultVM\="57,org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType13,1515681447003" defaultVMConnector\="">\n<vmType id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType">\n<vm id\="1515681447003" name\="jre.linux.gtk.x86_64.feature_1.8.0.u144" path\="/opt/tibco/TIB_js-studiocomm_6.5.0.final/features/jre.linux.gtk.x86_64.feature_1.8.0.u144"/>\n</vmType>\n</vmSettings>\n

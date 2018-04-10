@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="voocher" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa0e286b-986a-4fa0-babe-2e26b27784de">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="174"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="819"/>
+	<parameter name="RECORD_ID" class="java.lang.Integer"/>
+	<parameter name="AD_USER_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[100]]></defaultValueExpression>
+	</parameter>
+	<parameter name="RESOURCE_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select h.name as hotel, vol.departdatetime_direct, vol.returndatetime_direct,
+case when v.typeroom='10' then 'Chambre Single'
+when v.typeroom='20' then 'Chambre Double'
+when v.typeroom='30' then 'Chambre Triple'
+end as typeroom,
+(select value from c_bpartner where c_bpartner_id in 
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as ppno,
+(select name || ' ' || name2 from c_bpartner where c_bpartner_id in 
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as bpname,
+(select name_ar || ' ' || name2_ar from c_bpartner where c_bpartner_id in 
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as bpname_ar,
+(select value || ' ' || name from c_bpartner where c_bpartner_id in 
+(select c_bpartnerrelation_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as codeclient,
+(select description from ad_user where ad_user_id = $P{AD_USER_ID}) as user_name,
+(select imageurl from ad_image where ad_image_id in 
+(select (select logo_id from c_bpartner ib where ib.c_bpartner_id = vl.c_bpartner_id) 
+	from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1
+)) as imageurl,
+v.amoutvh,
+v.value as nvouch,
+(select array_to_string(array(select p.name from m_product p 
+inner join c_orderline l on l.m_product_id = p.m_product_id and p.typeservice='6' where l.c_order_id=vl.c_order_id), ', ') 
+from du_vallocationline vl where vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1) as prestation
+ from du_vallocation v
+inner join du_vol vol on vol.du_vol_id = v.du_vol_id
+inner join du_hotel h on h.du_hotel_id = v.du_hotel_id
+where vol.du_vol_id=$P{RECORD_ID} and v.typeroom in ('10','20','30')]]>
+	</queryString>
+	<field name="hotel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="hotel"/>
+	</field>
+	<field name="departdatetime_direct" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="departdatetime_direct"/>
+	</field>
+	<field name="returndatetime_direct" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="returndatetime_direct"/>
+	</field>
+	<field name="typeroom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="typeroom"/>
+	</field>
+	<field name="ppno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ppno"/>
+	</field>
+	<field name="bpname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bpname"/>
+	</field>
+	<field name="bpname_ar" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bpname_ar"/>
+	</field>
+	<field name="codeclient" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
+	</field>
+	<field name="imageurl" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="imageurl"/>
+	</field>
+	<field name="amoutvh" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amoutvh"/>
+	</field>
+	<field name="nvouch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nvouch"/>
+	</field>
+	<field name="prestation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prestation"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="50">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="194" y="14" width="176" height="26" uuid="36464cbd-95f9-4ffb-a099-829782dfdd4a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOUCHER]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="705" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<rectangle>
+				<reportElement x="26" y="40" width="276" height="82" uuid="532c00f2-2620-40cb-b434-3642af980efd"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="40" width="230" height="82" uuid="ce4a7026-a236-40dc-91cd-3bb84b18a563"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="122" width="276" height="47" uuid="11fbfaf0-e6fb-40fe-b74e-fd327c79671e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="169" width="276" height="106" uuid="f60d3079-afa4-4a3f-bbc8-60d6c37665e4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="275" width="276" height="35" uuid="96efdd34-1382-4297-834a-f27c05af679a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="122" width="230" height="153" uuid="7c8dffb5-492d-4eb6-8c51-948951f90e58"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="275" width="230" height="64" uuid="b21e7403-a6a6-486c-b717-8702862ee965"/>
+			</rectangle>
+			<textField>
+				<reportElement x="362" y="40" width="100" height="17" uuid="d3c0306d-d230-4c6e-a876-50966ba44c95"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["مكة المكرمة"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="78" width="190" height="17" uuid="f6f90ee4-599d-4780-a38a-155155fa93e4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date de Depart "+ new SimpleDateFormat("dd/MM/yyyy").format($F{departdatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="331" y="99" width="190" height="17" uuid="770f08ea-0fba-4121-9060-422b85be44d4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date de Retour " +new SimpleDateFormat("dd/MM/yyyy").format($F{returndatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="362" y="59" width="100" height="17" uuid="7bff00a1-d52e-4ee7-b8c6-23e040b41c60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="59" width="190" height="17" uuid="140c9e67-220d-4c85-996a-a77da4915ab7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="137" width="190" height="17" uuid="5319302c-d1f4-4ea4-b0c7-7e97c9d31613"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{typeroom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="175" width="100" height="17" uuid="bdac9817-9f43-4601-b116-65fa1ca1aa4c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Passeport N°"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="194" width="100" height="17" uuid="f1f3a349-fe85-49f5-b612-746574812b97"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ppno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="132" y="212" width="165" height="17" uuid="ba6a57b8-8bfb-449e-91bc-def2d91fd030"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bpname_ar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="231" width="178" height="17" uuid="b845df87-4c0a-4b57-9aa2-1efb8e128368"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bpname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="277" width="165" height="14" uuid="618b8b2b-a8e1-4186-a044-8746cad0df9d"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["L'Agent commercial"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="34" y="294" width="258" height="14" uuid="f7d674fc-da28-4c68-98ec-2e4939ed35b9"/>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="277" width="165" height="14" uuid="34bc26cc-0c2e-4bb6-9e3c-6404a97a5826"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Le Financier"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="26" y="404" width="276" height="82" uuid="2f6e091a-136e-43cf-8c74-66f75b7bb50f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="404" width="230" height="82" uuid="95362761-2038-4ce8-a15e-cef9e23b2f42"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="486" width="230" height="153" uuid="a9aa1c36-8eb5-41bb-8293-6b3a0f39180b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="486" width="276" height="47" uuid="ef839a46-f2e1-4d11-8dd4-ee47d6cdcc5a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="533" width="276" height="106" uuid="ea54e36f-9f2f-4fb2-a88b-8a570d4ea68c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="26" y="639" width="276" height="35" uuid="278b6425-7abb-4ec7-8524-95aa72d47062"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="302" y="639" width="230" height="64" uuid="7da9066f-5901-43ec-b413-1e4a7344aa6f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<textField>
+				<reportElement x="362" y="416" width="100" height="17" uuid="a524a89a-7bd4-46d9-8fea-ca200900c2bf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["المدينة المنورة"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="443" width="190" height="17" uuid="ee41a116-6233-4ff9-bdce-99d50779c66d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date de Depart "+ new SimpleDateFormat("dd/MM/yyyy").format($F{departdatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="464" width="190" height="17" uuid="963e4677-649d-43f7-8f44-d1fa17a6f23b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date de Retour " +new SimpleDateFormat("dd/MM/yyyy").format($F{returndatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="424" width="190" height="17" uuid="f50975f4-cf8e-432c-9e22-8c0f971b1eb8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="502" width="190" height="17" uuid="ecc79beb-6894-4f19-b034-0aab6de7e68c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{typeroom} + "  " + $F{amoutvh}+ " DA"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="540" width="100" height="17" uuid="8aa99655-4260-4a40-b6be-1b58be693757"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Passeport N°"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="559" width="100" height="17" uuid="8e7aece1-94e5-4001-919f-2989cfe3b962"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ppno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="577" width="190" height="17" uuid="df8c5469-260a-4b12-a967-f5a8f52e393f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bpname_ar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="596" width="189" height="17" uuid="9ba5a1a1-83d0-4718-b466-8a6c3e88c596"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bpname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="29" y="643" width="165" height="14" uuid="e0b77a9a-731e-492e-b0ff-12ccbeacb47a"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["L'Agent commercial"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="34" y="660" width="258" height="14" uuid="521d6028-2480-48b4-86d3-68983f9a22b2"/>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="643" width="165" height="14" uuid="d60272df-9e0b-482f-98e3-55df82e0a3ae"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Le Financier"]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement x="27" y="355" width="506" height="1" uuid="d6568d3b-1f27-42b3-a4f6-fd11e5769e6e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line direction="BottomUp">
+				<reportElement x="26" y="366" width="506" height="1" uuid="2139bfab-5267-4084-a7f6-7eb9c91e52d3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="26" y="14" width="173" height="21" uuid="cf0411e5-963a-44d8-9360-c0f071bcf89a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° VOUCHER : " + $F{nvouch}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="378" width="172" height="21" uuid="597c1488-4268-4951-b781-f70c3bbfddf3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° VOUCHER : " + $F{nvouch}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="160" y="175" width="100" height="30" uuid="586359ea-5691-45ff-b80c-b7d2ea489f56">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Codabar" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{ppno}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<componentElement>
+				<reportElement x="155" y="540" width="100" height="30" uuid="d5e7c467-71a4-499c-b25e-14530e4e2915">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Codabar" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{ppno}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="48" y="214" width="60" height="57" uuid="fc763607-4347-4500-bf12-238ed247a3bd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[org.dusfan.idempiere.jasper.Convert.isExistFile($F{imageurl}) ? $F{imageurl} :$P{RESOURCE_DIR} + "img/inconu.png"]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="44" y="579" width="60" height="57" uuid="3bdbc9c3-ebda-4a05-a89a-fb4282ce1ae6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<imageExpression><![CDATA[org.dusfan.idempiere.jasper.Convert.isExistFile($F{imageurl}) ? $F{imageurl} :$P{RESOURCE_DIR} + "img/inconu.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="312" y="153" width="210" height="94" uuid="cee2705e-6d52-49ca-a9ed-f17cbbc955ef"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prestation}!=null ? $F{prestation} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="126" width="190" height="17" uuid="daf489ea-b567-4a86-9baf-fda3fe256059"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prestations :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="324" y="490" width="190" height="17" uuid="cf11c73e-252d-4883-8438-8619ff5aae3b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prestations :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="314" y="516" width="210" height="102" uuid="d8869eb0-3b3d-4159-8d23-a3015bf7baea"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prestation}!=null ? $F{prestation} : ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
