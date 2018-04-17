@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bankstatment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7eb28c32-9d0e-45e2-8cca-61a93ae7fc98">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="RECORD_ID" class="java.lang.Integer"/>
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
@@ -24,7 +24,8 @@ left join c_payment p on p.c_payment_id = bl.c_payment_id
 left join c_doctype dt on dt.c_doctype_id = p.c_doctype_id
 left join c_bpartner bp on bp.c_bpartner_id = p.c_bpartner_id
 left join c_charge ch on ch.c_charge_id = bl.c_charge_id
-where b.C_BankStatement_ID = $P{RECORD_ID}]]>
+where b.C_BankStatement_ID = $P{RECORD_ID}
+order by p.documentno]]>
 	</queryString>
 	<field name="ad_client_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="ad_client_id"/>
@@ -237,7 +238,7 @@ where b.C_BankStatement_ID = $P{RECORD_ID}]]>
 			</textField>
 			<textField pattern="#,##0.###">
 				<reportElement x="446" y="0" width="108" height="36" uuid="14d51409-538a-470d-8d27-2a8775fad73e"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="3">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -289,9 +290,9 @@ where b.C_BankStatement_ID = $P{RECORD_ID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Total de l'extrait : "]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="278" y="10" width="142" height="23" uuid="a89ea955-0497-43db-a964-1d0d4c000135"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="3">
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">

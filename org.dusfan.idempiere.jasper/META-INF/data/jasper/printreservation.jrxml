@@ -5,12 +5,16 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="208"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="785"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="743"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="243"/>
 	<parameter name="AD_CLIENT_ID" class="java.lang.Integer"/>
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="AD_User_ID" class="java.lang.Integer"/>
+	<parameter name="M_PriceList_Version_ID" class="java.lang.Integer"/>
+	<parameter name="AD_ROLE_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select i.ad_client_id, i.ad_org_id,ppno, Afirstname||' '||alastname as namear, groupname,customercode||'-'||customername as codeclient, customercode,case when i_isimported='Y'
 then 'Oui' else 'Non' end as valid,
@@ -19,10 +23,18 @@ p.name as pack, pr.name as prestat, ch.name as charge,
 v.departdatetime_direct,v.description,
 v.returndatetime_direct, v.value as codevol, cm.name,
 (select value from ad_user where ad_user_id = i.createdby) as createdby ,
-COALESCE(EXTRACT(YEAR from AGE(current_date,to_date(birthdate,'MM/DD/YYYY'))),0) as age
+COALESCE(EXTRACT(YEAR from AGE(current_date,to_date(birthdate,'MM/DD/YYYY'))),0) as age,
+bompricestd(p.m_product_id,$P{M_PriceList_Version_ID}) as prix,
+case when p.typeroom in ('10','20','30','40','50','60','70','80')
+then (bompricestd(p.m_product_id,$P{M_PriceList_Version_ID})-cod.remisemarge) else
+bompricestd(p.m_product_id,$P{M_PriceList_Version_ID}) end as total,
+(select name from M_PriceList_Version where M_PriceList_Version_id = $P{M_PriceList_Version_ID}) as tarif,
+bompricestd(pr.m_product_id,$P{M_PriceList_Version_ID}) as prixprestation,
+coalesce(ch.chargeamt,0) as chargeamt
 from i_importomrabp i
 inner join du_vol v on v.du_vol_id = i.du_vol_id
 inner join du_compa cm on cm.du_compa_id = v.du_compa_id
+inner join c_bpartner cod on cod.value = i.customercode
 left join m_product p on p.m_product_id = i.m_product_id
 left join m_product pr on pr.m_product_id = i.du_presta_id
 left join c_charge ch on ch.c_charge_id = i.c_charge_id
@@ -86,14 +98,38 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 	<field name="createdby" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="createdby"/>
 	</field>
-	<field name="age" class="java.lang.Integer">
+	<field name="age" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="age"/>
+	</field>
+	<field name="prix" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="prix"/>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<field name="tarif" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tarif"/>
+	</field>
+	<field name="prixprestation" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="prixprestation"/>
+	</field>
+	<field name="chargeamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="chargeamt"/>
 	</field>
 	<variable name="totalcodeclient" class="java.lang.Integer" resetType="Group" resetGroup="CodeClient" calculation="Sum">
 		<variableExpression><![CDATA[$F{nbr}]]></variableExpression>
 	</variable>
 	<variable name="TOTAL" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{nbr}]]></variableExpression>
+	</variable>
+	<variable name="totalcodeclientprix" class="java.math.BigDecimal" resetType="Group" resetGroup="CodeClient" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="totalcodeclientpresta" class="java.math.BigDecimal" resetType="Group" resetGroup="CodeClient" calculation="Sum">
+		<variableExpression><![CDATA[$F{prixprestation}]]></variableExpression>
+	</variable>
+	<variable name="totalcodeclienTax" class="java.math.BigDecimal" resetType="Group" resetGroup="CodeClient" calculation="Sum">
+		<variableExpression><![CDATA[$F{chargeamt}]]></variableExpression>
 	</variable>
 	<group name="CodeClient">
 		<groupExpression><![CDATA[$F{customercode}]]></groupExpression>
@@ -117,10 +153,10 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="24">
+			<band height="48">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
-					<reportElement x="560" y="3" width="240" height="21" uuid="7ba48052-90f1-4740-8441-e44b1e580316">
+					<reportElement x="430" y="3" width="370" height="21" uuid="7ba48052-90f1-4740-8441-e44b1e580316">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<box>
@@ -133,6 +169,21 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 						<font size="11" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Total : " + $F{codeclient} + " = "+$V{totalcodeclient}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="620" y="24" width="180" height="21" uuid="6ef878ec-2e1b-4cf6-9675-4fdb737806d1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total : " +$V{totalcodeclientprix}.add($V{totalcodeclientpresta}).add($V{totalcodeclienTax})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -163,7 +214,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 	<pageHeader>
 		<band height="68" splitType="Stretch">
 			<textField>
-				<reportElement x="326" y="4" width="150" height="17" uuid="732a3489-ab9b-40f3-a952-ae64ffe1b7ae"/>
+				<reportElement x="311" y="-9" width="150" height="17" uuid="732a3489-ab9b-40f3-a952-ae64ffe1b7ae"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
@@ -185,7 +236,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Date Depart : "+new SimpleDateFormat("dd/MM/yyyy").format($F{departdatetime_direct})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="316" y="25" width="170" height="19" uuid="73e8a85c-905f-4b29-9d94-71ce1176c233"/>
+				<reportElement x="301" y="14" width="170" height="19" uuid="73e8a85c-905f-4b29-9d94-71ce1176c233"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{codevol}]]></textFieldExpression>
 			</textField>
@@ -194,12 +245,26 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA["Date Retour : "+new SimpleDateFormat("dd/MM/yyyy").format($F{returndatetime_direct})]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="301" y="40" width="170" height="19" uuid="1cd6dd25-a2fe-4db0-aec9-18499bdec543"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Etablie par : "+($P{AD_User_ID}!=null ? $F{createdby} : "GLOBALE")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="540" y="-9" width="230" height="34" uuid="87366c3f-57e1-4612-8e55-50133dfb02ea"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tarif}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="19" splitType="Stretch">
+		<band height="24" splitType="Stretch">
 			<textField>
-				<reportElement x="623" y="0" width="47" height="19" uuid="7003a7dd-be64-4dfa-b49d-0c95a9ca8e74"/>
+				<reportElement x="651" y="0" width="39" height="19" uuid="7003a7dd-be64-4dfa-b49d-0c95a9ca8e74"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -212,7 +277,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Validé"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="670" y="0" width="70" height="19" uuid="df0df264-48fc-4fc6-9f30-ec65532214ba"/>
+				<reportElement x="690" y="0" width="70" height="19" uuid="df0df264-48fc-4fc6-9f30-ec65532214ba"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -238,7 +303,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["N°"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="30" y="0" width="80" height="19" uuid="b910e8f1-de62-4437-89a0-d67e5214b09b"/>
+				<reportElement x="30" y="0" width="70" height="19" uuid="b910e8f1-de62-4437-89a0-d67e5214b09b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -251,7 +316,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Passeport"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="184" y="0" width="79" height="19" uuid="3f1da7c0-a815-468d-a598-81b9974a1a55"/>
+				<reportElement x="174" y="0" width="66" height="19" uuid="3f1da7c0-a815-468d-a598-81b9974a1a55"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -264,7 +329,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Groupe"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="263" y="0" width="178" height="19" uuid="113a718a-fb72-4991-804e-793877016a8e"/>
+				<reportElement x="240" y="0" width="177" height="19" uuid="113a718a-fb72-4991-804e-793877016a8e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -277,7 +342,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Package"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="441" y="0" width="135" height="19" uuid="17834674-fdb6-42c7-8aa3-3974719e48cb"/>
+				<reportElement x="529" y="0" width="75" height="19" uuid="17834674-fdb6-42c7-8aa3-3974719e48cb"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -290,7 +355,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Préstation"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="576" y="0" width="47" height="19" uuid="f3838dd4-801e-416f-9c49-5fbed2fd75e7"/>
+				<reportElement x="604" y="0" width="47" height="19" uuid="f3838dd4-801e-416f-9c49-5fbed2fd75e7"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -303,7 +368,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Taxe"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="740" y="0" width="60" height="19" uuid="787b34d6-27bd-421f-b87f-b37108589269"/>
+				<reportElement x="760" y="0" width="40" height="19" uuid="787b34d6-27bd-421f-b87f-b37108589269"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -313,10 +378,10 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Créer Par"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Par"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="110" y="0" width="74" height="19" uuid="ea8cbb58-d653-49bf-a9ef-ab0817f52e85">
+				<reportElement x="100" y="0" width="74" height="19" uuid="ea8cbb58-d653-49bf-a9ef-ab0817f52e85">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -330,12 +395,38 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				</textElement>
 				<textFieldExpression><![CDATA["Age"]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="417" y="0" width="53" height="19" uuid="55b2174e-99f3-469b-8ef3-e6e6ae75bffb"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prix"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="471" y="0" width="58" height="19" uuid="13f84b6f-cedb-4f45-a9ec-079dd1365520"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="40" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<textField>
-				<reportElement x="110" y="0" width="74" height="40" uuid="5ec05e0e-436c-4451-a725-0aeeba94bc12">
+				<reportElement x="101" y="0" width="74" height="40" uuid="5ec05e0e-436c-4451-a725-0aeeba94bc12">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -352,7 +443,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{age}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="263" y="0" width="178" height="40" uuid="a251ecc3-7062-4315-82e8-249bd8b5ecf1"/>
+				<reportElement x="241" y="0" width="177" height="40" uuid="a251ecc3-7062-4315-82e8-249bd8b5ecf1"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -365,7 +456,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{pack}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="30" y="0" width="80" height="40" uuid="eb37a24e-887b-485a-b10a-5458bf5f0608"/>
+				<reportElement x="30" y="0" width="70" height="40" uuid="eb37a24e-887b-485a-b10a-5458bf5f0608"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -378,7 +469,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{ppno}+"\n"+$F{namear}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="670" y="0" width="70" height="40" uuid="23b3bd65-2295-4e4c-8795-84ad15a10d87"/>
+				<reportElement x="690" y="0" width="70" height="40" uuid="23b3bd65-2295-4e4c-8795-84ad15a10d87"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -404,7 +495,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="576" y="0" width="47" height="40" uuid="2a6fe05f-b14e-48e6-8809-927133f26a0d"/>
+				<reportElement x="604" y="0" width="47" height="40" uuid="2a6fe05f-b14e-48e6-8809-927133f26a0d"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -417,7 +508,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{charge}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="623" y="0" width="47" height="40" uuid="85f72d1b-1411-43cf-bb12-84c7c315bf85"/>
+				<reportElement x="651" y="0" width="39" height="40" uuid="85f72d1b-1411-43cf-bb12-84c7c315bf85"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -430,7 +521,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{valid}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="184" y="0" width="79" height="40" uuid="6d3b7d89-adc2-48dc-aa4e-03cb46503c54"/>
+				<reportElement x="175" y="0" width="66" height="40" uuid="6d3b7d89-adc2-48dc-aa4e-03cb46503c54"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -443,7 +534,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{groupname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="441" y="0" width="135" height="40" uuid="d1dc2135-3fc3-48ce-8515-7c414a2e32a8"/>
+				<reportElement x="529" y="0" width="75" height="40" uuid="d1dc2135-3fc3-48ce-8515-7c414a2e32a8"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -456,7 +547,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{prestat}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="740" y="0" width="60" height="40" uuid="130dd4ee-7229-4d51-bfbf-8db731bf3bc0">
+				<reportElement x="760" y="0" width="40" height="40" uuid="130dd4ee-7229-4d51-bfbf-8db731bf3bc0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -471,7 +562,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA[$F{createdby}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="110" y="0" width="74" height="40" uuid="d85323ff-0ae0-46ca-89b8-52f763dc9409">
+				<reportElement x="101" y="0" width="74" height="40" uuid="d85323ff-0ae0-46ca-89b8-52f763dc9409">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -487,7 +578,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/chd.png"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="110" y="0" width="74" height="40" uuid="7eb45262-4782-4788-82a2-905424bd7d92">
+				<reportElement x="101" y="0" width="74" height="40" uuid="7eb45262-4782-4788-82a2-905424bd7d92">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -502,12 +593,38 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				</box>
 				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/bebe.jpeg"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="418" y="0" width="52" height="40" uuid="44e20674-b05c-4b4d-b3a0-e6c3546f1ac8"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prix}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="471" y="0" width="58" height="40" uuid="85562c1c-9bc8-4fb0-b4e6-829f14496754"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{AD_ROLE_ID}==1000004 || $P{AD_ROLE_ID}==1000012 || $P{AD_ROLE_ID}==1000013 ? $F{total} : " "]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
+		<band height="26" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" x="714" y="7" width="55" height="11" uuid="9408c5ff-b90b-4b8f-aa0d-22d0fe321694"/>
+				<reportElement key="textField" x="714" y="8" width="55" height="11" uuid="9408c5ff-b90b-4b8f-aa0d-22d0fe321694"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -521,7 +638,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="769" y="7" width="31" height="11" uuid="2bdc6601-e8ff-482e-a69e-20534a5f6335">
+				<reportElement x="769" y="8" width="31" height="11" uuid="2bdc6601-e8ff-482e-a69e-20534a5f6335">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

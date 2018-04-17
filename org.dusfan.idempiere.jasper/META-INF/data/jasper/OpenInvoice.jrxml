@@ -22,10 +22,12 @@
 	<parameter name="isSoTrx" class="java.lang.String"/>
 	<parameter name="C_Activity_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
+	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select  rv.ad_client_id, rv.ad_org_id, rv.documentno, rv.docstatus, bp.name, bp.value, rv.grandtotal,cr.iso_code as currency, ac.name as activity,rv.paidamt,
 rv.openamt, rv.description, dt.name as docty, rv.dateinvoiced,
-u.name as agentname  , u.description as agentdesc , cd.value||'-'||cd.name as codeclient from RV_OpenItem rv
+u.name as agentname , u.description as agentdesc , cd.value||'-'||cd.name as codeclient,
+vol.value as codevol from RV_OpenItem rv
 inner join c_invoice inv on inv.c_invoice_id = rv.c_invoice_id
 inner join ad_user u on u.ad_user_id = inv.createdby
 inner join c_bpartner cd on  cd.c_bpartner_id = inv.c_bpartnerrelation_id
@@ -33,11 +35,13 @@ inner join c_bpartner bp on bp.c_bpartner_id = rv.c_bpartner_id
 inner join c_currency cr on cr.c_currency_id = rv.c_currency_id
 inner join c_doctype dt on dt.c_doctype_id = rv.c_doctype_id
 left outer join c_activity ac on ac.c_activity_id = rv.c_activity_id
+left join du_vol vol on vol.du_vol_id = inv.du_vol_id
  where rv.ad_client_id = $P{AD_CLIENT_ID}
  and ($P{C_BPartner_ID} is null or rv.c_bpartner_id = $P{C_BPartner_ID})
  and ($P{isSoTrx} is null or rv.issotrx=$P{isSoTrx})
  and ($P{C_Activity_ID} is null or rv.C_Activity_ID = $P{C_Activity_ID})
  and ($P{C_BPartnerRelation_ID} is null or inv.C_BPartnerRelation_ID = $P{C_BPartnerRelation_ID})
+ and ($P{DU_Vol_ID} is null or inv.du_vol_id = $P{DU_Vol_ID})
 order by rv.dateinvoiced]]>
 	</queryString>
 	<field name="ad_client_id" class="java.lang.Integer">
@@ -91,6 +95,7 @@ order by rv.dateinvoiced]]>
 	<field name="codeclient" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
 	</field>
+	<field name="codevol" class="java.lang.String"/>
 	<title>
 		<band height="54" splitType="Stretch">
 			<subreport isUsingCache="true">
@@ -218,6 +223,22 @@ order by rv.dateinvoiced]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Code Client : " + ($P{C_BPartnerRelation_ID}!=null  ? $F{codeclient} : "-")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="44" width="105" height="19" uuid="d23ca130-1a15-4b77-b50f-2ed4ff8236fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["VOL : "  +($P{DU_Vol_ID} !=null ?$F{codevol} :"-") ]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

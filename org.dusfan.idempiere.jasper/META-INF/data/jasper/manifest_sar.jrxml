@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="manifest_sar" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="370d2f44-cf95-4d10-ac3c-d0622efb8332">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="manifest_sar" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" uuid="370d2f44-cf95-4d10-ac3c-d0622efb8332">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="132"/>
@@ -11,7 +11,10 @@
 	</parameter>
 	<queryString>
 		<![CDATA[select v.departdatetime_direct,v.NumDepartFlight_Direct,v.PlaceDepart_Direct,
-v.Placereturn_Direct, bp.value, bp.name,bp.name2, bp.sexe,bp.birth_date, c.name as country, vl.isfree,
+v.Placereturn_Direct, bp.value, bp.name,bp.name2,
+ case when vl.isfree = 'Y' then '3'
+ else bp.sexe end as sexe
+ ,bp.birth_date, c.name as country, vl.isfree,
 COALESCE(EXTRACT(YEAR from AGE(current_date,bp.birth_date)),0) as age,
 case when COALESCE(EXTRACT(YEAR from AGE(current_date,bp.birth_date)),0) > 12
 then 1 else 0 end as adult,
@@ -20,11 +23,12 @@ COALESCE(EXTRACT(YEAR from AGE(current_date,bp.birth_date)),0) >= 2 then 1 else 
 case when COALESCE(EXTRACT(YEAR from AGE(current_date,bp.birth_date)),0) < 2 then 1 else 0
 end as inf,
 case when COALESCE(EXTRACT(YEAR from AGE(current_date,bp.birth_date)),0) >= 2 then
-1 else 0 end as count_line from du_volline vl
+1 else 0 end as count_line
+ from du_volline vl
 inner join du_vol v on v.du_vol_id = vl.du_vol_id
 inner join c_bpartner bp on bp.c_bpartner_id = vl.c_bpartner_id
 left join c_country c on c.c_country_id = bp.c_country_id
-where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.isfree, bp.sexe]]>
+where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by sexe, bp.name]]>
 	</queryString>
 	<field name="departdatetime_direct" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.label" value="departdatetime_direct"/>
@@ -382,7 +386,7 @@ where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.isfree, bp.se
 		</groupFooter>
 	</group>
 	<group name="GroupByGratuite" isStartNewPage="true" keepTogether="true">
-		<groupExpression><![CDATA[$F{isfree}]]></groupExpression>
+		<groupExpression><![CDATA[$F{sexe}]]></groupExpression>
 		<groupHeader>
 			<band height="30">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -854,7 +858,7 @@ where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.isfree, bp.se
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
@@ -882,7 +886,7 @@ where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.isfree, bp.se
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name2}]]></textFieldExpression>

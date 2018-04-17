@@ -53,7 +53,10 @@ array_to_string(array(select p.name from m_product p  inner join c_orderline l o
 	and p.typeservice='6'  where l.c_order_id=ord.c_order_id
 ), ', ') as prestation,
 pax.value as ppno,
-pax.name_ar || ' ' || pax.name2_ar as bpname
+pax.name_ar || ' ' || pax.name2_ar as bpname,
+(select name from DU_RemiseMoudj where DU_RemiseMoudj_id in (select DU_RemiseMoudj_id 
+	from c_orderline l where l.c_order_id = ord.c_order_id
+)) as remiseM
  from c_invoiceline vl
 inner join c_orderline ol on ol.c_orderline_id = vl.c_orderline_id and ol.m_sejour_id > 0
 inner join m_product pr on pr.m_product_id = ol.m_sejour_id
@@ -101,6 +104,9 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 	</field>
 	<field name="bpname" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="bpname"/>
+	</field>
+	<field name="remisem" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="remisem"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -381,7 +387,7 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="9" isBold="false" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ppno}+"\n"+$F{bpname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ppno}+"\n"+$F{bpname}+"\n"+($F{remisem}!=null?$F{remisem}:" ")]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
