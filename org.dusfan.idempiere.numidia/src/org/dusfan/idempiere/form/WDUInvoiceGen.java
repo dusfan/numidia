@@ -213,7 +213,7 @@ public class WDUInvoiceGen extends DUInvoiceGen implements IFormController, Even
 		{
 			m_C_BPartner_ID = e.getNewValue();
 			fBPartner.setValue(m_C_BPartner_ID);	//	display value
-		} else if (e.getPropertyName().equals("M_Product_ID")) {
+		} else if (e.getPropertyName().equals("DU_Vol_ID")) {
 			m_DU_VOL_ID = e.getNewValue();
 			fvol.setValue(m_DU_VOL_ID);
 		}

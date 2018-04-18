@@ -7,6 +7,8 @@ import org.dusfan.idempiere.process.CreateAffectationLineVol;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
 import org.dusfan.idempiere.process.ExploseBom;
+import org.dusfan.idempiere.process.ExportSrdox;
+import org.dusfan.idempiere.process.ExportSrdox2;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
@@ -56,6 +58,12 @@ public class ProcessFactory implements IProcessFactory {
 		}
 		else if (className.equals(SetTagPasseport.class.getName())) {
 			return new SetTagPasseport();
+		}
+		else if (className.equals(ExportSrdox.class.getName())) {
+			return new ExportSrdox();
+		}
+		else if (className.equals(ExportSrdox2.class.getName())) {
+			return new ExportSrdox2();
 		}
      		
 		return null;

@@ -38,6 +38,8 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 	private int m_DU_Visa_Group_ID = 0;
 	// product valo
 	private int m_M_Product_ID = 0;
+	// vol
+	private int m_DU_Vol_ID = 0;
 	private int du_Season_Period_ID =0;
 	/** Effective						*/
 	private Timestamp		m_DateValue = null;
@@ -63,6 +65,8 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 				m_DateValue = para[i].getParameterAsTimestamp();
 			} else if (name.equals("DU_Season_Period_ID")) {
 				du_Season_Period_ID = para[i].getParameterAsInt();
+			}else if (name.equals("DU_Vol_ID")) {
+				m_DU_Vol_ID = para[i].getParameterAsInt();
 			}
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
@@ -339,7 +343,8 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 	}
 	
 	public String getWhereGroupClause () {
-		StringBuilder msgreturn = new StringBuilder(" AND DU_Visa_Group_ID=").append(m_DU_Visa_Group_ID);
+		StringBuilder msgreturn = new StringBuilder(" AND DU_Visa_Group_ID=").append(m_DU_Visa_Group_ID).
+				append(" AND DU_Vol_ID = ").append(m_DU_Vol_ID);
 		return msgreturn.toString();
 	}
 	
@@ -401,6 +406,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		bp.setDeliveryRule(MOrder.DELIVERYRULE_Availability);
 		bp.setPaymentRule(MOrder.PAYMENTRULE_OnCredit);
 		bp.setC_PaymentTerm_ID(1000001); // set immediatly
+		bp.setInvoice_PrintFormat_ID(1000018); // set print format invoice
 		
 		// set remise from code client
 		MBPartner codeclient = new MBPartner(getCtx(), imp.getC_BPartnerRelation_ID(), get_TrxName());

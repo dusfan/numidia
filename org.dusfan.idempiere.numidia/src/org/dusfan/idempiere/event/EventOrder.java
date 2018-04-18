@@ -278,6 +278,8 @@ public class EventOrder {
 		return false;
 	}
 	
+	
+	// Set tiere facturation auto après l'annulation et la création d'un ordre de vente
 	public static void setRelation (PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
 		if (order.isSOTrx() && order.getC_DocTypeTarget_ID() == 1000048) {
@@ -291,6 +293,8 @@ public class EventOrder {
 								+ " and C_BPartnerRelation_ID ="+ c_bpartnerRelation_id);
 				if (rela_id > 0) {
 					X_C_BP_Relation rel = new X_C_BP_Relation(ctx, rela_id, trxName);
+					order.setBill_BPartner_ID(c_bpartnerRelation_id);
+					order.setBill_Location_ID(rel.getC_BPartnerRelation_Location_ID());
 					DB.executeUpdateEx("Update C_Order set "
 							+ "bill_Bpartner_id ="+c_bpartnerRelation_id +" , bill_location_id ="+ rel.getC_BPartnerRelation_Location_ID()
 							+" where C_Order_ID ="+order.getC_Order_ID(), trxName);

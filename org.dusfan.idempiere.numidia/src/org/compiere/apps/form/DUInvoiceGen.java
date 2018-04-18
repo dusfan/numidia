@@ -19,6 +19,7 @@ import org.compiere.model.MRMA;
 import org.compiere.model.MRole;
 import org.compiere.print.ReportEngine;
 import org.compiere.process.ProcessInfo;
+import org.compiere.util.AdempiereUserError;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -54,7 +55,7 @@ public class DUInvoiceGen extends GenForm
 		miniTable.addColumn("AD_Org_ID");
 		miniTable.addColumn("C_DocType_ID");
 		miniTable.addColumn("DocumentNo");
-		miniTable.addColumn("Bill_BPartner_ID");
+		miniTable.addColumn("C_BPartnerRelation_ID");
 		miniTable.addColumn("C_BPartner_ID");
 		miniTable.addColumn("DateOrdered");
 		miniTable.addColumn("TotalLines");
@@ -81,7 +82,7 @@ public class DUInvoiceGen extends GenForm
 	{
 	    StringBuilder sql = new StringBuilder(
 	            "SELECT ic.C_Order_ID, o.Name, dt.Name, ic.DocumentNo, "
-	            + " (select name from C_BPartner where C_BPartner_id = ord.Bill_BPartner_ID) as code ,bp.name,"
+	            + " (select value||'-'||name from C_BPartner where C_BPartner_id = ord.C_BPartnerRelation_ID) as code ,bp.name,"
 	            + " ic.DateOrdered, ic.TotalLines "
 	    		// use C_Order instead of C_Invoice_Candidate_v for access purposes, will be replaced later
 	            + "FROM C_Order ic, AD_Org o, C_BPartner bp, C_DocType dt, C_Order ord "
@@ -93,8 +94,10 @@ public class DUInvoiceGen extends GenForm
 
         if (m_AD_Org_ID != null)
             sql.append(" AND ic.AD_Org_ID=").append(m_AD_Org_ID);
-        if (m_C_BPartner_ID != null)
-            sql.append(" AND ord.Bill_BPartner_ID=").append(m_C_BPartner_ID);
+        if (m_C_BPartner_ID != null) {
+            sql.append(" AND (ord.Bill_BPartner_ID=").append(m_C_BPartner_ID);
+        	sql.append(" OR ord.C_BPartnerRelation_ID=").append(m_C_BPartner_ID).append(")");
+        }
         if (m_DU_VOL_ID != null) {
         	String sqlv = " AND ord.du_vol_id = " + m_DU_VOL_ID;
         	sql.append(sqlv);
@@ -240,6 +243,14 @@ public class DUInvoiceGen extends GenForm
 	 */
 	public String generate(IStatusBar statusBar, KeyNamePair docTypeKNPair, String docActionSelected)
 	{
+		if (m_DU_VOL_ID == null) {
+			throw new AdempiereUserError("Le vol et Code client est Obligatoire");
+		}
+		
+		if(m_C_BPartner_ID == null) {
+			throw new AdempiereUserError("Le vol et Code client est Obligatoire");
+		}
+		
 		String info = "";
 		String trxName = Trx.createTrxName("IVG");
 		Trx trx = Trx.get(trxName, true);	//trx needs to be committed too

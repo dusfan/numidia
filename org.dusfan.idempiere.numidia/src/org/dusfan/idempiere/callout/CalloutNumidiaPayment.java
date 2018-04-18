@@ -29,9 +29,15 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 			}
 			else {
 				int c_bpartner_id = (int) mTab.getValue("C_BPartner_ID");
+				
 				int codeclient = DB.getSQLValue(null, "Select C_BPartnerRelation_ID from c_bpartner where c_bpartner_id ="+ c_bpartner_id);
-				if (codeclient > 0)
-					mTab.setValue("C_BPartnerRelation_ID", codeclient);
+				if (codeclient > 0) {
+					if (codeclient != 1000000)
+						mTab.setValue("C_BPartnerRelation_ID", codeclient);
+					else
+						mTab.setValue("C_BPartnerRelation_ID", c_bpartner_id); // mettre le code client
+				}
+ 				
 			}
 		}
 		else if (mField.getColumnName().equals("C_Invoice_ID")) {

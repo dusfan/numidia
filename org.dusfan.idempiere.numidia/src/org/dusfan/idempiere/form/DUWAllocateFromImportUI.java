@@ -51,6 +51,7 @@ public class DUWAllocateFromImportUI extends DUAllocateFromImport implements Eve
 {
 	private DUWCreateFromWindow window;
 	int ad_user_id;
+	int ad_role_id ;
 	String whereClause;
 	
 	public DUWAllocateFromImportUI(GridTab tab) 
@@ -58,10 +59,13 @@ public class DUWAllocateFromImportUI extends DUAllocateFromImport implements Eve
 		super(tab);
 		log.info(getGridTab().toString());
 		ad_user_id = Env.getAD_User_ID(Env.getCtx());
-		whereClause = " not exists " + 
-				" (select DU_Visa_Group_ID from DU_Visa_GroupLine l where " + 
-				" l.DU_Visa_Group_ID = DU_Visa_Group.DU_Visa_Group_ID) and " +
-				"(DU_Visa_Group.Createdby =" + ad_user_id + " or " + ad_user_id + " in (100,1000005))";
+		ad_role_id = Env.getAD_Role_ID(Env.getCtx());
+		whereClause = " exists " + 
+				" (select 1 from DU_Visa_Group v " + 
+				" inner join i_importomrabp i on i.du_visa_group_id = v.du_visa_group_id " +
+				" where i.i_isimported='N' and DU_Visa_Group.DU_Visa_Group_ID = v.DU_Visa_Group_ID) " +
+				" AND (DU_Visa_Group.Createdby =" + ad_user_id + " or " + ad_user_id + " in (100,1000005)"
+						+ " OR "+ ad_role_id + "=" + 1000017 + ")";
 		
 		window = new DUWCreateFromWindow(this, getGridTab().getWindowNo());
 		
@@ -127,13 +131,13 @@ public class DUWAllocateFromImportUI extends DUAllocateFromImport implements Eve
 		int AD_Column_ID = COLUMN_C_INVOICELINE_M_PRODUCT_ID;       
 		MLookup lookup = MLookupFactory.get(Env.getCtx(), p_WindowNo, DisplayType.Search ,
 				AD_Column_ID, Env.getLanguage(Env.getCtx()), "M_Product_ID", -1 ,
-				false, " M_Product.isActive='Y' AND M_Product.TypeService in ('0','2')");
+				false, " M_Product.isActive='Y' AND (M_Product.TypeService in ('0','2') OR M_Product.isbom = 'Y')");
 		productField = new WSearchEditor ("M_Product_ID", true, false, true, lookup);
 		
 		//  VOL		
 		lookup = MLookupFactory.get(Env.getCtx(), p_WindowNo, DisplayType.TableDir ,
 				1000425, Env.getLanguage(Env.getCtx()), "DU_Vol_ID", -1 ,
-				false, " DU_Vol.isActive='Y' AND trunc(DU_Vol.departdatetime_direct) > trunc(current_date)");
+				false, " DU_Vol.isActive='Y' AND trunc(DU_Vol.departdatetime_direct) >= trunc(current_date-10)");
 		volField = new WTableDirEditor ("DU_Vol_ID", true, false, true, lookup);
 		
 		// Prestation

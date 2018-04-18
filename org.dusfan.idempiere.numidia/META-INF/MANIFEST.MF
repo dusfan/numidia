@@ -10,7 +10,8 @@ Require-Bundle: org.adempiere.base,
  org.adempiere.ui.zk,
  zk
 Service-Component: OSGI-INF/*
-Import-Package: org.compiere.model,
+Import-Package: org.apache.poi.hssf.usermodel,
+ org.compiere.model,
  org.joda.time;version="2.9.7",
  org.zkoss.util.media,
  org.zkoss.zul,

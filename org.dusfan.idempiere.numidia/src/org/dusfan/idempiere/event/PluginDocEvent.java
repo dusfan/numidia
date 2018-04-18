@@ -93,9 +93,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MPayment) {
 					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MBPartner ) {
-					if (!EventPartner.checkCodeClient(po, trxName, ctx))
-						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
-								+ " contacter l administrateur");
+//					if (!EventPartner.checkCodeClient(po, trxName, ctx))
+//						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
+//								+ " contacter l administrateur");
 				}
 				
 				
@@ -106,7 +106,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 				if (po instanceof MBPartner) {
 					EventPartner.setAdresse((MBPartner)po, trxName, ctx);
 					EventPartner.deleteSpace(po, trxName, ctx);
-//					EventPartner.setImage(po, trxName, ctx);
+					EventPartner.setImage(po, trxName, ctx);
 				}
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName);
@@ -130,9 +130,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				}
 				else if (po instanceof MBPartner ) {
-					if (!EventPartner.checkCodeClient(po, trxName, ctx))
-						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
-								+ " contacter l administrateur");
+//					if (!EventPartner.checkCodeClient(po, trxName, ctx))
+//						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
+//								+ " contacter l administrateur");
 				}
 			} // before change
 			// After change
@@ -140,7 +140,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 				if (po instanceof MBPartner) {
 					EventPartner.setAdresse((MBPartner)po, trxName, ctx);
 					EventPartner.deleteSpace(po, trxName, ctx);
-//					EventPartner.setImage(po, trxName, ctx);
+					EventPartner.setImage(po, trxName, ctx);
 				}
 			}
 			// End After change 
