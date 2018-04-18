@@ -36,7 +36,7 @@
     end as modepaiment,
     case when c.isreceipt = 'Y' and c.payamt > 0 then 'Reçu de Paiement Client'
     when c.isreceipt = 'Y' and c.payamt < 0 then 'Rembourssement Client'
-    when c.isreceipt = 'N' and c.payamt < 0 then 'Reçu de Paiement Fournisseur'
+    when c.isreceipt = 'N' and c.payamt > 0 then 'Reçu de Paiement Fournisseur'
     when c.isreceipt = 'N' and c.payamt < 0 then 'Rembourssement Fournisseur' end as typedocument,
     u.description as agent,
     bk.accountno as banque
