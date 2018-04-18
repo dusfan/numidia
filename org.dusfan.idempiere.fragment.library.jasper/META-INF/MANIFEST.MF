@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.dusfan.idempiere.fragment.library.jasper
+Bundle-SymbolicName: org.dusfan.idempiere.fragment.library.jasper
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Dusfan ERP Solution
+Fragment-Host: org.adempiere.report.jasper.library;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: lib/arial.jar,
+ lib/org.dusfan.idempiere.jasper_1.0.0.201803260136.jar,
+ .
