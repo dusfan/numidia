@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d2b42497-cec7-4097-ad33-9660c0b89175">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -56,7 +56,10 @@ pax.value as ppno,
 pax.name_ar || ' ' || pax.name2_ar as bpname,
 (select name from DU_RemiseMoudj where DU_RemiseMoudj_id in (select DU_RemiseMoudj_id 
 	from c_orderline l where l.c_order_id = ord.c_order_id
-)) as remiseM
+)) as remiseM,
+(select value || ' ' || departdatetime_direct from du_vol v where v.du_vol_id in 
+	(select du_vol_id from c_invoice where c_invoice_id = vl.c_invoice_id)
+) as vol
  from c_invoiceline vl
 inner join c_orderline ol on ol.c_orderline_id = vl.c_orderline_id and ol.m_sejour_id > 0
 inner join m_product pr on pr.m_product_id = ol.m_sejour_id
@@ -108,6 +111,7 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 	<field name="remisem" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="remisem"/>
 	</field>
+	<field name="vol" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -148,7 +152,7 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 			<staticText>
 				<reportElement key="" x="1" y="51" width="139" height="16" uuid="aef9acfd-ca85-4fc8-8809-697381300e30"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Details Client:]]></text>
 			</staticText>
@@ -161,6 +165,9 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{value}+"-"+$F{name}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -215,6 +222,13 @@ where v.C_Invoice_ID=$P{RECORD_ID}]]>
 					<font fontName="DejaVu Sans" size="18" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Facture :  " + $F{documentno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-3" positionType="Float" stretchType="RelativeToTallestObject" x="3" y="91" width="207" height="30" uuid="77884f71-0276-404b-be2d-dce84792df72"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vol}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

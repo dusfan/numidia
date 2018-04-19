@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="voocher" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa0e286b-986a-4fa0-babe-2e26b27784de">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="174"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="819"/>
@@ -19,23 +19,23 @@ when v.typeroom='20' then 'Chambre Double'
 when v.typeroom='30' then 'Chambre Triple'
 end as typeroom,
 (select value from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as ppno,
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as ppno,
 (select name || ' ' || name2 from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as bpname,
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as bpname,
 (select name_ar || ' ' || name2_ar from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as bpname_ar,
+(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as bpname_ar,
 (select value || ' ' || name from c_bpartner where c_bpartner_id in 
-(select c_bpartnerrelation_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1)) as codeclient,
-(select description from ad_user where ad_user_id = $P{AD_USER_ID}) as user_name,
+(select c_bpartnerrelation_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as codeclient,
+(select description from ad_user where ad_user_id = v.createdby) as user_name,
 (select imageurl from ad_image where ad_image_id in 
 (select (select logo_id from c_bpartner ib where ib.c_bpartner_id = vl.c_bpartner_id) 
-	from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1
+	from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1
 )) as imageurl,
 v.amoutvh,
 v.value as nvouch,
 (select array_to_string(array(select p.name from m_product p 
 inner join c_orderline l on l.m_product_id = p.m_product_id and p.typeservice='6' where l.c_order_id=vl.c_order_id), ', ') 
-from du_vallocationline vl where vl.du_vallocation_id = v.du_vallocation_id order by vl.du_vallocationline_id desc limit 1) as prestation
+from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1) as prestation
  from du_vallocation v
 inner join du_vol vol on vol.du_vol_id = v.du_vol_id
 inner join du_hotel h on h.du_hotel_id = v.du_hotel_id
