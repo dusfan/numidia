@@ -2,9 +2,9 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentnumidia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="440"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="546"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="503"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="483"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="270"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
 	<parameter name="RECORD_ID" class="java.lang.Integer"/>
@@ -39,8 +39,10 @@
     when c.isreceipt = 'N' and c.payamt > 0 then 'Reçu de Paiement Fournisseur'
     when c.isreceipt = 'N' and c.payamt < 0 then 'Rembourssement Fournisseur' end as typedocument,
     u.description as agent,
-    bk.accountno as banque
+    bk.accountno as banque,
+    cu.ISO_Code as currency
    FROM c_payment c
+   inner join c_currency cu on cu.c_currency_id = c.c_currency_id
    inner join C_BankAccount bk on bk.C_BankAccount_ID = c.C_BankAccount_ID
    join ad_user u on u.ad_user_id = c.createdby
    JOIN c_bpartner bp ON bp.c_bpartner_id = c.c_bpartner_id
@@ -49,10 +51,10 @@
    JOIN c_location loc ON loc.c_location_id = bploc.c_location_id
   WHERE c.docstatus in ('CO', 'CL', 'DR', 'IP') and c.C_Payment_ID=$P{RECORD_ID}]]>
 	</queryString>
-	<field name="c_payment_id" class="java.math.BigDecimal">
+	<field name="c_payment_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="c_payment_id"/>
 	</field>
-	<field name="c_doctype_id" class="java.math.BigDecimal">
+	<field name="c_doctype_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="c_doctype_id"/>
 	</field>
 	<field name="ad_client_id" class="java.lang.Integer">
@@ -111,6 +113,9 @@
 	</field>
 	<field name="banque" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="banque"/>
+	</field>
+	<field name="currency" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="currency"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -283,7 +288,7 @@
 	<detail>
 		<band height="102" splitType="Stretch">
 			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="390" y="56" width="129" height="41" uuid="c597ef72-414e-4618-a835-b244b4c31699">
+				<reportElement x="388" y="60" width="129" height="41" uuid="c597ef72-414e-4618-a835-b244b4c31699">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -292,7 +297,7 @@
 				<textFieldExpression><![CDATA[$F{payamt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="293" y="56" width="95" height="41" uuid="1e42d3ef-5192-4616-a5c0-b4dae68b60e7">
+				<reportElement x="291" y="60" width="95" height="41" uuid="1e42d3ef-5192-4616-a5c0-b4dae68b60e7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -318,14 +323,12 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Mode Paiement : "]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="524" y="56" width="31" height="41" uuid="fc6b4ef3-dbcc-4253-9417-4cf3d606a625">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="517" y="60" width="34" height="41" uuid="8668c584-f277-4cd2-80f1-943c26abc5ab"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["DA"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
