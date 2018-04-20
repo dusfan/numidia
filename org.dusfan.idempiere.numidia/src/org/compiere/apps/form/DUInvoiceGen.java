@@ -59,6 +59,7 @@ public class DUInvoiceGen extends GenForm
 		miniTable.addColumn("C_BPartner_ID");
 		miniTable.addColumn("DateOrdered");
 		miniTable.addColumn("TotalLines");
+		miniTable.addColumn("VOL");
 		//
 		miniTable.setMultiSelection(true);
 		//  set details
@@ -70,6 +71,7 @@ public class DUInvoiceGen extends GenForm
 		miniTable.setColumnClass(5, String.class, true, Msg.translate(Env.getCtx(), "C_BPartner_ID"));
 		miniTable.setColumnClass(6, Timestamp.class, true, Msg.translate(Env.getCtx(), "DateOrdered"));
 		miniTable.setColumnClass(7, BigDecimal.class, true, Msg.translate(Env.getCtx(), "TotalLines"));
+		miniTable.setColumnClass(8, String.class, true, "VOL");
 		//
 		miniTable.autoSize();
 	}
@@ -83,7 +85,7 @@ public class DUInvoiceGen extends GenForm
 	    StringBuilder sql = new StringBuilder(
 	            "SELECT ic.C_Order_ID, o.Name, dt.Name, ic.DocumentNo, "
 	            + " (select value||'-'||name from C_BPartner where C_BPartner_id = ord.C_BPartnerRelation_ID) as code ,bp.name,"
-	            + " ic.DateOrdered, ic.TotalLines "
+	            + " ic.DateOrdered, ic.TotalLines, (select value from du_vol where du_vol.du_vol_id=ord.du_vol_id) as vol "
 	    		// use C_Order instead of C_Invoice_Candidate_v for access purposes, will be replaced later
 	            + "FROM C_Order ic, AD_Org o, C_BPartner bp, C_DocType dt, C_Order ord "
 	            + " WHERE ic.AD_Org_ID=o.AD_Org_ID AND ord.c_order_id = ic.c_order_id "
@@ -191,6 +193,7 @@ public class DUInvoiceGen extends GenForm
 				miniTable.setValueAt(rs.getString(6), row, 5);              //  BPartner
 				miniTable.setValueAt(rs.getTimestamp(7), row, 6);           //  DateOrdered
 				miniTable.setValueAt(rs.getBigDecimal(8), row, 7);          //  TotalLines
+				miniTable.setValueAt(rs.getString(9), row, 8);              //  VOL
 				//  prepare next
 				row++;
 			}

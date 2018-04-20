@@ -93,12 +93,21 @@ public class EventOrder {
 						: Env.ZERO;
 				BigDecimal remiseMargeSP = bp.get_Value("RemiseMargeSP") != null
 						? (BigDecimal) bp.get_Value("RemiseMargeSP") : Env.ZERO;
-				if (remiseMarge.compareTo(Env.ZERO) > 0) {
+				BigDecimal margeVIP = bp.get_Value("margevip") != null
+								? (BigDecimal) bp.get_Value("margevip") : Env.ZERO;
+				
+				if (pr.get_ValueAsString("VIP")!=null && pr.get_ValueAsString("VIP").equals("Y") ) {
+					BigDecimal price = line.getPriceActual().subtract(margeVIP);
+					line.setPriceActual(price);
+					line.setPriceEntered(price);
+					line.setLineNetAmt();
+				} else {
 					BigDecimal price = line.getPriceActual().subtract(remiseMarge);
 					line.setPriceActual(price);
 					line.setPriceEntered(price);
 					line.setLineNetAmt();
 				}
+
 				if (remiseMargeSP.compareTo(Env.ZERO) > 0) {
 					line.setPriceActual(remiseMargeSP);
 					line.setPriceEntered(remiseMargeSP);
