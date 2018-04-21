@@ -18,7 +18,7 @@ public class CalloutNumidiaInvoice implements IColumnCallout{
 			else {
 				int c_doctype_id = (int) mTab.getValue("C_DocTypeTarget_ID");
 				if (c_doctype_id == 1000051 || c_doctype_id == 1000052 ||
-						c_doctype_id == 1000054 || c_doctype_id == 1000006 || c_doctype_id == 1000055)
+						c_doctype_id == 1000054 || c_doctype_id == 1000006 || c_doctype_id == 1000055 || c_doctype_id ==1000056)
 					mTab.setValue("C_Activity_ID", 1000001);
 			}
 
