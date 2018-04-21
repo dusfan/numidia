@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="printreservation" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8c8a09b-671c-4db3-bb0d-41bb4b8bd010">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="208"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="785"/>
@@ -194,7 +194,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 	<title>
 		<band height="56" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-11" x="-40" y="0" width="800" height="40" uuid="5a0a28f2-5b52-4624-822a-e7850459a611">
+				<reportElement key="subreport-11" x="1" y="0" width="800" height="40" uuid="5a0a28f2-5b52-4624-822a-e7850459a611">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="AD_ORG_ID">
@@ -262,7 +262,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="24" splitType="Stretch">
+		<band height="19" splitType="Stretch">
 			<textField>
 				<reportElement x="651" y="0" width="39" height="19" uuid="7003a7dd-be64-4dfa-b49d-0c95a9ca8e74"/>
 				<box>
@@ -424,7 +424,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="45" splitType="Stretch">
+		<band height="41" splitType="Stretch">
 			<textField>
 				<reportElement x="101" y="0" width="74" height="40" uuid="5ec05e0e-436c-4451-a725-0aeeba94bc12">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
