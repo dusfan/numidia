@@ -181,7 +181,7 @@
 				<textFieldExpression><![CDATA["N°"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="39" y="0" width="180" height="22" uuid="23c96046-1e0d-4cd2-9b5d-bb56d414e4d0">
+				<reportElement x="39" y="0" width="101" height="22" uuid="23c96046-1e0d-4cd2-9b5d-bb56d414e4d0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -196,7 +196,7 @@
 				<textFieldExpression><![CDATA["Article"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="219" y="0" width="180" height="22" uuid="a859e46e-6754-45e6-a395-6892581506cd">
+				<reportElement x="140" y="0" width="238" height="22" uuid="a859e46e-6754-45e6-a395-6892581506cd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -211,7 +211,7 @@
 				<textFieldExpression><![CDATA["Description"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="0" width="41" height="22" uuid="fb8fb073-178c-4980-9549-b48b21c56cdf">
+				<reportElement x="378" y="0" width="41" height="22" uuid="fb8fb073-178c-4980-9549-b48b21c56cdf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -226,7 +226,7 @@
 				<textFieldExpression><![CDATA["QTY"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="440" y="0" width="41" height="22" uuid="e9343056-618a-4d67-a11f-62fda5e6e2cd">
+				<reportElement x="419" y="0" width="62" height="22" uuid="e9343056-618a-4d67-a11f-62fda5e6e2cd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -260,7 +260,7 @@
 	<detail>
 		<band height="41" splitType="Stretch">
 			<textField>
-				<reportElement x="219" y="0" width="180" height="40" uuid="2f9f27e6-92f3-4d6d-896b-c7ec312bab85">
+				<reportElement x="140" y="0" width="238" height="40" uuid="2f9f27e6-92f3-4d6d-896b-c7ec312bab85">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2">
@@ -274,8 +274,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="440" y="0" width="41" height="40" uuid="d7785182-5a88-4a3d-97c1-8bac59fdc690">
+			<textField pattern="#,##0.##">
+				<reportElement x="419" y="0" width="62" height="40" uuid="d7785182-5a88-4a3d-97c1-8bac59fdc690">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -304,7 +304,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="481" y="0" width="71" height="40" uuid="b96971da-8f08-4896-8008-b09f8c7d82ea">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -320,7 +320,7 @@
 				<textFieldExpression><![CDATA[$F{linenetamt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="39" y="0" width="180" height="40" uuid="68a825c7-6de5-43c7-b5ab-7b99c4af5583">
+				<reportElement x="39" y="0" width="101" height="40" uuid="68a825c7-6de5-43c7-b5ab-7b99c4af5583">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2">
@@ -335,7 +335,7 @@
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="399" y="0" width="41" height="40" uuid="a2b8a111-8c6d-4796-b31f-61be40680e83">
+				<reportElement x="378" y="0" width="41" height="40" uuid="a2b8a111-8c6d-4796-b31f-61be40680e83">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -461,7 +461,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{modepaiment}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###" isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="390" y="41" width="129" height="41" uuid="9184a997-4382-41a9-bc80-5ca113eca76d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
