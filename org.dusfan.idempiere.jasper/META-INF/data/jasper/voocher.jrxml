@@ -403,20 +403,6 @@ where vol.du_vol_id=$P{RECORD_ID} and v.typeroom in ('10','20','30')]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Prestations :"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="324" y="490" width="190" height="17" uuid="cf11c73e-252d-4883-8438-8619ff5aae3b"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isUnderline="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Prestations :"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement stretchType="RelativeToBandHeight" x="314" y="516" width="210" height="102" uuid="d8869eb0-3b3d-4159-8d23-a3015bf7baea"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Arial" size="12" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{prestation}!=null ? $F{prestation} : ""]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 </jasperReport>
