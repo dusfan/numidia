@@ -41,6 +41,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoiceLine.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MBPartner.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MBPartner.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
 		
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MBPartner.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrder.Table_Name);
@@ -91,13 +92,16 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventOrder.setC_Activity_ID(MInvoice.Table_Name, po, ctx,trxName);
 					EventInvoice.setDateAcct (po);
 				} else if (po instanceof MPayment) {
+					if (!EventPayment.CheckPaymentRules(po, ctx, trxName)) {
+						throw new AdempiereUserError("Attention "
+								+ "Le mode de paiement et la banque ne sont pas compatible");
+					}
 					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MBPartner ) {
 //					if (!EventPartner.checkCodeClient(po, trxName, ctx))
 //						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
 //								+ " contacter l administrateur");
-				}
-				
+				}				
 				
 			} // end before new
 			
