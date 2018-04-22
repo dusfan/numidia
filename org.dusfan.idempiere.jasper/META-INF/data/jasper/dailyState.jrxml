@@ -58,7 +58,7 @@
        array_to_string(array(select c.isActive from C_Charge c  inner join c_orderline l on l.C_Charge_ID = c.C_Charge_ID
 	and c.C_Charge_ID = 1000000 where l.c_order_id=o.c_order_id
        ), ', ') as tax,
-       array_to_string(array(select mj.name from DU_RemiseMoudj mj  inner join c_orderline l on l.C_Charge_ID = mj.DU_RemiseMoudj_ID
+       array_to_string(array(select mj.name from DU_RemiseMoudj mj  inner join c_orderline l on l.DU_RemiseMoudj_ID = mj.DU_RemiseMoudj_ID
 	where l.c_order_id=o.c_order_id
        ), ', ') as remise
 FROM   c_order o
@@ -103,7 +103,7 @@ order by cod.c_bpartner_id, o.salesrep_id]]>
 	<field name="codbalance" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="codbalance"/>
 	</field>
-	<field name="age" class="java.lang.Double">
+	<field name="age" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="age"/>
 	</field>
 	<field name="departdatetime_direct" class="java.sql.Timestamp">
@@ -632,7 +632,7 @@ order by cod.c_bpartner_id, o.salesrep_id]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{age}  < 2]]></printWhenExpression>
 				</reportElement>
-				<box leftPadding="10" rightPadding="0">
+				<box leftPadding="5" rightPadding="0">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -646,7 +646,7 @@ order by cod.c_bpartner_id, o.salesrep_id]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{age}  >=2 && $F{age} < 12]]></printWhenExpression>
 				</reportElement>
-				<box leftPadding="10">
+				<box leftPadding="5">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -751,8 +751,10 @@ order by cod.c_bpartner_id, o.salesrep_id]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled"/>
-				<textFieldExpression><![CDATA[$F{tax}]]></textFieldExpression>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tax}.equals( "Y" ) ?  "X" : ""]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###;(#,##0.###-)">
 				<reportElement x="559" y="0" width="46" height="28" uuid="7455e64a-6324-4999-83c4-f5aed6075226">
