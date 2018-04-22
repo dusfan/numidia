@@ -153,7 +153,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="48">
+			<band height="45">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
 					<reportElement x="430" y="3" width="370" height="21" uuid="7ba48052-90f1-4740-8441-e44b1e580316">
@@ -252,7 +252,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{AD_User_ID}!=null ? $F{createdby} : "GLOBALE"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{AD_User_ID}!=null ?  " "+$F{createdby} : " GLOBALE"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="540" y="-9" width="230" height="34" uuid="87366c3f-57e1-4612-8e55-50133dfb02ea"/>
