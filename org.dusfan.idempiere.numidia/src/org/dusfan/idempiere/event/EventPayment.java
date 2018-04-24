@@ -2,6 +2,7 @@ package org.dusfan.idempiere.event;
 
 import java.util.Properties;
 
+import org.compiere.model.MBankAccount;
 import org.compiere.model.MPayment;
 import org.compiere.model.PO;
 
@@ -14,11 +15,24 @@ public class EventPayment {
 					pay.getC_BankAccount_ID()==1000003)) {
 				return false;
 			}
-			if (pay.getTenderType().equals("K") && pay.getC_BankAccount_ID()==1000000) {
+			if (pay.getTenderType().equals("K") && (pay.getC_BankAccount_ID()==1000000 ||
+					pay.getC_BankAccount_ID()==1000006 || pay.getC_BankAccount_ID()==1000007 ||
+							pay.getC_BankAccount_ID()==1000004 || pay.getC_BankAccount_ID()==1000005)) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
+	public static boolean checkCaisseCurrency (PO po, Properties ctx, String trxName) {
+		MPayment pay = (MPayment)po;
+		if (pay.getAD_Client_ID() == 1000002) {
+			MBankAccount bk = new MBankAccount(ctx, pay.getC_BankAccount_ID(), trxName);
+			if (pay.getC_Currency_ID()!=bk.getC_Currency_ID()) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
 }

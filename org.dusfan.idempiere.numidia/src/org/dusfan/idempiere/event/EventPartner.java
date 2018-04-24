@@ -50,7 +50,7 @@ public class EventPartner {
 			String valuebp =  bp.getValue().trim();
 			String imageUrl = DB.getSQLValueString(trxName, 
 					"Select value from du_imageurl where ad_client_id =?",Env.getAD_Client_ID(ctx));
-			imageUrl = "http://192.168.0.80/img/SCANMAWLED2018/"+valuebp + ".jpg";
+			imageUrl += valuebp + ".jpg";
 //			imageUrl = "Refresh24.png"; // test
 			MImage img = null;
 			if (bp.getLogo_ID() > 0) {

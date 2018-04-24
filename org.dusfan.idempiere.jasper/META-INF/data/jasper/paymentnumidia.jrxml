@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentnumidia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="503"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="483"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="270"/>
@@ -288,7 +288,7 @@
 	<detail>
 		<band height="102" splitType="Stretch">
 			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="388" y="60" width="129" height="41" uuid="c597ef72-414e-4618-a835-b244b4c31699">
+				<reportElement x="385" y="60" width="129" height="41" uuid="c597ef72-414e-4618-a835-b244b4c31699">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -297,7 +297,7 @@
 				<textFieldExpression><![CDATA[$F{payamt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="291" y="60" width="95" height="41" uuid="1e42d3ef-5192-4616-a5c0-b4dae68b60e7">
+				<reportElement x="288" y="60" width="95" height="41" uuid="1e42d3ef-5192-4616-a5c0-b4dae68b60e7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -326,7 +326,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="517" y="60" width="34" height="41" uuid="8668c584-f277-4cd2-80f1-943c26abc5ab"/>
 				<textElement verticalAlignment="Middle">
-					<font size="11" isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>

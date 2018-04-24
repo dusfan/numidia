@@ -96,6 +96,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 						throw new AdempiereUserError("Attention "
 								+ "Le mode de paiement et la banque ne sont pas compatible");
 					}
+					if (!EventPayment.checkCaisseCurrency(po, ctx, trxName)) {
+						throw new AdempiereUserError("Attention "
+								+ "La caisse et la devise du paiement ne sont pas compatible");
+					}
 					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MBPartner ) {
 //					if (!EventPartner.checkCodeClient(po, trxName, ctx))
