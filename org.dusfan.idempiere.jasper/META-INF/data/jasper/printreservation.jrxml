@@ -451,7 +451,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</textField>
 			<textField>
 				<reportElement x="217" y="0" width="201" height="40" uuid="a251ecc3-7062-4315-82e8-249bd8b5ecf1"/>
-				<box>
+				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -529,7 +529,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</textField>
 			<textField>
 				<reportElement x="150" y="0" width="66" height="40" uuid="6d3b7d89-adc2-48dc-aa4e-03cb46503c54"/>
-				<box>
+				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -542,7 +542,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</textField>
 			<textField>
 				<reportElement x="529" y="0" width="75" height="40" uuid="d1dc2135-3fc3-48ce-8515-7c414a2e32a8"/>
-				<box>
+				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -602,7 +602,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</image>
 			<textField>
 				<reportElement x="418" y="0" width="52" height="40" uuid="44e20674-b05c-4b4d-b3a0-e6c3546f1ac8"/>
-				<box>
+				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -615,7 +615,7 @@ and ($P{AD_User_ID} is null or i.createdby = $P{AD_User_ID}) order by i.createdb
 			</textField>
 			<textField>
 				<reportElement x="471" y="0" width="58" height="40" uuid="85562c1c-9bc8-4fb0-b4e6-829f14496754"/>
-				<box>
+				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
