@@ -5,6 +5,7 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Table_CH" mode="Opaque" backcolor="#E6FFE6">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -99,8 +100,6 @@ INNER JOIN C_Location orgloc
 ON Orgloc.C_Location_Id = Orginfo.C_Location_Id
 INNER JOIN ad_org org
 ON Org.Ad_Org_Id = i.ad_org_id
-LEFT JOIN Ad_Image img
-ON Img.Ad_Image_Id = orginfo.logo_id
 INNER JOIN C_Currency cur
 ON cur.c_currency_id = I.C_Currency_Id
 WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
@@ -128,15 +127,15 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 	<title>
 		<band height="33" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="28" uuid="e5373826-7fb3-4543-8a8d-d0a3fb6c08ba"/>
+				<reportElement x="0" y="0" width="555" height="28" uuid="9a1dc3fe-9872-4d38-9de1-d7302bbd5ee9"/>
 				<subreportParameter name="AD_ORG_ID">
 					<subreportParameterExpression><![CDATA[$F{ad_org_id}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="BASE_PATH">
-					<subreportParameterExpression><![CDATA[$P{BASE_PATH}]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="AD_CLIENT_ID">
 					<subreportParameterExpression><![CDATA[$F{ad_client_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="RESOURCE_DIR">
+					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"CompanyHeader.jasper"]]></subreportExpression>
