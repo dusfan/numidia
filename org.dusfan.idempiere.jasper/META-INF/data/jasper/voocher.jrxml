@@ -19,27 +19,27 @@ when v.typeroom='20' then 'Chambre Double'
 when v.typeroom='30' then 'Chambre Triple'
 end as typeroom,
 (select value from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as ppno,
+(select c_bpartner_id from du_vallocationline vl where vl.du_vallocation_id = v.du_vallocation_id order by isavailable desc, sexe asc limit 1)) as ppno,
 (select name || ' ' || name2 from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as bpname,
+(select c_bpartner_id from du_vallocationline vl where  vl.du_vallocation_id = v.du_vallocation_id order by isavailable desc, sexe asc limit 1)) as bpname,
 (select name_ar || ' ' || name2_ar from c_bpartner where c_bpartner_id in 
-(select c_bpartner_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as bpname_ar,
+(select c_bpartner_id from du_vallocationline vl where  vl.du_vallocation_id = v.du_vallocation_id order by isavailable desc, sexe asc limit 1)) as bpname_ar,
 (select value || ' ' || name from c_bpartner where c_bpartner_id in 
-(select c_bpartnerrelation_id from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1)) as codeclient,
+(select c_bpartnerrelation_id from du_vallocationline vl where  vl.du_vallocation_id = v.du_vallocation_id order by isavailable desc, sexe asc limit 1)) as codeclient,
 (select description from ad_user where ad_user_id = v.createdby) as user_name,
 (select imageurl from ad_image where ad_image_id in 
 (select (select logo_id from c_bpartner ib where ib.c_bpartner_id = vl.c_bpartner_id) 
-	from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1
+	from du_vallocationline vl where  vl.du_vallocation_id = v.du_vallocation_id order by isavailable desc, sexe asc limit 1
 )) as imageurl,
 v.amoutvh,
 v.value as nvouch,
 (select array_to_string(array(select p.name from m_product p 
 inner join c_orderline l on l.m_product_id = p.m_product_id and p.typeservice='6' where l.c_order_id=vl.c_order_id), ', ') 
-from du_vallocationline vl where vl.IsAvailable='Y' and vl.du_vallocation_id = v.du_vallocation_id limit 1) as prestation
+from du_vallocationline vl where  vl.du_vallocation_id = v.du_vallocation_id limit 1) as prestation
  from du_vallocation v
 inner join du_vol vol on vol.du_vol_id = v.du_vol_id
 inner join du_hotel h on h.du_hotel_id = v.du_hotel_id
-where vol.du_vol_id=$P{RECORD_ID} and v.typeroom in ('10','20','30')]]>
+where vol.du_vol_id=$P{RECORD_ID}  and v.typeroom in ('10','20','30')]]>
 	</queryString>
 	<field name="hotel" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="hotel"/>
@@ -369,7 +369,7 @@ where vol.du_vol_id=$P{RECORD_ID} and v.typeroom in ('10','20','30')]]>
 					<jr:codeExpression><![CDATA[$F{ppno}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
-			<image hAlign="Center" vAlign="Middle">
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
 				<reportElement x="48" y="214" width="60" height="57" uuid="fc763607-4347-4500-bf12-238ed247a3bd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -377,17 +377,17 @@ where vol.du_vol_id=$P{RECORD_ID} and v.typeroom in ('10','20','30')]]>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
-				<imageExpression><![CDATA[org.dusfan.idempiere.jasper.Convert.isExistFile($F{imageurl}) ? $F{imageurl} :$P{RESOURCE_DIR} + "img/inconu.png"]]></imageExpression>
+				<imageExpression><![CDATA[$F{imageurl}]]></imageExpression>
 			</image>
-			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="44" y="579" width="60" height="57" uuid="3bdbc9c3-ebda-4a05-a89a-fb4282ce1ae6">
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement stretchType="RelativeToTallestObject" x="44" y="579" width="60" height="57" uuid="3bdbc9c3-ebda-4a05-a89a-fb4282ce1ae6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
-				<imageExpression><![CDATA[org.dusfan.idempiere.jasper.Convert.isExistFile($F{imageurl}) ? $F{imageurl} :$P{RESOURCE_DIR} + "img/inconu.png"]]></imageExpression>
+				<imageExpression><![CDATA[$F{imageurl}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="312" y="153" width="210" height="94" uuid="cee2705e-6d52-49ca-a9ed-f17cbbc955ef"/>
