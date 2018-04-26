@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bankstatment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7eb28c32-9d0e-45e2-8cca-61a93ae7fc98">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="160"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -19,7 +19,9 @@ case when b.docstatus='DR' then
 'Achevé' else 'Annulé' end as docstatus ,
 ch.name as charge,
 b.statementdifference as sold,
-cr.iso_code as currency
+cr.iso_code as currency,
+b.BeginningBalance,
+b.EndingBalance
 from C_BankStatement b
 inner join C_BankAccount act on act.C_BankAccount_ID = b.C_BankAccount_ID
 inner join C_Currency cr on cr.C_Currency_ID = act.C_Currency_ID
@@ -70,7 +72,15 @@ order by p.documentno]]>
 	<field name="sold" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="sold"/>
 	</field>
-	<field name="currency" class="java.lang.String"/>
+	<field name="currency" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="currency"/>
+	</field>
+	<field name="beginningbalance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="beginningbalance"/>
+	</field>
+	<field name="endingbalance" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="endingbalance"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -284,26 +294,120 @@ order by p.documentno]]>
 		</band>
 	</detail>
 	<lastPageFooter>
-		<band height="50">
+		<band height="79">
 			<textField pattern="#,##0.###">
-				<reportElement x="120" y="10" width="158" height="23" uuid="71cb0c3a-1874-4cb4-b175-cc6daf2cd75b"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<reportElement x="150" y="10" width="128" height="23" uuid="71cb0c3a-1874-4cb4-b175-cc6daf2cd75b"/>
+				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Total de l'extrait : "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Solde initial "]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##">
-				<reportElement x="278" y="10" width="142" height="23" uuid="a89ea955-0497-43db-a964-1d0d4c000135"/>
+				<reportElement x="278" y="10" width="112" height="23" uuid="a89ea955-0497-43db-a964-1d0d4c000135"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="3">
 					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sold}+" "+$F{currency}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{beginningbalance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###">
+				<reportElement x="150" y="33" width="128" height="23" uuid="6e77ca2d-b271-4633-af34-63f461919727"/>
+				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total mouvement"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##">
+				<reportElement x="278" y="33" width="112" height="23" uuid="0102a2f6-b64d-4818-9d42-ce189947b3ff"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sold}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###">
+				<reportElement x="150" y="56" width="128" height="23" uuid="4db12626-f0f0-4803-9260-1798ec3c686c"/>
+				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Solde final"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##">
+				<reportElement x="278" y="56" width="112" height="23" uuid="82c3927f-34ad-4b27-917c-998ea5dcc8de"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{endingbalance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="10" width="30" height="23" uuid="43828ee5-ffdf-455e-8f7e-9cb29fb371ea"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="33" width="30" height="23" uuid="5cba1eab-1fcc-4c49-8cd2-7816d7d6848e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="56" width="30" height="23" uuid="1c4abf15-e467-443e-891f-35db79c6b17c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>
