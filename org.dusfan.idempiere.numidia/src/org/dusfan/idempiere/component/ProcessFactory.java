@@ -11,6 +11,7 @@ import org.dusfan.idempiere.process.ExportSrdox;
 import org.dusfan.idempiere.process.ExportSrdox2;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
+import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
 import org.dusfan.idempiere.process.SetGratuiteSV;
 import org.dusfan.idempiere.process.SetTagPasseport;
@@ -64,6 +65,9 @@ public class ProcessFactory implements IProcessFactory {
 		}
 		else if (className.equals(ExportSrdox2.class.getName())) {
 			return new ExportSrdox2();
+		}
+		else if (className.equals(ImportPartnerOnly.class.getName())){
+			return new ImportPartnerOnly();
 		}
      		
 		return null;

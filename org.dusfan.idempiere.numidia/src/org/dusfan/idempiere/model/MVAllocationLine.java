@@ -3,6 +3,7 @@ package org.dusfan.idempiere.model;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+import org.compiere.model.MBPartner;
 import org.compiere.util.DB;
 
 public class MVAllocationLine extends X_DU_VAllocationLine {
@@ -32,6 +33,8 @@ public class MVAllocationLine extends X_DU_VAllocationLine {
 	protected boolean beforeSave(boolean newRecord) {
 		if (getDU_VolLine_ID() > 0) {
 			MVolLine vl = new MVolLine(getCtx(), getDU_VolLine_ID(), get_TrxName());
+			MBPartner bp = new MBPartner(getCtx(), vl.getC_BPartner_ID(), get_TrxName());
+			set_Value("Sexe", bp.get_Value("Sexe"));
 			setC_BPartner_ID(vl.getC_BPartner_ID());
 			setC_BPartnerRelation_ID(vl.getC_BPartnerRelation_ID());
 			setC_Order_ID(vl.getC_Order_ID());
