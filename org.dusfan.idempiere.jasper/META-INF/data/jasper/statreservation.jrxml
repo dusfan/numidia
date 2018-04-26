@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="statreservation" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d38235b-a746-4b20-be7f-008ecd7fa75e">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="172"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="817"/>
@@ -21,7 +21,7 @@ inner join du_vol v on v.du_vol_id = vl.du_vol_id
 inner join c_order ord on ord.c_order_id = vl.c_order_id
 inner join DU_Compa cp on cp.DU_Compa_ID = v.DU_Compa_ID
 inner join c_bpartner bp on bp.c_bpartner_id = vl.c_bpartner_id
-where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.c_bpartnerrelation_id]]>
+where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.c_bpartnerrelation_id, bp.name]]>
 	</queryString>
 	<field name="ad_org_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
@@ -265,11 +265,11 @@ where vl.isprinted='Y' and v.du_vol_id = $P{RECORD_ID} order by vl.c_bpartnerrel
 		<band height="20" splitType="Stretch">
 			<textField>
 				<reportElement x="130" y="0" width="110" height="19" uuid="b6f4b712-336e-43cd-9f10-ce43e8a95d08"/>
-				<box>
+				<box rightPadding="0">
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{bpname}]]></textFieldExpression>
 			</textField>
 			<textField>
