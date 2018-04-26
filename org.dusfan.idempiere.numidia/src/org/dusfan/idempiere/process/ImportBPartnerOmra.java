@@ -15,6 +15,7 @@ import org.adempiere.process.ImportProcess;
 import org.compiere.model.MBPGroup;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MBPartnerLocation;
+import org.compiere.model.MCharge;
 import org.compiere.model.MLocation;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
@@ -575,7 +576,9 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		if (imp.getC_Charge_ID() > 0) {
 			MOrderLine l2 = new MOrderLine(order);
 			l2.setC_Charge_ID(imp.getC_Charge_ID());
+			MCharge ch = new MCharge(getCtx(), imp.getC_Charge_ID(), get_TrxName());
 			l2.setQty(Env.ONE);
+			l2.setPrice(ch.getChargeAmt());
 			l2.setC_Activity_ID(1000001);
 			l2.saveEx();
 		}
@@ -586,6 +589,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 			l3.setM_Product_ID(imp.getDU_Presta_ID());
 			l3.setQty(Env.ONE);
 			l3.setC_Activity_ID(1000001);
+			l3.setLineNetAmt(); // Update for price
 			l3.saveEx();
 		}
 		
