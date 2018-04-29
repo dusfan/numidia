@@ -71,7 +71,7 @@ END AS "GRANDTOTAL",
 (select c_orderline_id  from c_invoiceline vl where vl.c_invoice_id = inv.c_invoice_id )) as inf,
 (select coalesce(count(1),0) from c_orderline l where l.DU_RemiseChd_ID > 0 and l.c_orderline_id in 
 (select c_orderline_id  from c_invoiceline vl where vl.c_invoice_id = inv.c_invoice_id )) as chdavlit,
-(select value||'-'||departdatetime_direct from du_vol v where v.du_vol_id =inv.du_vol_id) as vol
+(select value||'-'|| to_char(departdatetime_direct, 'DD-MM-YYYY') from du_vol v where v.du_vol_id =inv.du_vol_id) as vol
 from C_INVOICE inv,C_DOCTYPE doc
 WHERE inv.C_DOCTYPE_ID=doc.C_DOCTYPE_ID AND inv.DOCSTATUS IN ('CO','CL')
 AND doc.docbasetype IN ('ARI','ARC')
