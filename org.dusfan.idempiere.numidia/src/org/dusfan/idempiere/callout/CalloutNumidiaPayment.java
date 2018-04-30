@@ -40,12 +40,12 @@ public class CalloutNumidiaPayment implements IColumnCallout{
  				
 			}
 		}
-		else if (mField.getColumnName().equals("C_Invoice_ID")) {
-			if (value!=null) {
-				MInvoice inv = new MInvoice(ctx, (int) value, null);
-				mTab.setValue("DateAcct", inv.getDateInvoiced());
-			}
-		}
+//		else if (mField.getColumnName().equals("C_Invoice_ID")) {
+//			if (value!=null) {
+//				MInvoice inv = new MInvoice(ctx, (int) value, null);
+//				mTab.setValue("DateAcct", inv.getDateInvoiced());
+//			}
+//		}
 		return null;
 	}
 
