@@ -161,20 +161,36 @@ public class EventOrder {
 			}
 		} else if (type.equals(MInvoice.Table_Name)) {
 			MInvoice inv = (MInvoice) po;
-			if (inv.getC_DocType_ID() == 1000051 && inv.getC_Order_ID() > 0) {
-				MOrder ord = new MOrder(ctx, inv.getC_Order_ID(), trxName);
-				inv.set_ValueNoCheck("C_BPartnerRelation_ID", ord.get_Value("C_BPartnerRelation_ID"));
+			if (inv.getAD_Org_ID() == 1000002) {
+				if (inv.getC_DocType_ID() == 1000051 && inv.getC_Order_ID() > 0) {
+					MOrder ord = new MOrder(ctx, inv.getC_Order_ID(), trxName);
+					inv.set_ValueNoCheck("C_BPartnerRelation_ID", ord.get_Value("C_BPartnerRelation_ID"));
+				}
+				else
+				{
+					int c_bpartner_id = inv.getC_BPartner_ID();
+					int codeclient = DB.getSQLValue(null, 
+							"Select C_BPartnerRelation_ID from c_bpartner where c_bpartner_id ="+ c_bpartner_id);
+					if (codeclient > 0) {
+						if (codeclient != 1000000)
+							inv.set_ValueNoCheck("C_BPartnerRelation_ID", codeclient);
+						else
+							inv.set_ValueNoCheck("C_BPartnerRelation_ID", c_bpartner_id); // mettre le code client
+					}
+				}
 			}
+		
 
-		} else if (type.equals(MPayment.Table_Name)) {
-			MPayment pay = (MPayment) po;
-			if (pay.getC_DocType_ID() == 1000049) {
-				int codeclient = DB.getSQLValue(trxName, "select c_bpartner_id from c_bpartner where value='470200'");
-				pay.set_ValueNoCheck("C_BPartnerRelation_ID", codeclient);
-			} else if (pay.getC_DocType_ID() == 1000050) {
-				pay.set_ValueNoCheck("C_BPartnerRelation_ID", pay.getC_BPartner_ID());
-			}
-		}
+    	}
+			//else if (type.equals(MPayment.Table_Name)) {
+//			MPayment pay = (MPayment) po;
+//			if (pay.getC_DocType_ID() == 1000049) {
+//				int codeclient = DB.getSQLValue(trxName, "select c_bpartner_id from c_bpartner where value='470200'");
+//				pay.set_ValueNoCheck("C_BPartnerRelation_ID", codeclient);
+//			} else if (pay.getC_DocType_ID() == 1000050) {
+//				pay.set_ValueNoCheck("C_BPartnerRelation_ID", pay.getC_BPartner_ID());
+//			}
+//		}
 	}
 
 	// Mettre la date de l ordre de vente paraport a la date de depart de vol
