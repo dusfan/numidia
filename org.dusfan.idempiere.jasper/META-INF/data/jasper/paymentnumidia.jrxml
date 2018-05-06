@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentnumidia" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="503"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="483"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="270"/>
@@ -118,7 +118,9 @@
 		<property name="com.jaspersoft.studio.field.label" value="currency"/>
 	</field>
 	<background>
-		<band splitType="Stretch"/>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
 	</background>
 	<title>
 		<band height="56" splitType="Stretch">
@@ -278,6 +280,18 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{banque}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="197" y="186" width="160" height="22" uuid="5b24059a-87bf-4c16-bb5f-d7757e0d9b8b">
+					<printWhenExpression><![CDATA[$F{codeclient}.equals("800800")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["HADJ "+Calendar.getInstance().get(Calendar.YEAR)]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -286,7 +300,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="102" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<textField pattern="#,##0.###" isBlankWhenNull="true">
 				<reportElement x="385" y="60" width="129" height="41" uuid="c597ef72-414e-4618-a835-b244b4c31699">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -330,6 +344,18 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="16" y="19" width="160" height="60" uuid="5211ec23-a3ea-4dbe-a689-c0e3447a236d">
+					<printWhenExpression><![CDATA[$F{codeclient}.equals("800800")]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["HADJ " + Calendar.getInstance().get(Calendar.YEAR)]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -343,23 +369,16 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="86" splitType="Stretch">
+		<band height="53" splitType="Stretch">
 			<textField>
-				<reportElement x="38" y="29" width="115" height="17" uuid="e43c45a4-46d4-446c-9553-74e0609ec67c">
+				<reportElement x="15" y="12" width="115" height="17" uuid="e43c45a4-46d4-446c-9553-74e0609ec67c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA["Signature Agent : "]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="367" y="31" width="115" height="17" uuid="49bf308d-e351-443e-84e1-6c0742d108c1">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Signature Client : "]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="39" y="53" width="221" height="17" uuid="b7cb64ab-33cc-4ac9-960e-535aebc16ac0">
+				<reportElement x="16" y="36" width="221" height="17" uuid="b7cb64ab-33cc-4ac9-960e-535aebc16ac0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
