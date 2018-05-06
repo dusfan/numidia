@@ -85,6 +85,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
+					if (!EventOrder.checkHadjClient(po, ctx, trxName))
+						throw new AdempiereUserError("Le type de document et "
+								+ "le code client ne sont pas compatible");
 					EventOrder.setC_Activity_ID(MOrder.Table_Name, po, ctx,trxName);
 					EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
 					EventOrder.setDateOrderedByFlight(po, ctx, trxName);
@@ -100,6 +103,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 						throw new AdempiereUserError("Attention "
 								+ "La caisse et la devise du paiement ne sont pas compatible");
 					}
+					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
+						throw new AdempiereUserError("Attention "
+								+ "Le code client Hadj et la caisse ne sont pas compatible");
 					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MBPartner ) {
 //					if (!EventPartner.checkCodeClient(po, trxName, ctx))

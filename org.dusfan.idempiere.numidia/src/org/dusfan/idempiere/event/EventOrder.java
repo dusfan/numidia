@@ -60,19 +60,19 @@ public class EventOrder {
 				}
 				MBPartner bp = new MBPartner(ctx, line.getC_BPartner_ID(), trxName);
 				MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
-				if (bp.get_ValueAsString("isTaxSAR").equals("Y") && ord.getC_Activity_ID() == 1000001) {
-					int no = DB.getSQLValue(trxName, "Select c_charge_id from c_orderline where c_order_id =" + 1000000
-							+ " and c_orderline_id = " + ord.getC_Order_ID());
-					if (no > 0)
-						return;
-					else {
-						MOrderLine chline = new MOrderLine(ord);
-						chline.setC_Charge_ID(1000000);
-						chline.setQty(Env.ONE);
-						chline.saveEx();
-					}
-
-				}
+//				if (bp.get_ValueAsString("isTaxSAR").equals("Y") && ord.getC_Activity_ID() == 1000001) {
+//					int no = DB.getSQLValue(trxName, "Select c_charge_id from c_orderline where c_order_id =" + 1000000
+//							+ " and c_orderline_id = " + ord.getC_Order_ID());
+//					if (no > 0)
+//						return;
+//					else {
+//						MOrderLine chline = new MOrderLine(ord);
+//						chline.setC_Charge_ID(1000000);
+//						chline.setQty(Env.ONE);
+//						chline.saveEx();
+//					}
+//
+//				}
 			} else {
 				line.set_ValueNoCheck("M_Sejour_ID", null);
 				line.set_ValueNoCheck("TypeRoom", null);
@@ -154,7 +154,7 @@ public class EventOrder {
 			MOrder ord = (MOrder) po;
 			MBPartner bp = new MBPartner(ctx, ord.getC_BPartner_ID(), trxName);
 			if (ord.getC_DocTypeTarget_ID() == 1000047 
-					&& bp.get_ValueAsInt("C_BPartnerRelation_ID")!=1000147) {
+					&& bp.get_ValueAsInt("C_BPartnerRelation_ID")!=1000147) { // si le type de document comptoir mettre le code client particulier
 				int c_BPartnerRelation_ID = DB.getSQLValue(null,
 						"select c_bpartner_id from c_bpartner where value = '470200'");
 				ord.set_ValueNoCheck("C_BPartnerRelation_ID", c_BPartnerRelation_ID);
@@ -206,7 +206,7 @@ public class EventOrder {
 	public static void addFlightLine(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
 		if (order.isSOTrx() && order.get_ValueAsInt("DU_Vol_ID") > 0
-				&& (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048)) {
+				&& (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048 || order.getC_DocType_ID()==1000057)) {
 			String sql = "Select du_volLine_id from du_volLine where c_order_id =" + order.getC_Order_ID();
 			int du_mvolline_id = DB.getSQLValue(trxName, sql);
 			if (du_mvolline_id > 0) {
@@ -238,7 +238,8 @@ public class EventOrder {
 
 	public static void deleteFlight(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
-		if (order.isSOTrx() && (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048)) {
+		if (order.isSOTrx() && (order.getC_DocType_ID()==1000057
+				|| order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048)) {
 			// Delete line in vol
 			String sql = "Select du_volLine_id from du_volLine where c_order_id = " + order.getC_Order_ID();
 			int du_mvolline_id = DB.getSQLValue(trxName, sql);
@@ -263,7 +264,8 @@ public class EventOrder {
 	// if the document don't contain flight return error
 	public static void AddAndCheckFlightBeforeComplete(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
-		if (order.isSOTrx() && (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048)) {
+		if (order.isSOTrx() && (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048 || 
+				order.getC_DocType_ID() == 1000057)) {
 			if (order.get_ValueAsInt("DU_Vol_ID") > 0) {
 				String sql = "Select du_volLine_id from du_volLine where c_order_id = " + order.getC_Order_ID();
 				int du_mvolline_id = DB.getSQLValue(trxName, sql);
@@ -326,5 +328,19 @@ public class EventOrder {
 				}
 			}
 		}
+	}
+	
+	// Check if doctype is hadj and code client is hadj
+	public static boolean checkHadjClient (PO po, Properties ctx, String trxName) {
+		MOrder ord = (MOrder)po;
+		if (ord.getAD_Org_ID() == 1000002 && ord.isSOTrx()) {
+			if (ord.getC_DocTypeTarget_ID()==1000057 && ord.get_ValueAsInt("C_BPartnerRelation_ID")!=1002081) {
+				return false;
+			}
+			if (ord.getC_DocTypeTarget_ID()!=1000057 && ord.get_ValueAsInt("C_BPartnerRelation_ID")==1002081) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

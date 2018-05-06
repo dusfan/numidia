@@ -35,4 +35,17 @@ public class EventPayment {
 		return true;
 		
 	}
+	
+	public static boolean checkHadjPayment (PO po, Properties ctx, String trxName) {
+		MPayment pay = (MPayment)po;
+		if (pay.getAD_Org_ID() == 1000002) {
+			if (pay.getC_BankAccount_ID()==1000009 && pay.get_ValueAsInt("C_BPartnerRelation_ID")!=1002081) {
+				return false;
+			}
+			if (pay.getC_BankAccount_ID()!=1000009 && pay.get_ValueAsInt("C_BPartnerRelation_ID")==1002081) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
