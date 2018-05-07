@@ -102,11 +102,13 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 	
 	private void setRules (GridTab mTab) {
 		int c_bp_group_id = mTab.getValue("C_BP_Group_ID")!= null ? (int)mTab.getValue("C_BP_Group_ID") : 0 ;
-		if (c_bp_group_id > 0 && c_bp_group_id == 1000001) {
+		if (c_bp_group_id > 0 && (c_bp_group_id == 1000001 || c_bp_group_id==1000000)) {
 			mTab.setValue("InvoiceRule", MOrder.INVOICERULE_Immediate);
 			mTab.setValue("DeliveryRule", MOrder.DELIVERYRULE_Availability);
 			mTab.setValue("PaymentRule", MOrder.PAYMENTRULE_OnCredit);
+			mTab.setValue("PaymentRulePO", MOrder.PAYMENTRULE_OnCredit);
 			mTab.setValue("C_PaymentTerm_ID", 1000001);
+			mTab.setValue("PO_PaymentTerm_ID", 1000001);
 			mTab.setValue("M_PriceList_ID", 1000002);
 			mTab.setValue("Invoice_PrintFormat_ID", 1000018);
 		}
