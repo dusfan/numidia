@@ -17,31 +17,16 @@ public class EventPartner {
 	}
 
 	public static void setAdresse (MBPartner bp, String trxName, Properties ctx) {
-		if (bp.getC_BP_Group_ID() == 1000001 && bp.get_ValueAsString("TypeClient").equals("2")) {
-			int c_BPartner_Location_ID = DB.getSQLValue(trxName,
-					"Select C_BPartner_Location_ID from C_BPartner_Location where C_BPartner_ID = ?",
-					bp.getC_BPartner_ID());
-			MBPartnerLocation mbploc = null;
-			MLocation loc = null;
-			if (c_BPartner_Location_ID > 0) { // check if exist location
-				mbploc = new MBPartnerLocation(ctx, c_BPartner_Location_ID, trxName);
-				loc = new MLocation(ctx, mbploc.getC_Location_ID(), trxName);
-			} else {
-				mbploc = new MBPartnerLocation(bp);
-				loc = new MLocation(ctx, 0, trxName);
-				loc.setAD_Org_ID(bp.getAD_Org_ID());
-			}
-
-			mbploc.setName("Algerie");
-			mbploc.setIsBillTo(true);
-
-			loc.setAddress1("Algerie");
-			loc.setAddress2("Algerie");
-			loc.setC_Country_ID(112);
-			loc.saveEx();
-			mbploc.setC_Location_ID(loc.getC_Location_ID());
-			mbploc.saveEx();
-		}
+		MBPartnerLocation mbploc = new MBPartnerLocation(bp);
+		MLocation loc = new MLocation(ctx, 0, trxName);
+		mbploc.setName("Algerie");
+		mbploc.setIsBillTo(true);
+		loc.setAddress1("Algerie");
+		loc.setAddress2("Algerie");
+		loc.setC_Country_ID(112);
+		loc.saveEx();
+		mbploc.setC_Location_ID(loc.getC_Location_ID());
+		mbploc.saveEx();
 	}
 	
 	public static void setImage (PO po, String trxName, Properties ctx) {
