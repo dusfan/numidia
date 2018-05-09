@@ -17,16 +17,22 @@ public class EventPartner {
 	}
 
 	public static void setAdresse (MBPartner bp, String trxName, Properties ctx) {
-		MBPartnerLocation mbploc = new MBPartnerLocation(bp);
-		MLocation loc = new MLocation(ctx, 0, trxName);
-		mbploc.setName("Algerie");
-		mbploc.setIsBillTo(true);
-		loc.setAddress1("Algerie");
-		loc.setAddress2("Algerie");
-		loc.setC_Country_ID(112);
-		loc.saveEx();
-		mbploc.setC_Location_ID(loc.getC_Location_ID());
-		mbploc.saveEx();
+		int c_BPartner_Location_ID = DB.getSQLValue(trxName,
+				"Select C_BPartner_Location_ID from C_BPartner_Location where C_BPartner_ID = ?",
+				bp.getC_BPartner_ID());
+		if (c_BPartner_Location_ID < 0) {
+			MBPartnerLocation mbploc = new MBPartnerLocation(bp);
+			MLocation loc = new MLocation(ctx, 0, trxName);
+			mbploc.setName("Algerie");
+			mbploc.setIsBillTo(true);
+			loc.setAddress1("Algerie");
+			loc.setAddress2("Algerie");
+			loc.setC_Country_ID(112);
+			loc.saveEx();
+			mbploc.setC_Location_ID(loc.getC_Location_ID());
+			mbploc.saveEx();	
+		}
+
 	}
 	
 	public static void setImage (PO po, String trxName, Properties ctx) {
