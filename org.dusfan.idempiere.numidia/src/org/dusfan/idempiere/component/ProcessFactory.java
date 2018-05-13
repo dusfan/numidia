@@ -2,7 +2,7 @@ package org.dusfan.idempiere.component;
 import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
 import org.dusfan.idempiere.process.AddUpdateRemise;
-import org.dusfan.idempiere.process.ChangeVisaStatus;
+import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
@@ -27,8 +27,8 @@ public class ProcessFactory implements IProcessFactory {
 
 	@Override
 	public ProcessCall newProcessInstance(String className) {
-		if (className.equals(ChangeVisaStatus.class.getName()))
-			return new ChangeVisaStatus();
+		if (className.equals(ChangeVolFromTo.class.getName()))
+			return new ChangeVolFromTo();
 		else if (className.equals(ImportBPartnerOmra.class.getName()))
 			return new ImportBPartnerOmra();
 		else if (className.equals(DUInvoiceGenerate.class.getName()))

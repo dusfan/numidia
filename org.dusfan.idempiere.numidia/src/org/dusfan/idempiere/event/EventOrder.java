@@ -288,7 +288,7 @@ public class EventOrder {
 	}
 	
 	// verifier si l'ordre de vente contient un billet pour l'inclure dans le manifest
-	private static boolean setIsPrinted (String trxName, int c_order_id) {
+	public static boolean setIsPrinted (String trxName, int c_order_id) {
 		int count = DB.getSQLValue(trxName, "Select count(1) from c_orderline where c_order_id = ? and m_product_id in "
 				+ "(select m_product_id from m_product where typeservice='2')", c_order_id);
 		if (count > 0)
@@ -297,7 +297,7 @@ public class EventOrder {
 	}
 	
 	// Verifier si l'ordre de vente contient un sejour pour l'inclure dans l'hebergement
-	private static boolean setIsInclude (String trxName, int c_order_id) {
+	public static boolean setIsInclude (String trxName, int c_order_id) {
 		int count = DB.getSQLValue(trxName, "Select count(1) from c_orderline where c_order_id = ? and m_sejour_id in "
 				+ "(select m_product_id from m_product where typeservice='0')", c_order_id);
 		if (count > 0)
