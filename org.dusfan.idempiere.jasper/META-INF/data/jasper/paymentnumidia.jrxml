@@ -40,7 +40,8 @@
     when c.isreceipt = 'N' and c.payamt < 0 then 'Rembourssement Fournisseur' end as typedocument,
     u.description as agent,
     bk.accountno as banque,
-    cu.ISO_Code as currency
+    cu.ISO_Code as currency,
+    c.created
    FROM c_payment c
    inner join c_currency cu on cu.c_currency_id = c.c_currency_id
    inner join C_BankAccount bk on bk.C_BankAccount_ID = c.C_BankAccount_ID
@@ -116,6 +117,9 @@
 	</field>
 	<field name="currency" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="currency"/>
+	</field>
+	<field name="created" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="birth_date"/>
 	</field>
 	<background>
 		<band splitType="Stretch">
@@ -246,7 +250,7 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{created})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="407" y="47" width="137" height="32" uuid="87aea2aa-c601-4f5a-b65b-a7a6396aec4f">
