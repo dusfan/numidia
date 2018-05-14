@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subscribe_perlin" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37b9f1b0-133c-478c-9766-6f6648be0afc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
+	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT VALUE, NAME, NAME2 FROM C_BPARTNER 
+WHERE C_BPartner_ID = $P{C_BPartner_ID} ]]>
+	</queryString>
+	<field name="value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="value"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="name2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name2"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="50" y="0" width="450" height="60" uuid="b9e78077-7612-42af-9859-2e94a759d186"/>
+				<imageExpression><![CDATA[$P{RESOURCE_DIR}+"img/numidia-logo.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="50" y="67" width="440" height="1" uuid="fd5b21b9-73f9-4f89-89d6-a98107aaff3b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="3.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="653" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="147" width="556" height="51" uuid="57c16c4a-c803-40d3-be9b-834127b46041"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Nous soussigné                                                                           , attestons par la présente que:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="145" width="340" height="20" uuid="c1995039-af39-4f28-8d47-fe43f201e59d"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AGENCE NUMIDIA TRAVEL SERVICES]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="60" y="42" width="451" height="70" backcolor="#E0E0E0" uuid="8c409543-e718-4791-8106-1f117b03e5b8"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="120" y="52" width="340" height="40" uuid="dc1693ce-2076-4ffb-a7ad-205b0810b7d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Attestaion d'inscription]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="203" width="410" height="30" uuid="11f58cb6-606e-424d-b651-eac36e604576"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ "- MR/Mme  : "+$F{name}+"  "+$F{name2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="233" width="410" height="30" uuid="d484b3d6-a37b-41d7-b802-9581f9c7eb21"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ "- N° PASSPORT  :  "+$F{value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="263" width="380" height="30" uuid="c9311087-3082-4100-832f-eb575bb9146b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["- Est inscrit au programme OMRA "+ Calendar.getInstance().get(Calendar.YEAR)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="480" width="276" height="30" uuid="0fa04afe-98ee-4f2e-bbb9-0d1f60816f8f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Constantine le :  " +new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="70" splitType="Stretch">
+			<line>
+				<reportElement x="55" y="11" width="440" height="1" uuid="58279a8d-079a-47de-ab85-4de63a11c2a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="3.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="55" y="19" width="440" height="50" uuid="7349fa8a-ba98-48cf-b2aa-83e43abffb2f"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agence Centrale : 43, Rue Si Abdallah (Casbah) Constantine
+Tel: 031 87 29 - 031 87 29 72 / FAX: 031 87 36 87
+www.numidiatravelservices.com/numidiatourisme@yahoo.fr]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
