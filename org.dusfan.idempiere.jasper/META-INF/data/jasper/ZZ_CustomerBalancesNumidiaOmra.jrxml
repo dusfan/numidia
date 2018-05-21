@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="47"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="147"/>
@@ -39,18 +39,18 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select (select name from ad_org where ad_org_id = balance.ad_org_id) as org,balance.* from (select i.ad_org_id as ad_org_id, sum(i.GRANDTOTAL) as suminv,0 as sumdzdpaycash,0 as sumdzdpayother,0 as sumdevisepay,0 as sumpaytotal,
-i.C_BPartnerRelation_ID as C_BPartnerRelation_ID, (select value||'-'||name from c_bpartner where c_bpartner_id = i.C_BPartnerRelation_ID) as codeclient,
-getnbromraclientcode($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbr,
-getnbomrarmoudjah($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrmoudj,
-getnbomrachdaveclit($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrchdlit,
-getnbomrachd($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrchd,
-getnbomrasingle($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrsingle,
-getnbomradouble($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrdouble,
-getnbomratriple($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as triple,
-getnbomraquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrquad,
-getnbomrainf($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrinf,
-getnbomragratuit($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrgratuit,0 as avoir,
-getnbomraplusquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartnerRelation_ID,$P{C_Activity_ID}) as nbrplusquad
+i.C_BPartner_ID as C_BPartnerRelation_ID, (select value||'-'||name from c_bpartner where c_bpartner_id = i.C_BPartner_ID) as codeclient,
+getnbromraclientcode($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbr,
+getnbomrarmoudjah($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrmoudj,
+getnbomrachdaveclit($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrchdlit,
+getnbomrachd($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrchd,
+getnbomrasingle($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrsingle,
+getnbomradouble($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrdouble,
+getnbomratriple($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as triple,
+getnbomraquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrquad,
+getnbomrainf($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrinf,
+getnbomragratuit($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrgratuit,0 as avoir,
+getnbomraplusquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},i.C_BPartner_ID,$P{C_Activity_ID}) as nbrplusquad
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType='ARI'
@@ -58,10 +58,11 @@ WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.ISSOTRX = 'Y'
 and i.docstatus in ('CO', 'CL') and i.ad_client_id = $P{AD_Client_ID} and i.C_Activity_ID = $P{C_Activity_ID}
-group by i.C_BPartnerRelation_ID, i.ad_org_id
+and i.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by i.C_BPartner_ID, i.ad_org_id
 union
 select i.ad_org_id as ad_org_id, 0,0 as sumdzdpaycash,0 as sumdzdpayother,0 as sumdevisepay,0 as sumpaytotal,
-i.C_BPartnerRelation_ID as C_BPartnerRelation_ID, (select value||'-'||name from c_bpartner where c_bpartner_id = i.C_BPartnerRelation_ID) as codeclient,
+i.C_BPartner_ID as C_BPartnerRelation_ID, (select value||'-'||name from c_bpartner where c_bpartner_id = i.C_BPartner_ID) as codeclient,
 0 as nbr,
 0 as nbrmoudj,
 0 as nbrchdlit,
@@ -79,40 +80,49 @@ WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.ISSOTRX = 'Y'
 and i.docstatus in ('CO', 'CL') and i.ad_client_id = $P{AD_Client_ID} and i.C_Activity_ID = $P{C_Activity_ID}
-group by i.C_BPartnerRelation_ID, i.ad_org_id
+and i.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by i.C_BPartner_ID, i.ad_org_id
 union 
 select p.ad_org_id as ad_org_id, 0 as suminv,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumdzdpaycash,0,0,0,
-p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0 
+p.C_BPartner_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartner_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0 
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL') and p.tendertype='X' and p.c_currency_id =235
-and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID} group by p.C_BPartnerRelation_ID, p.ad_org_id
+and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID}
+and p.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by p.C_BPartner_ID, p.ad_org_id
 union
 select p.ad_org_id as ad_org_id, 0 as suminv,0,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumdzdpayother,0,0,
-p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0  
+p.C_BPartner_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartner_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0  
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL') and p.tendertype <> 'X' and p.c_currency_id =235
-and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID} group by p.C_BPartnerRelation_ID, p.ad_org_id
+and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID}
+and p.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by p.C_BPartner_ID, p.ad_org_id
 union
 select p.ad_org_id as ad_org_id, 0 as suminv,0,0, (sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)) as sumdevisepay,0,
-p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient
+p.C_BPartner_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartner_ID) as codeclient
 ,0,0,0,0,0,0,0,0,0,0,0,0 
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL')
-and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (235) and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID} group by p.C_BPartnerRelation_ID, p.ad_org_id
+and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (235) and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID}
+and p.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by p.C_BPartner_ID, p.ad_org_id
 union
 select p.ad_org_id as ad_org_id, 0 as suminv,0,0, 0,sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DateTrx, null, p.AD_Client_ID, p.AD_Org_ID)) as sumpaytotal,
-p.C_BPartnerRelation_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartnerRelation_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0  
+p.C_BPartner_ID as C_BPartnerRelation_ID , (select value||'-'||name from c_bpartner where c_bpartner_id = p.C_BPartner_ID) as codeclient,0,0,0,0,0,0,0,0,0,0,0,0  
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL')
-and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID} group by p.C_BPartnerRelation_ID, p.ad_org_id) balance order by C_BPartnerRelation_ID]]>
+and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID = $P{C_Activity_ID}
+and p.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
+group by p.C_BPartner_ID, p.ad_org_id) balance order by C_BPartnerRelation_ID]]>
 	</queryString>
 	<field name="org" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="org"/>
@@ -918,7 +928,7 @@ and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID} and p.C_Activity_ID 
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["ETAT DES CLIENTS "+$F{org}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["ETAT DES CLIENTS GLOBAL "+$F{org}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
