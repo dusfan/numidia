@@ -46,6 +46,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 	private Timestamp		m_DateValue = null;
 	private boolean			p_IsValidateOnly = false;
 	private boolean			m_deleteOldImported = false;
+	private boolean			m_IsReValidate = false;
 
 	@Override
 	protected void prepare() {
@@ -57,6 +58,8 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 				m_deleteOldImported = "Y".equals(para[i].getParameter());
 			else if (name.equals("IsValidateOnly"))
 				p_IsValidateOnly = para[i].getParameterAsBoolean();
+			else if (name.equals("IsReValidate"))
+				m_IsReValidate = "Y".equals(para[i].getParameter()); // Tester le code Client
 			else if (name.equals("AD_Client_ID")) {
 				m_AD_Client_ID = para[i].getParameterAsInt();
 			}
@@ -244,6 +247,36 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		int noInsert = 0;
 		int noUpdate = 0;
 
+		
+		// Tester la présende de deux code client pour le même groupe
+		StringBuilder testSql = new StringBuilder(
+				"Select count(1), customercode " + " from I_ImportOmraBP where I_IsImported='N'").append(clientCheck)
+						.append(groupCheck).append(" Group by customercode");
+		PreparedStatement pstmtS = null;
+		ResultSet rsS = null;
+		int countS = 0;
+		String ClientC = "";
+		try {
+			pstmtS = DB.prepareStatement(testSql.toString(), get_TrxName());
+			rsS = pstmtS.executeQuery();
+			while (rsS.next()) {
+				countS += 1;
+				ClientC += rsS.getString(2) + ", ";
+				
+			}
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+		} finally {
+			DB.close(rsS, pstmtS);
+			rsS = null; pstmtS = null;
+		} 
+		if (!m_IsReValidate && countS > 1) {
+			throw new AdempiereUserError("Il existe plus d un code client pour le meme groupe => "+
+					ClientC);
+		}
+		// Fin du test
+		
+		
 		//	Go through Records
 		sql = new StringBuilder ("SELECT * FROM I_ImportOmraBP ")
 				.append("WHERE I_IsImported='N' ").append(clientCheck).append(groupCheck);

@@ -3,6 +3,7 @@ import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
 import org.dusfan.idempiere.process.AddUpdateRemise;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
+import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
@@ -69,6 +70,8 @@ public class ProcessFactory implements IProcessFactory {
 		else if (className.equals(ImportPartnerOnly.class.getName())){
 			return new ImportPartnerOnly();
 		}
+		else if (className.equals(ConfirmAchatSar.class.getName()))
+			return new ConfirmAchatSar();
      		
 		return null;
 	}
