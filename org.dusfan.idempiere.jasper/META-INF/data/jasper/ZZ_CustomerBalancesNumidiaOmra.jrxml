@@ -75,7 +75,10 @@ and trunc(p.DATETRX) <= $P{EndDate}
 and p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = bp.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}) as sumpaytotal,
-getnbromraclientcode($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbr,
+(Select count(1) from c_order where c_bpartnerrelation_id = bp.c_bpartner_id
+and trunc(dateordered) >=  $P{StartDate} 
+and trunc(dateordered) <= $P{EndDate}
+and docstatus in ('CO','CL')) as nbr,
 getnbomrarmoudjah($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrmoudj,
 getnbomrachdaveclit($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrchdlit,
 getnbomrachd($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrchd,
