@@ -41,6 +41,7 @@
     u.description as agent,
     bk.accountno as banque,
     cu.ISO_Code as currency,
+    bk.c_bankaccount_id,
     c.created
    FROM c_payment c
    inner join c_currency cu on cu.c_currency_id = c.c_currency_id
@@ -121,6 +122,7 @@
 	<field name="created" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.label" value="birth_date"/>
 	</field>
+	<field name="c_bankaccount_id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -286,7 +288,7 @@
 			</textField>
 			<textField>
 				<reportElement x="197" y="186" width="160" height="22" uuid="5b24059a-87bf-4c16-bb5f-d7757e0d9b8b">
-					<printWhenExpression><![CDATA[$F{codeclient}.equals("800800")]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{c_bankaccount_id} == 1000009]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -350,7 +352,7 @@
 			</textField>
 			<textField>
 				<reportElement x="16" y="19" width="160" height="60" uuid="5211ec23-a3ea-4dbe-a689-c0e3447a236d">
-					<printWhenExpression><![CDATA[$F{codeclient}.equals("800800")]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{c_bankaccount_id} == 1000009]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
