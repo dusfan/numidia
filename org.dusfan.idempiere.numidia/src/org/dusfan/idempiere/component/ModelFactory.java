@@ -8,6 +8,8 @@ import org.compiere.model.PO;
 import org.compiere.util.Env;
 import org.dusfan.idempiere.model.MCreatePackage;
 import org.dusfan.idempiere.model.MHotel;
+import org.dusfan.idempiere.model.MPOSAR;
+import org.dusfan.idempiere.model.MPOSARLine;
 import org.dusfan.idempiere.model.MRemiseChd;
 import org.dusfan.idempiere.model.MRemiseGP;
 import org.dusfan.idempiere.model.MRemiseMoudj;
@@ -55,6 +57,10 @@ public class ModelFactory implements IModelFactory {
 		else if (tableName.equals(MCreatePackage.Table_Name)) {
 			return MCreatePackage.class;
 		}
+		else if (tableName.equals(MPOSAR.Table_Name))
+			return MPOSAR.class;
+		else if (tableName.equals(MPOSARLine.Table_Name))
+			return MPOSAR.class;
 		
 		return null;
 	}
@@ -89,6 +95,10 @@ public class ModelFactory implements IModelFactory {
 		else if (tableName.equals(MCreatePackage.Table_Name)) {
 			return new MCreatePackage(Env.getCtx(), Record_ID, trxName);
 		}
+		else if (tableName.equals(MPOSAR.Table_Name))
+			return new MPOSAR(Env.getCtx(), Record_ID, trxName);
+		else if (tableName.equals(MPOSARLine.Table_Name))
+			return new MPOSARLine(Env.getCtx(), Record_ID, trxName);
 		return null;
 	}
 
@@ -122,6 +132,10 @@ public class ModelFactory implements IModelFactory {
 		else if (tableName.equals(MCreatePackage.Table_Name)) {
 			return new MCreatePackage(Env.getCtx(), rs, trxName);
 		}
+		else if (tableName.equals(MPOSAR.Table_Name))
+			return new MPOSAR(Env.getCtx(), rs, trxName);
+		else if (tableName.equals(MPOSARLine.Table_Name))
+			return new MPOSARLine(Env.getCtx(), rs, trxName);
 		return null;
 	}
 

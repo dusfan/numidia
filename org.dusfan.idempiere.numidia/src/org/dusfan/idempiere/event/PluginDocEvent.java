@@ -49,6 +49,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 		// DOC
 		// Order
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MOrder.Table_Name);
+		registerTableEvent(IEventTopics.DOC_BEFORE_VOID, MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_PREPARE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_VOID, MOrder.Table_Name);
 		// Invoice
@@ -175,6 +177,16 @@ public class PluginDocEvent extends AbstractEventHandler {
 			if (type.equals(IEventTopics.DOC_AFTER_VOID)) {
 				if(po instanceof MOrder)
 					EventOrder.deleteFlight(po, ctx, trxName);
+			}
+			if (type.equals(IEventTopics.DOC_BEFORE_VOID)) {
+				if (po instanceof MInvoice)
+					EventInvoice.subSarPrice(po, ctx, trxName);
+			}
+			if (type.equals(IEventTopics.DOC_AFTER_COMPLETE)) {
+				if (po instanceof MInvoice) {
+					if (!EventInvoice.addSarPrice(po, ctx, trxName))
+						throw new AdempiereUserError("Erreur la caisse est epuisee");
+				}
 			}
 		}
 
