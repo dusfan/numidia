@@ -15,6 +15,7 @@ import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
 import org.dusfan.idempiere.process.SetGratuiteSV;
+import org.dusfan.idempiere.process.SetPrinted;
 import org.dusfan.idempiere.process.SetTagPasseport;
 import org.dusfan.idempiere.process.UpdateAffectationLineVol;
 
@@ -72,6 +73,8 @@ public class ProcessFactory implements IProcessFactory {
 		}
 		else if (className.equals(ConfirmAchatSar.class.getName()))
 			return new ConfirmAchatSar();
+		else if (className.equals(SetPrinted.class.getName()))
+			return new SetPrinted();
      		
 		return null;
 	}
