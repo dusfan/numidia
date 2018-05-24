@@ -17,12 +17,17 @@
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[Select bp.value as ppno, bp.name||' '|| bp.name as nom, od.grandtotal, 
-(select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
+		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, od.grandtotal, 
+((select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = od.C_BPARTNER_ID
-and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id) as totalpay,
+and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id) -
+(select coalesce(sum(i.GRANDTOTAL),0)
+from C_INVOICE i
+INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
+AND d.DocBaseType in ('ARI', 'ARC')
+WHERE i.C_BPartner_ID = bp.C_BPARTNER_ID and i.GRANDTOTAL<0 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as totalpay,
 v.value as vol, v.departdatetime_direct, cod.value||'-'||cod.name as value,
 (select p.name from c_orderline ol inner join m_product p on p.m_product_id = ol.m_sejour_id
 where ol.c_order_id = od.c_order_id and p.typeservice='0') as package,
@@ -32,7 +37,8 @@ where p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = od.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id)) as reste,
 od.c_bpartnerrelation_id,
-od.du_vol_id
+od.du_vol_id,
+od.docstatus
 from c_order od 
 inner join du_vol v on v.du_vol_id = od.du_vol_id
 inner join c_bpartner bp on bp.c_bpartner_id = od.c_bpartner_id
@@ -77,6 +83,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	<field name="du_vol_id" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="du_vol_id"/>
 	</field>
+	<field name="docstatus" class="java.lang.String"/>
 	<variable name="Tprix" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Sum">
 		<variableExpression><![CDATA[$F{grandtotal}]]></variableExpression>
 	</variable>
@@ -84,10 +91,13 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		<variableExpression><![CDATA[$F{totalpay}]]></variableExpression>
 	</variable>
 	<variable name="Tbal" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Sum">
-		<variableExpression><![CDATA[$F{reste}]]></variableExpression>
+		<variableExpression><![CDATA[$V{tdiff}]]></variableExpression>
 	</variable>
 	<variable name="countT" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Count">
 		<variableExpression><![CDATA[$F{reste}]]></variableExpression>
+	</variable>
+	<variable name="tdiff" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{grandtotal}.subtract($F{totalpay})]]></variableExpression>
 	</variable>
 	<group name="GroupByCodeClient">
 		<groupExpression><![CDATA[$F{c_bpartnerrelation_id}]]></groupExpression>
@@ -128,7 +138,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA["Total Code Client : "+$F{value}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="425" y="2" width="72" height="20" uuid="7992522f-4493-4931-8be1-d69f617116b6">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -143,7 +153,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tprix}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="497" y="2" width="74" height="20" uuid="05dc0e5c-3c25-40c4-bbc2-9170ee930519">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -158,7 +168,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tpym}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="571" y="2" width="75" height="20" uuid="b5d175a7-7953-4e2b-a843-0d6d5445fbb0">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -171,7 +181,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Tbal}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Tprix}.subtract($V{Tpym})]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="173" y="2" width="72" height="20" uuid="2d6f8d65-3176-4f79-bf47-39a43011c908">
@@ -229,7 +239,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="34" splitType="Stretch">
+		<band height="39" splitType="Stretch">
 			<textField>
 				<reportElement x="646" y="0" width="58" height="34" uuid="7690efca-6532-48a2-9765-3b54cd01787e"/>
 				<box>
@@ -281,7 +291,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA["Code Client"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="310" height="34" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
+				<reportElement x="115" y="0" width="285" height="34" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -308,7 +318,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA["Verssement"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="425" y="0" width="72" height="34" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
+				<reportElement x="424" y="0" width="72" height="34" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -321,12 +331,26 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Prix"]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="24" height="34" uuid="bb6d4916-640b-4396-861a-92ebdaa46418">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ST"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="34" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="571" y="0" width="75" height="34" uuid="dac85af5-cc3f-4599-897a-f22625d2a3b3"/>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -336,7 +360,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{reste}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{tdiff}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="2" y="0" width="113" height="34" uuid="7d7c7cf5-0b4d-4aef-b778-d651d1f3c1ec"/>
@@ -352,7 +376,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="310" height="34" uuid="47ab023f-86c0-4809-bea3-04cb9d7bf20f">
+				<reportElement x="115" y="0" width="285" height="34" uuid="47ab023f-86c0-4809-bea3-04cb9d7bf20f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -379,7 +403,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="497" y="0" width="74" height="34" uuid="12555dde-e07b-4044-9363-a350cb82146c"/>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -391,7 +415,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalpay}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="425" y="0" width="72" height="34" uuid="f61aed71-34b7-4f78-b9b4-12316c28118b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -416,6 +440,20 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vol}+"-"+new SimpleDateFormat("dd/MM/yyyy").format($F{departdatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="25" height="34" uuid="dbb11741-bfd3-4970-97cf-724e306b6fc7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{docstatus}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

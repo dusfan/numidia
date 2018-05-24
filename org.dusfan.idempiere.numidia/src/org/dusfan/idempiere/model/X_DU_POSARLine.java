@@ -32,7 +32,7 @@ public class X_DU_POSARLine extends PO implements I_DU_POSARLine, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180516L;
+	private static final long serialVersionUID = 20180524L;
 
     /** Standard Constructor */
     public X_DU_POSARLine (Properties ctx, int DU_POSARLine_ID, String trxName)
@@ -92,29 +92,29 @@ public class X_DU_POSARLine extends PO implements I_DU_POSARLine, I_Persistent
 		return bd;
 	}
 
-	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException
+	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException
     {
-		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
-			.getPO(getC_Invoice_ID(), get_TrxName());	}
+		return (org.compiere.model.I_C_Order)MTable.get(getCtx(), org.compiere.model.I_C_Order.Table_Name)
+			.getPO(getC_Order_ID(), get_TrxName());	}
 
-	/** Set Invoice.
-		@param C_Invoice_ID 
-		Invoice Identifier
+	/** Set Order.
+		@param C_Order_ID 
+		Order
 	  */
-	public void setC_Invoice_ID (int C_Invoice_ID)
+	public void setC_Order_ID (int C_Order_ID)
 	{
-		if (C_Invoice_ID < 1) 
-			set_ValueNoCheck (COLUMNNAME_C_Invoice_ID, null);
+		if (C_Order_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, null);
 		else 
-			set_ValueNoCheck (COLUMNNAME_C_Invoice_ID, Integer.valueOf(C_Invoice_ID));
+			set_ValueNoCheck (COLUMNNAME_C_Order_ID, Integer.valueOf(C_Order_ID));
 	}
 
-	/** Get Invoice.
-		@return Invoice Identifier
+	/** Get Order.
+		@return Order
 	  */
-	public int getC_Invoice_ID () 
+	public int getC_Order_ID () 
 	{
-		Integer ii = (Integer)get_Value(COLUMNNAME_C_Invoice_ID);
+		Integer ii = (Integer)get_Value(COLUMNNAME_C_Order_ID);
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
@@ -142,8 +142,8 @@ public class X_DU_POSARLine extends PO implements I_DU_POSARLine, I_Persistent
 		return (I_DU_POSAR)MTable.get(getCtx(), I_DU_POSAR.Table_Name)
 			.getPO(getDU_POSAR_ID(), get_TrxName());	}
 
-	/** Set POSAR.
-		@param DU_POSAR_ID POSAR	  */
+	/** Set Caisse SAR.
+		@param DU_POSAR_ID Caisse SAR	  */
 	public void setDU_POSAR_ID (int DU_POSAR_ID)
 	{
 		if (DU_POSAR_ID < 1) 
@@ -152,8 +152,8 @@ public class X_DU_POSARLine extends PO implements I_DU_POSARLine, I_Persistent
 			set_ValueNoCheck (COLUMNNAME_DU_POSAR_ID, Integer.valueOf(DU_POSAR_ID));
 	}
 
-	/** Get POSAR.
-		@return POSAR	  */
+	/** Get Caisse SAR.
+		@return Caisse SAR	  */
 	public int getDU_POSAR_ID () 
 	{
 		Integer ii = (Integer)get_Value(COLUMNNAME_DU_POSAR_ID);

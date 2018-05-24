@@ -46,16 +46,22 @@ public interface I_DU_POSARLine
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
 
-	/** Get Client	  */
+	/** Get Client.
+	  * Client/Tenant for this installation.
+	  */
 	public int getAD_Client_ID();
 
     /** Column name AD_Org_ID */
     public static final String COLUMNNAME_AD_Org_ID = "AD_Org_ID";
 
-	/** Set Organization	  */
+	/** Set Organization.
+	  * Organizational entity within client
+	  */
 	public void setAD_Org_ID (int AD_Org_ID);
 
-	/** Get Organization	  */
+	/** Get Organization.
+	  * Organizational entity within client
+	  */
 	public int getAD_Org_ID();
 
     /** Column name Amt */
@@ -71,31 +77,35 @@ public interface I_DU_POSARLine
 	  */
 	public BigDecimal getAmt();
 
-    /** Column name C_Invoice_ID */
-    public static final String COLUMNNAME_C_Invoice_ID = "C_Invoice_ID";
+    /** Column name C_Order_ID */
+    public static final String COLUMNNAME_C_Order_ID = "C_Order_ID";
 
-	/** Set Invoice.
-	  * Invoice Identifier
+	/** Set Order.
+	  * Order
 	  */
-	public void setC_Invoice_ID (int C_Invoice_ID);
+	public void setC_Order_ID (int C_Order_ID);
 
-	/** Get Invoice.
-	  * Invoice Identifier
+	/** Get Order.
+	  * Order
 	  */
-	public int getC_Invoice_ID();
+	public int getC_Order_ID();
 
-	public org.compiere.model.I_C_Invoice getC_Invoice() throws RuntimeException;
+	public org.compiere.model.I_C_Order getC_Order() throws RuntimeException;
 
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
-	/** Get Created	  */
+	/** Get Created.
+	  * Date this record was created
+	  */
 	public Timestamp getCreated();
 
     /** Column name CreatedBy */
     public static final String COLUMNNAME_CreatedBy = "CreatedBy";
 
-	/** Get Created By	  */
+	/** Get Created By.
+	  * User who created this records
+	  */
 	public int getCreatedBy();
 
     /** Column name Description */
@@ -114,10 +124,10 @@ public interface I_DU_POSARLine
     /** Column name DU_POSAR_ID */
     public static final String COLUMNNAME_DU_POSAR_ID = "DU_POSAR_ID";
 
-	/** Set POSAR	  */
+	/** Set Caisse SAR	  */
 	public void setDU_POSAR_ID (int DU_POSAR_ID);
 
-	/** Get POSAR	  */
+	/** Get Caisse SAR	  */
 	public int getDU_POSAR_ID();
 
 	public I_DU_POSAR getDU_POSAR() throws RuntimeException;
@@ -134,21 +144,29 @@ public interface I_DU_POSARLine
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
-	/** Set Active	  */
+	/** Set Active.
+	  * The record is active in the system
+	  */
 	public void setIsActive (boolean IsActive);
 
-	/** Get Active	  */
+	/** Get Active.
+	  * The record is active in the system
+	  */
 	public boolean isActive();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
-	/** Get Updated	  */
+	/** Get Updated.
+	  * Date this record was updated
+	  */
 	public Timestamp getUpdated();
 
     /** Column name UpdatedBy */
     public static final String COLUMNNAME_UpdatedBy = "UpdatedBy";
 
-	/** Get Updated By	  */
+	/** Get Updated By.
+	  * User who updated this records
+	  */
 	public int getUpdatedBy();
 }

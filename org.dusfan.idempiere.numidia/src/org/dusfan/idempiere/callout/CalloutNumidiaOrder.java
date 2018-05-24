@@ -31,7 +31,7 @@ public class CalloutNumidiaOrder implements IColumnCallout {
 				mTab.setValue("C_BPartnerRelation_ID", bp.get_Value("C_BPartnerRelation_ID")); // recuperer code client du partner
 				mTab.setValue("C_BP_Mohrem_ID", bp.get_Value("C_BP_Mohrem_ID")); // recuperer le  mohrem 
 				mTab.setValue("LinkMohrem", bp.get_Value("LinkMohrem")); // recuperer le link du mohrem du partner
-				chackDoubleOrder (c_BPartner_ID, mTab); // verifier les doubles
+//				chackDoubleOrder (c_BPartner_ID, mTab); // verifier les doubles
 			}
 
 		} else if (mField.getColumnName().equals("C_DocTypeTarget_ID")) {
@@ -68,15 +68,15 @@ public class CalloutNumidiaOrder implements IColumnCallout {
 	}
 	
 	
-	private void chackDoubleOrder (int C_Bpartner_ID, GridTab mTab) {
-		int count = DB.getSQLValue(null, "Select count(1) from c_order where "
-				+ " docstatus in ('IP','DR','CO','CL') and c_bpartner_id = ?", C_Bpartner_ID);
-		if (count > 0) {
-			MBPartner bp = new MBPartner(Env.getCtx(), C_Bpartner_ID, null);
-			mTab.fireDataStatusEEvent("Attention il existe un ordre de vente pour = " 
-			+ bp.getValue(), null, false);
-		}
-	}
+//	private void chackDoubleOrder (int C_Bpartner_ID, GridTab mTab) {
+//		int count = DB.getSQLValue(null, "Select count(1) from c_order where "
+//				+ " docstatus in ('IP','DR','CO','CL') and c_bpartner_id = ?", C_Bpartner_ID);
+//		if (count > 0) {
+//			MBPartner bp = new MBPartner(Env.getCtx(), C_Bpartner_ID, null);
+//			mTab.fireDataStatusEEvent("Attention il existe un ordre de vente pour = " 
+//			+ bp.getValue(), null, false);
+//		}
+//	}
 	
 	
 }
