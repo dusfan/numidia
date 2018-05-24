@@ -17,12 +17,17 @@
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[Select bp.value as ppno, bp.name||' '|| bp.name as nom, od.grandtotal, 
-(select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
+		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, od.grandtotal, 
+((select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = od.C_BPARTNER_ID
-and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id) as totalpay,
+and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id) -
+(select coalesce(sum(i.GRANDTOTAL),0)
+from C_INVOICE i
+INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
+AND d.DocBaseType in ('ARI', 'ARC')
+WHERE i.C_BPartner_ID = bp.C_BPARTNER_ID and i.GRANDTOTAL<0 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as totalpay,
 v.value as vol, v.departdatetime_direct, cod.value||'-'||cod.name as value,
 (select p.name from c_orderline ol inner join m_product p on p.m_product_id = ol.m_sejour_id
 where ol.c_order_id = od.c_order_id and p.typeservice='0') as package,
@@ -86,10 +91,13 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		<variableExpression><![CDATA[$F{totalpay}]]></variableExpression>
 	</variable>
 	<variable name="Tbal" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Sum">
-		<variableExpression><![CDATA[$F{reste}]]></variableExpression>
+		<variableExpression><![CDATA[$V{tdiff}]]></variableExpression>
 	</variable>
 	<variable name="countT" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Count">
 		<variableExpression><![CDATA[$F{reste}]]></variableExpression>
+	</variable>
+	<variable name="tdiff" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{grandtotal}.subtract($F{totalpay})]]></variableExpression>
 	</variable>
 	<group name="GroupByCodeClient">
 		<groupExpression><![CDATA[$F{c_bpartnerrelation_id}]]></groupExpression>
@@ -173,7 +181,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Tbal}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Tprix}.subtract($V{Tpym})]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="173" y="2" width="72" height="20" uuid="2d6f8d65-3176-4f79-bf47-39a43011c908">
@@ -352,7 +360,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{reste}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{tdiff}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="2" y="0" width="113" height="34" uuid="7d7c7cf5-0b4d-4aef-b778-d651d1f3c1ec"/>
