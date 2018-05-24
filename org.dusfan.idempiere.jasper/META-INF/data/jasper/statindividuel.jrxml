@@ -32,7 +32,8 @@ where p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = od.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' and p.ad_client_id = od.ad_client_id)) as reste,
 od.c_bpartnerrelation_id,
-od.du_vol_id
+od.du_vol_id,
+od.docstatus
 from c_order od 
 inner join du_vol v on v.du_vol_id = od.du_vol_id
 inner join c_bpartner bp on bp.c_bpartner_id = od.c_bpartner_id
@@ -77,6 +78,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	<field name="du_vol_id" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="du_vol_id"/>
 	</field>
+	<field name="docstatus" class="java.lang.String"/>
 	<variable name="Tprix" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByCodeClient" calculation="Sum">
 		<variableExpression><![CDATA[$F{grandtotal}]]></variableExpression>
 	</variable>
@@ -229,7 +231,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="34" splitType="Stretch">
+		<band height="39" splitType="Stretch">
 			<textField>
 				<reportElement x="646" y="0" width="58" height="34" uuid="7690efca-6532-48a2-9765-3b54cd01787e"/>
 				<box>
@@ -281,7 +283,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA["Code Client"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="310" height="34" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
+				<reportElement x="115" y="0" width="285" height="34" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -308,7 +310,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA["Verssement"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="425" y="0" width="72" height="34" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
+				<reportElement x="424" y="0" width="72" height="34" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -320,6 +322,20 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Prix"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="24" height="34" uuid="bb6d4916-640b-4396-861a-92ebdaa46418">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ST"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -352,7 +368,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="310" height="34" uuid="47ab023f-86c0-4809-bea3-04cb9d7bf20f">
+				<reportElement x="115" y="0" width="285" height="34" uuid="47ab023f-86c0-4809-bea3-04cb9d7bf20f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -416,6 +432,20 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vol}+"-"+new SimpleDateFormat("dd/MM/yyyy").format($F{departdatetime_direct})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="25" height="34" uuid="dbb11741-bfd3-4970-97cf-724e306b6fc7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{docstatus}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
