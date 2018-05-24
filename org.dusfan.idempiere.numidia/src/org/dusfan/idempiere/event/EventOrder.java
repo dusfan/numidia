@@ -15,6 +15,8 @@ import org.compiere.model.X_C_BP_Relation;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.dusfan.idempiere.model.MPOSAR;
+import org.dusfan.idempiere.model.MPOSARLine;
 import org.dusfan.idempiere.model.MVAllocationLine;
 import org.dusfan.idempiere.model.MVol;
 import org.dusfan.idempiere.model.MVolLine;
@@ -342,5 +344,50 @@ public class EventOrder {
 			}
 		}
 		return true;
+	}
+	
+	
+	// Gestion de la caisse en arabie saoudi
+	public static boolean addSarPrice(PO po, Properties ctx, String trxName) {
+		MOrder ord = (MOrder) po;
+		if (!ord.isSOTrx() && ord.getC_DocTypeTarget_ID() == 1000016) {
+			MPOSAR csar = new MPOSAR(ctx, ord.get_ValueAsInt("DU_POSAR_ID"), trxName);
+			BigDecimal totalSar = DB.getSQLValueBD(trxName,
+					"Select sum(lineNetAmt) from C_OrderLine "
+							+ " where c_order_id=? and m_product_id in (Select m_product_id from m_product where value='SAR')",
+					ord.getC_Order_ID());
+			BigDecimal totalused = csar.getAmtSubtract(); // get amt used from caisse sar
+			BigDecimal totalCaisse = csar.getAmt(); // get total in caisse sar
+			BigDecimal totalNow = totalused.add(totalSar); // get current transaction
+			if (totalNow.compareTo(totalCaisse) > 0)
+				return false;
+			csar.setAmtSubtract(totalNow);
+			csar.saveEx();
+			// Add line expense to sar caisse
+			MPOSARLine line = new MPOSARLine(ctx, 0, trxName);
+			line.setDU_POSAR_ID(csar.getDU_POSAR_ID());
+			line.setC_Order_ID(ord.getC_Order_ID());
+			line.setAmt(totalSar);
+			line.saveEx();
+		}
+		return true;
+	}
+	// Gestion de la caisse en arabie saoudi
+	public static void subSarPrice(PO po, Properties ctx, String trxName) {
+		MOrder ord = (MOrder) po;
+		if (!ord.isSOTrx() && ord.getC_DocTypeTarget_ID() == 1000016) {
+			MPOSAR csar = new MPOSAR(ctx, ord.get_ValueAsInt("DU_POSAR_ID"), trxName);
+			BigDecimal totalSar = DB.getSQLValueBD(trxName,
+					"Select sum(lineNetAmt) from C_OrderLine where c_order_id=? and "
+					+ " m_product_id in (Select m_product_id from m_product where value='SAR')",
+					ord.getC_Order_ID());
+			BigDecimal totalused = csar.getAmtSubtract(); // get amt used from
+															// caisse sar
+			BigDecimal totalNow = totalused.subtract(totalSar);
+			csar.setAmtSubtract(totalNow);
+			csar.saveEx();
+			// Delete from line
+			DB.executeUpdate("Delete from DU_POSARLine where C_Order_ID =" + ord.getC_Order_ID(), trxName);
+		}
 	}
 }
