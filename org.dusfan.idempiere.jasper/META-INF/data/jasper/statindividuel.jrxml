@@ -130,7 +130,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA["Total Code Client : "+$F{value}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="425" y="2" width="72" height="20" uuid="7992522f-4493-4931-8be1-d69f617116b6">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -145,7 +145,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tprix}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="497" y="2" width="74" height="20" uuid="05dc0e5c-3c25-40c4-bbc2-9170ee930519">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -160,7 +160,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tpym}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.##">
 					<reportElement x="571" y="2" width="75" height="20" uuid="b5d175a7-7953-4e2b-a843-0d6d5445fbb0">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -342,7 +342,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	<detail>
 		<band height="34" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="571" y="0" width="75" height="34" uuid="dac85af5-cc3f-4599-897a-f22625d2a3b3"/>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -395,7 +395,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="497" y="0" width="74" height="34" uuid="12555dde-e07b-4044-9363-a350cb82146c"/>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -407,7 +407,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalpay}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.##">
 				<reportElement x="425" y="0" width="72" height="34" uuid="f61aed71-34b7-4f78-b9b4-12316c28118b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
