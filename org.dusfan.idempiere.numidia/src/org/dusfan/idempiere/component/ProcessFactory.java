@@ -13,6 +13,7 @@ import org.dusfan.idempiere.process.ExportSrdox2;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
+import org.dusfan.idempiere.process.ProcessOrder;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
 import org.dusfan.idempiere.process.SetGratuiteSV;
 import org.dusfan.idempiere.process.SetPrinted;
@@ -75,7 +76,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ConfirmAchatSar();
 		else if (className.equals(SetPrinted.class.getName()))
 			return new SetPrinted();
-     		
+		else if (className.equals(ProcessOrder.class.getName()))
+			return new ProcessOrder();	
 		return null;
 	}
 }
