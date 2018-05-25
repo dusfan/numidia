@@ -19,6 +19,7 @@ import org.dusfan.idempiere.process.SetGratuiteSV;
 import org.dusfan.idempiere.process.SetPrinted;
 import org.dusfan.idempiere.process.SetTagPasseport;
 import org.dusfan.idempiere.process.UpdateAffectationLineVol;
+import org.dusfan.idempiere.process.VoidOrderByGroup;
 
 /**
  *	ProcessFactory
@@ -78,6 +79,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new SetPrinted();
 		else if (className.equals(ProcessOrder.class.getName()))
 			return new ProcessOrder();	
+		else if (className.equals(VoidOrderByGroup.class.getName()))
+			return new VoidOrderByGroup();
 		return null;
 	}
 }
