@@ -153,7 +153,7 @@ public class DUWAllocateFromImportUI extends DUAllocateFromImport implements Eve
 		groupField = new WTableDirEditor ("DU_Visa_Group_ID", true, false, true, lookup);
 		
 		showList.addItem(new KeyNamePair(1, "Tous"));
-		showList.addItem(new KeyNamePair(2, "Nom Affecter"));
+		showList.addItem(new KeyNamePair(2, "Non Affecter"));
 		showList.setSelectedIndex(1);
 		
 		loadImportData(null);
