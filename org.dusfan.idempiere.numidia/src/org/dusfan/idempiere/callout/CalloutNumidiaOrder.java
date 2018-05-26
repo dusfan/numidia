@@ -41,13 +41,8 @@ public class CalloutNumidiaOrder implements IColumnCallout {
 				int c_doctype_id = (int) mTab.getValue("C_DocTypeTarget_ID");
 				if (c_doctype_id == 1000047 || c_doctype_id == 1000048 || c_doctype_id == 1000057) {
 					mTab.setValue("C_Activity_ID", 1000001);
-//					// Link Dateordered to flight depart
-//					int du_vol_id = mTab.getValue("DU_Vol_ID") != null? (int) mTab.getValue("DU_Vol_ID") : 0;
-//					if (du_vol_id > 0) {
-//						MVol vl = new MVol(ctx, du_vol_id, null);
-//						mTab.setValue("DateOrdered", vl.getDepartDateTime_Direct());
-//					} else
-//						mTab.setValue("DateOrdered", null);
+					if(c_doctype_id == 1000057)
+						mTab.setValue("C_BPartnerRelation_ID", 1002081);
 				}
 			}
 				
