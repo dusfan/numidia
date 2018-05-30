@@ -251,7 +251,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		// Tester la présende de deux code client pour le même groupe
 		StringBuilder testSql = new StringBuilder(
 				"Select count(1), customercode " + " from I_ImportOmraBP where I_IsImported='N'").append(clientCheck)
-						.append(groupCheck).append(" Group by customercode");
+						.append(" AND DU_Visa_Group_ID= " + m_DU_Visa_Group_ID).append(" Group by customercode");
 		PreparedStatement pstmtS = null;
 		ResultSet rsS = null;
 		int countS = 0;

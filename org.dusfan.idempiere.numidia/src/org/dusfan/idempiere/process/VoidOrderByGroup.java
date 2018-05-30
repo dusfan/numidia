@@ -77,7 +77,7 @@ public class VoidOrderByGroup extends SvrProcess {
 			pstmt = null;
 		}
 		return "Ordre Annule= " + nb_Voided + ", ligne de groupe supprimer= "+ nb_deleteFromGroup
-				+ ", ligne rimporter= "+ nb_reimpoted;
+				+ ", ligne reimporter= "+ nb_reimpoted;
 	}
 	
 
