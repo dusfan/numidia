@@ -37,14 +37,22 @@
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select c.Name as ClientName, bp.value || '-' || bp.name as codeclient,
-(select sum(i.GRANDTOTAL)
+((select COALESCE(sum(i.GRANDTOTAL),0)
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
-AND d.DocBaseType in ('ARI', 'ARC')
+AND d.DocBaseType = 'ARI'
 WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
-and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL')) as suminv,
+and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))+
+(select COALESCE(sum(i.GRANDTOTAL*-1),0)
+from C_INVOICE i
+INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
+AND d.DocBaseType = 'ARC'
+WHERE trunc(i.dateinvoiced) >= $P{StartDate}
+and trunc(i.dateinvoiced) <= $P{EndDate}
+and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
+and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as suminv,
 (select sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID))
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}

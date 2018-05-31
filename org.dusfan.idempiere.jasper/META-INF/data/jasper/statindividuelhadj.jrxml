@@ -17,6 +17,10 @@
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="DU_Agence_ID" class="java.lang.Integer"/>
+	<parameter name="RESOURCE_DIR" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, od.grandtotal, 
 ((select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
@@ -478,4 +482,18 @@ order by cod.value, v.departdatetime_direct]]>
 			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="32">
+			<subreport>
+				<reportElement x="1" y="0" width="799" height="30" uuid="165453ed-75d1-4974-b501-7608f01b3d1c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="RESOURCE_DIR">
+					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
 </jasperReport>
