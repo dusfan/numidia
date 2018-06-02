@@ -37,7 +37,7 @@
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select c.Name as ClientName, bp.value || '-' || bp.name as codeclient,
-((select COALESCE(sum(i.GRANDTOTAL),0)
+((select COALESCE(sum(currencyConvert(i.GRANDTOTAL, i.C_Currency_ID, 235, i.DATEInvoiced, null, i.AD_Client_ID, i.AD_Org_ID)),0)
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType = 'ARI'
@@ -45,7 +45,7 @@ WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))+
-(select COALESCE(sum(i.GRANDTOTAL*-1),0)
+(select COALESCE(sum(currencyConvert(i.GRANDTOTAL, i.C_Currency_ID, 235, i.DATEInvoiced, null, i.AD_Client_ID, i.AD_Org_ID)),0)*-1
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType = 'ARC'
@@ -53,7 +53,7 @@ WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as suminv,
-(select sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID))
+(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0)
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
@@ -61,7 +61,7 @@ and p.docstatus in ('CO', 'CL') and p.tendertype='X' and p.c_currency_id =235
 and p.C_BPartner_ID = bp.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}
 ) as sumdzdpaycash,
-(select sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)) 
+(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}  
@@ -69,14 +69,14 @@ and p.docstatus in ('CO', 'CL') and p.tendertype <> 'X' and p.c_currency_id =235
 and p.C_BPartner_ID = bp.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}
 ) as sumdzdpayother,
-(select (sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)) as sumdevisepay
+(select COALESCE((sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)),0) as sumdevisepay
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}
 and p.docstatus in ('CO', 'CL')
 and p.C_BPartner_ID = bp.C_BPARTNER_ID
 and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (235) and p.ad_client_id = $P{AD_Client_ID}) as sumdevisepay,
-(select sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)) 
+(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}
@@ -101,8 +101,7 @@ from C_BPARTNER bp
 INNER JOIN AD_Client c ON bp.AD_Client_ID=c.AD_Client_ID
 where bp.isCustomer = 'Y'
 and bp.AD_CLient_ID = $P{AD_Client_ID}
-and bp.c_bpartner_id in (select c_bpartner_id from c_bpartner where typecodeclient='1')
-and bp.value like '470%'
+and bp.typeclient='2' and bp.typecodeclient='1'
 order by bp.value]]>
 	</queryString>
 	<field name="clientname" class="java.lang.String">
