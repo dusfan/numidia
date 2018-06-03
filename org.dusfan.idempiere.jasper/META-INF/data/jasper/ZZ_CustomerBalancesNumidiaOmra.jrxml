@@ -272,7 +272,7 @@ order by bp.value]]>
 		<band height="35" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="245" y="0" width="58" height="34" uuid="35d75ebe-2ea0-4b22-93c1-73cb77a4a159"/>
+				<reportElement x="230" y="0" width="73" height="34" uuid="35d75ebe-2ea0-4b22-93c1-73cb77a4a159"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -284,7 +284,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Espèces"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="523" y="0" width="29" height="34" uuid="61d90fa9-249e-4557-8d53-f54746ec6aca"/>
+				<reportElement x="531" y="0" width="29" height="34" uuid="61d90fa9-249e-4557-8d53-f54746ec6aca"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -296,7 +296,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["GRT"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="754" y="0" width="29" height="34" uuid="1e13cab0-cd1e-42b2-98c0-b4bf10949f4e"/>
+				<reportElement x="762" y="0" width="29" height="34" uuid="1e13cab0-cd1e-42b2-98c0-b4bf10949f4e"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -320,7 +320,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="607" y="17" width="31" height="17" uuid="d61468d4-dd73-4370-82dc-d1eaeba07286"/>
+				<reportElement x="615" y="17" width="31" height="17" uuid="d61468d4-dd73-4370-82dc-d1eaeba07286"/>
 				<box>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -331,7 +331,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Dbl"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="783" y="0" width="30" height="34" uuid="c1bbff2d-8d91-46c5-8d80-3b7cc1fc0be7"/>
+				<reportElement x="791" y="0" width="30" height="34" uuid="c1bbff2d-8d91-46c5-8d80-3b7cc1fc0be7"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -359,7 +359,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["NBR"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="148" y="0" width="60" height="34" uuid="6f30712e-3d5c-431d-aad0-d484b8e17fcc">
+				<reportElement x="148" y="0" width="82" height="34" uuid="6f30712e-3d5c-431d-aad0-d484b8e17fcc">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -373,7 +373,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Facture"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="724" y="0" width="30" height="34" uuid="93154e22-1743-45f3-a9bf-63d035e8b980">
+				<reportElement x="732" y="0" width="30" height="34" uuid="93154e22-1743-45f3-a9bf-63d035e8b980">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -387,7 +387,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["CHD+LIT"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="582" y="0" width="142" height="17" uuid="b3d7e747-5bae-45af-8940-4dcf380534e6"/>
+				<reportElement x="590" y="0" width="142" height="17" uuid="b3d7e747-5bae-45af-8940-4dcf380534e6"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -411,7 +411,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Devise"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="582" y="17" width="25" height="17" uuid="d4c87399-e953-4b99-af70-474e6886270a">
+				<reportElement x="590" y="17" width="25" height="17" uuid="d4c87399-e953-4b99-af70-474e6886270a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -424,7 +424,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Sing"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="671" y="17" width="28" height="17" uuid="5de35465-20f9-40fc-ae87-f174f4876a62">
+				<reportElement x="679" y="17" width="28" height="17" uuid="5de35465-20f9-40fc-ae87-f174f4876a62">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -450,7 +450,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Code Client"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="552" y="0" width="30" height="34" uuid="add99ec1-e1e4-42ca-a10d-c762238f3f22"/>
+				<reportElement x="560" y="0" width="30" height="34" uuid="add99ec1-e1e4-42ca-a10d-c762238f3f22"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -462,7 +462,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["MDJ"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="638" y="17" width="33" height="17" uuid="d26df48a-bdfc-4c3d-a252-22f7c88a6afa"/>
+				<reportElement x="646" y="17" width="33" height="17" uuid="d26df48a-bdfc-4c3d-a252-22f7c88a6afa"/>
 				<box>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -473,7 +473,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Trip"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="0" width="64" height="34" uuid="af4000f3-5d94-437c-97eb-702f1cf71540"/>
+				<reportElement x="459" y="0" width="72" height="34" uuid="af4000f3-5d94-437c-97eb-702f1cf71540"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -497,19 +497,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Chq/Virement"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="208" y="0" width="37" height="34" uuid="2642a140-5281-4b15-9ad9-876871193614"/>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Remboursement"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="699" y="17" width="25" height="17" uuid="53dbd80a-3114-4f89-a8af-0bd13a30ed76">
+				<reportElement x="707" y="17" width="25" height="17" uuid="53dbd80a-3114-4f89-a8af-0bd13a30ed76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -527,7 +515,7 @@ order by bp.value]]>
 		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$F{suminv}.subtract($F{sumpaytotal}).compareTo(BigDecimal.ZERO)!=0]]></printWhenExpression>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="303" y="0" width="40" height="15" uuid="fe772033-b54a-4346-adf9-7ab3a50161fe">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -543,7 +531,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{sumdevisepay}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="638" y="0" width="33" height="15" uuid="64281d26-f70d-4813-8eb1-83cfdd8c09c3">
+				<reportElement x="646" y="0" width="33" height="15" uuid="64281d26-f70d-4813-8eb1-83cfdd8c09c3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -556,21 +544,6 @@ order by bp.value]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{triple}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="208" y="0" width="37" height="15" uuid="751686fa-a542-406c-ae10-aea95b8e8c1d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="2" y="0" width="113" height="15" uuid="8f478334-01c5-4c33-bc6a-9d7d651041de">
@@ -588,7 +561,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="523" y="0" width="29" height="15" uuid="98eda804-49ed-4856-bbae-8d7967cebcd7">
+				<reportElement x="531" y="0" width="29" height="15" uuid="98eda804-49ed-4856-bbae-8d7967cebcd7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -603,7 +576,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{nbrgratuit}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="699" y="0" width="25" height="15" uuid="2cf5a29c-af03-4f47-ae22-e9a500052de3">
+				<reportElement x="707" y="0" width="25" height="15" uuid="2cf5a29c-af03-4f47-ae22-e9a500052de3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -618,8 +591,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nbrplusquad}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="245" y="0" width="58" height="15" uuid="4d5ce1e8-dad7-4db8-b95c-04dc0710fd0f">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="230" y="0" width="73" height="15" uuid="4d5ce1e8-dad7-4db8-b95c-04dc0710fd0f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -634,7 +607,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{sumdzdpaycash}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="582" y="0" width="25" height="15" uuid="98a75a8d-4e19-4839-ac7b-39da38222ca3">
+				<reportElement x="590" y="0" width="25" height="15" uuid="98a75a8d-4e19-4839-ac7b-39da38222ca3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -649,8 +622,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nbrsingle}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="148" y="0" width="60" height="15" uuid="3a2a277a-e452-4097-9c76-ace43c32202f">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="148" y="0" width="82" height="15" uuid="3a2a277a-e452-4097-9c76-ace43c32202f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -666,7 +639,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{suminv}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="552" y="0" width="30" height="15" uuid="7b0458fb-32e7-466e-ad50-01f2c0eeb79e">
+				<reportElement x="560" y="0" width="30" height="15" uuid="7b0458fb-32e7-466e-ad50-01f2c0eeb79e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -681,7 +654,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{nbrmoudj}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="754" y="0" width="29" height="15" uuid="64cf9429-0e72-4655-b0d3-b9019ccfe208">
+				<reportElement x="762" y="0" width="29" height="15" uuid="64cf9429-0e72-4655-b0d3-b9019ccfe208">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -696,8 +669,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nbrchd}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="459" y="0" width="64" height="15" uuid="dcd2f005-90b1-4ec5-bbf0-07990d88d469">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="459" y="0" width="72" height="15" uuid="dcd2f005-90b1-4ec5-bbf0-07990d88d469">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -712,7 +685,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{suminv}.subtract($F{sumpaytotal})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="607" y="0" width="31" height="15" uuid="6378d484-154f-4e7b-b400-339e1402ba3f">
+				<reportElement x="615" y="0" width="31" height="15" uuid="6378d484-154f-4e7b-b400-339e1402ba3f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -726,7 +699,7 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nbrdouble}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="401" y="0" width="58" height="15" uuid="8e3cb30d-2d05-4e72-b612-9a9fac6e827e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -741,7 +714,7 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sumpaytotal}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="343" y="0" width="58" height="15" uuid="40eb45d1-9fc1-4a36-b212-6cb1abc88399">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -757,7 +730,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{sumdzdpayother}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="783" y="0" width="30" height="15" uuid="9123bdc2-5494-42f0-ac73-1bf3944f768b">
+				<reportElement x="791" y="0" width="30" height="15" uuid="9123bdc2-5494-42f0-ac73-1bf3944f768b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -788,7 +761,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{nbr}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="671" y="0" width="28" height="15" uuid="af16e5c3-1dea-459f-8964-35118a1efedc">
+				<reportElement x="679" y="0" width="28" height="15" uuid="af16e5c3-1dea-459f-8964-35118a1efedc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -804,7 +777,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{nbrquad}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="724" y="0" width="30" height="15" uuid="557332c8-38e8-4225-ad67-5083b98763b5">
+				<reportElement x="732" y="0" width="30" height="15" uuid="557332c8-38e8-4225-ad67-5083b98763b5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -827,7 +800,7 @@ order by bp.value]]>
 	<pageFooter>
 		<band height="19" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-2" x="569" y="0" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="06486b70-65d7-4988-babd-4ce201d5e45d"/>
+				<reportElement key="textField-2" x="577" y="0" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="06486b70-65d7-4988-babd-4ce201d5e45d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -840,7 +813,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-3" x="743" y="0" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="735966f0-af42-4983-839a-96311147873a"/>
+				<reportElement key="textField-3" x="751" y="0" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="735966f0-af42-4983-839a-96311147873a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -868,10 +841,10 @@ order by bp.value]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="34" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="754" y="12" width="29" height="17" uuid="14b6f50d-96b1-429b-a7e4-9764fbe002cd">
+				<reportElement x="762" y="12" width="29" height="17" uuid="14b6f50d-96b1-429b-a7e4-9764fbe002cd">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -901,20 +874,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TNBR}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="208" y="12" width="37" height="17" uuid="3e5ba764-30ea-4477-9818-6fed8662bd9d"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="638" y="12" width="33" height="17" uuid="a97721c5-76f8-4d39-b7d7-8eaa710c390c"/>
+				<reportElement x="646" y="12" width="33" height="17" uuid="a97721c5-76f8-4d39-b7d7-8eaa710c390c"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -926,7 +886,7 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TTRIPLE}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="303" y="12" width="40" height="17" uuid="35f5b819-a9ea-4c36-86f0-487c30e52629"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -940,7 +900,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TPAYDEVISE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="699" y="12" width="25" height="17" uuid="381252ab-1a40-41e6-8506-429f3c9fedcf">
+				<reportElement x="707" y="12" width="25" height="17" uuid="381252ab-1a40-41e6-8506-429f3c9fedcf">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -955,7 +915,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TPLUSQUAD}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="552" y="12" width="30" height="17" uuid="3d0c3219-0110-4fae-a50a-ee81bb48d1c4"/>
+				<reportElement x="560" y="12" width="30" height="17" uuid="3d0c3219-0110-4fae-a50a-ee81bb48d1c4"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -968,7 +928,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TMOUD}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="523" y="12" width="29" height="17" uuid="14394a75-acc7-4350-bcda-61c67c71cd30"/>
+				<reportElement x="531" y="12" width="29" height="17" uuid="14394a75-acc7-4350-bcda-61c67c71cd30"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -981,7 +941,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TGRATUIT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="783" y="12" width="30" height="17" uuid="8b321e37-fa59-4131-9be0-563cc90c1871"/>
+				<reportElement x="791" y="12" width="30" height="17" uuid="8b321e37-fa59-4131-9be0-563cc90c1871"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -993,7 +953,7 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TINF}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="401" y="12" width="58" height="17" uuid="7a11c48e-36b3-48dc-a141-55b912c9d91e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1023,8 +983,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA["TOTAL"]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="459" y="12" width="64" height="17" uuid="91028df2-342a-4c99-88db-673709347752"/>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="459" y="12" width="72" height="17" uuid="91028df2-342a-4c99-88db-673709347752"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1037,7 +997,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TINVOICE}.subtract($V{TPAYMENT})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="724" y="12" width="30" height="17" uuid="ad225cda-25db-4622-a9e1-15ee3f1691b9">
+				<reportElement x="732" y="12" width="30" height="17" uuid="ad225cda-25db-4622-a9e1-15ee3f1691b9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1052,7 +1012,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TCHDLIT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="607" y="12" width="31" height="17" uuid="b0abda07-07e3-4644-8d4b-9f076b7a4b5f"/>
+				<reportElement x="615" y="12" width="31" height="17" uuid="b0abda07-07e3-4644-8d4b-9f076b7a4b5f"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1065,7 +1025,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TDOUBLE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="582" y="12" width="25" height="17" uuid="5f5d8241-b501-48da-afbb-bf42b9c2e92f">
+				<reportElement x="590" y="12" width="25" height="17" uuid="5f5d8241-b501-48da-afbb-bf42b9c2e92f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1079,8 +1039,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TSINGLE}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="148" y="12" width="60" height="17" uuid="963d593b-f3d6-411a-95cf-8441aad5cdad">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="148" y="12" width="82" height="17" uuid="963d593b-f3d6-411a-95cf-8441aad5cdad">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1094,7 +1054,7 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TINVOICE}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="343" y="12" width="58" height="17" uuid="a0f1da36-ee6e-4188-8123-60eb108945c7"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1108,7 +1068,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$V{TPAYOTHER}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="671" y="12" width="28" height="17" uuid="1823a8fc-636f-4735-b6ab-864292a7b927">
+				<reportElement x="679" y="12" width="28" height="17" uuid="1823a8fc-636f-4735-b6ab-864292a7b927">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1122,8 +1082,8 @@ order by bp.value]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TQUAD}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="245" y="12" width="58" height="17" uuid="08cd9816-95df-43f4-9126-ef6d47519dc8"/>
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="230" y="12" width="73" height="17" uuid="08cd9816-95df-43f4-9126-ef6d47519dc8"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>

@@ -28,10 +28,10 @@ cr.iso_code as currency,
 b.BeginningBalance,
 b.EndingBalance,
 b.c_bankstatement_id as c_bankstatement_id,
-(Select sum(trxAmt)
+(Select  COALESCE(sum(trxAmt),0)
 from C_BankStatementLine 
 where C_BankStatement_ID=$P{RECORD_ID} and trxAmt > 0) as encais,
-(Select sum(trxAmt)
+(Select  COALESCE(sum(trxAmt),0)
 from C_BankStatementLine 
 where C_BankStatement_ID=$P{RECORD_ID} and trxAmt < 0) as decaiss
 from C_BankStatement b
