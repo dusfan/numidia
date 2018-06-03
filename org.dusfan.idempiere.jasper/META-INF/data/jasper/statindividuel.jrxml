@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="statindividuel" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6c72bfa-4d80-4b45-951a-19cc6c74ae57">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -105,7 +105,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 			<band height="25">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
-					<reportElement x="2" y="3" width="180" height="20" uuid="9ca328ff-e1bb-4262-88e4-74b313c60141">
+					<reportElement x="2" y="5" width="180" height="20" uuid="9ca328ff-e1bb-4262-88e4-74b313c60141">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box>
@@ -122,16 +122,16 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="27">
+			<band height="26">
 				<textField>
-					<reportElement x="245" y="2" width="180" height="20" uuid="3a483c5f-6820-467b-8066-92cd41e8c98c">
+					<reportElement x="245" y="0" width="180" height="20" uuid="3a483c5f-6820-467b-8066-92cd41e8c98c">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="8"/>
@@ -139,52 +139,54 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<textFieldExpression><![CDATA["Total Code Client : "+$F{value}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.##">
-					<reportElement x="425" y="2" width="72" height="20" uuid="7992522f-4493-4931-8be1-d69f617116b6">
+					<reportElement x="425" y="0" width="65" height="20" uuid="7992522f-4493-4931-8be1-d69f617116b6">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<box>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<box rightPadding="1">
+						<pen lineStyle="Dashed"/>
+						<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tprix}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.##">
-					<reportElement x="497" y="2" width="74" height="20" uuid="05dc0e5c-3c25-40c4-bbc2-9170ee930519">
+					<reportElement x="490" y="0" width="74" height="20" uuid="05dc0e5c-3c25-40c4-bbc2-9170ee930519">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<box>
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<box rightPadding="1">
+						<pen lineWidth="1.0" lineStyle="Dashed"/>
+						<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tpym}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.##">
-					<reportElement x="571" y="2" width="75" height="20" uuid="b5d175a7-7953-4e2b-a843-0d6d5445fbb0">
+					<reportElement x="564" y="0" width="82" height="20" uuid="b5d175a7-7953-4e2b-a843-0d6d5445fbb0">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<box>
+					<box rightPadding="1">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{Tprix}.subtract($V{Tpym})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="173" y="2" width="72" height="20" uuid="2d6f8d65-3176-4f79-bf47-39a43011c908">
+					<reportElement x="173" y="0" width="72" height="20" uuid="2d6f8d65-3176-4f79-bf47-39a43011c908">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box>
@@ -204,9 +206,9 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	<pageHeader>
 		<band height="45" splitType="Stretch">
 			<staticText>
-				<reportElement x="281" y="1" width="240" height="19" uuid="61610120-5518-4145-9d6f-122bd3cb4c72"/>
+				<reportElement x="262" y="1" width="278" height="19" uuid="61610120-5518-4145-9d6f-122bd3cb4c72"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Etat des clients individuels/Comptoir]]></text>
 			</staticText>
@@ -219,7 +221,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Code Client : " + ($P{C_BPartner_ID}!=null ? $F{value}:"-")]]></textFieldExpression>
 			</textField>
@@ -239,21 +241,21 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="39" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="646" y="0" width="58" height="34" uuid="7690efca-6532-48a2-9765-3b54cd01787e"/>
+				<reportElement x="646" y="0" width="58" height="20" uuid="7690efca-6532-48a2-9765-3b54cd01787e"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["VOL"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="2" y="0" width="113" height="34" uuid="2496c0a3-325b-459b-b884-69857c0eec3c"/>
+				<reportElement x="2" y="0" width="113" height="20" uuid="2496c0a3-325b-459b-b884-69857c0eec3c"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -261,24 +263,24 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nom"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="571" y="0" width="75" height="34" uuid="2a1e22be-db13-4893-9ee8-1e7a02724f17"/>
+				<reportElement x="564" y="0" width="82" height="20" uuid="2a1e22be-db13-4893-9ee8-1e7a02724f17"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Reste"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="704" y="0" width="94" height="34" uuid="27b04dca-0eb5-4cdb-9742-f101fef9a3a0"/>
+				<reportElement x="704" y="0" width="94" height="20" uuid="27b04dca-0eb5-4cdb-9742-f101fef9a3a0"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -286,12 +288,12 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Code Client"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="285" height="34" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
+				<reportElement x="115" y="0" width="285" height="20" uuid="a27bf7ad-f9f9-498b-a781-1006435cf57d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -301,24 +303,24 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Package"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="497" y="0" width="74" height="34" uuid="873592ae-fb09-4083-857b-d8e39b9de0a0"/>
+				<reportElement x="490" y="0" width="74" height="20" uuid="873592ae-fb09-4083-857b-d8e39b9de0a0"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Verssement"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="424" y="0" width="72" height="34" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
+				<reportElement x="425" y="0" width="65" height="20" uuid="1d83f37a-7d62-44b2-81e9-1ef9c3612620">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -327,12 +329,12 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Prix"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="24" height="34" uuid="bb6d4916-640b-4396-861a-92ebdaa46418">
+				<reportElement x="400" y="0" width="25" height="20" uuid="bb6d4916-640b-4396-861a-92ebdaa46418">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -341,7 +343,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["ST"]]></textFieldExpression>
 			</textField>
@@ -351,8 +353,8 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		<band height="34" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#,##0.##">
-				<reportElement x="571" y="0" width="75" height="34" uuid="dac85af5-cc3f-4599-897a-f22625d2a3b3"/>
-				<box>
+				<reportElement x="564" y="0" width="82" height="34" uuid="dac85af5-cc3f-4599-897a-f22625d2a3b3"/>
+				<box rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -364,7 +366,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 			</textField>
 			<textField>
 				<reportElement x="2" y="0" width="113" height="34" uuid="7d7c7cf5-0b4d-4aef-b778-d651d1f3c1ec"/>
-				<box>
+				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -404,8 +406,8 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##">
-				<reportElement x="497" y="0" width="74" height="34" uuid="12555dde-e07b-4044-9363-a350cb82146c"/>
-				<box>
+				<reportElement x="490" y="0" width="74" height="34" uuid="12555dde-e07b-4044-9363-a350cb82146c"/>
+				<box rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -416,10 +418,10 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				<textFieldExpression><![CDATA[$F{totalpay}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##">
-				<reportElement x="425" y="0" width="72" height="34" uuid="f61aed71-34b7-4f78-b9b4-12316c28118b">
+				<reportElement x="425" y="0" width="65" height="34" uuid="f61aed71-34b7-4f78-b9b4-12316c28118b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<box>
+				<box rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -458,7 +460,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="30" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-2" x="569" y="4" width="170" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="02214551-6cf2-45b9-abe7-2cc7db230cc5"/>
 				<box>
