@@ -35,7 +35,7 @@ and (o.du_agence_id =$P{C_BPartner_ID} or $P{C_BPartner_ID} is null)
 and (o.createdby=$P{AD_User_ID} or  $P{AD_User_ID} is null)
 and (o.du_vol_id =$P{DU_Vol_ID} or $P{DU_Vol_ID} is null)
 and o.c_bpartnerrelation_id =1002081
-order by o.du_agence_id, o.createdby, bp.name, o.docstatus]]>
+order by o.du_agence_id, bp.name, o.createdby,  o.docstatus]]>
 	</queryString>
 	<field name="docstatus" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="docstatus"/>
