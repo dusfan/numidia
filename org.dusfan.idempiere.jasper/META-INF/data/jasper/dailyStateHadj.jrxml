@@ -35,7 +35,7 @@ and (o.du_agence_id =$P{C_BPartner_ID} or $P{C_BPartner_ID} is null)
 and (o.createdby=$P{AD_User_ID} or  $P{AD_User_ID} is null)
 and (o.du_vol_id =$P{DU_Vol_ID} or $P{DU_Vol_ID} is null)
 and o.c_bpartnerrelation_id =1002081
-order by o.du_agence_id, o.createdby,o.docstatus]]>
+order by o.du_agence_id, o.createdby, bp.name, o.docstatus]]>
 	</queryString>
 	<field name="docstatus" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="docstatus"/>
@@ -449,7 +449,7 @@ order by o.du_agence_id, o.createdby,o.docstatus]]>
 				<reportElement x="79" y="0" width="120" height="28" uuid="ee89d8fc-2844-4f2b-8c00-0070fbe1aa9d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c363d609-d9c3-4e37-8720-7a0b71ea47b1"/>
 				</reportElement>
-				<box>
+				<box leftPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -538,4 +538,16 @@ order by o.du_agence_id, o.createdby,o.docstatus]]>
 			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="28">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="28" uuid="5c9fdc36-a221-4657-8749-d6ce25f58151"/>
+				<subreportParameter name="RESOURCE_DIR">
+					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
 </jasperReport>
