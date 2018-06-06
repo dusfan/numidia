@@ -347,6 +347,20 @@ public class EventOrder {
 	}
 	
 	
+	// Check if doctype is hadj and exist two record in same year (duplicate)
+	public static boolean checkHadjDuplicate(PO po, Properties ctx, String trxName) {
+		MOrder ord = (MOrder) po;
+		if (ord.getAD_Org_ID() == 1000002 && ord.isSOTrx() & ord.getC_DocTypeTarget_ID() == 1000057) {
+			int count = DB.getSQLValue(trxName, 
+					"Select count(1) from c_order where docstatus in ('DR','IP','CO','CL') and C_DocTypeTarget_ID = 1000057 "
+					+ " and extract(year from created)= extract(year from current_date) and c_bpartner_id = ?", 
+					ord.getC_BPartner_ID());
+			if (count > 0)
+				return false;
+					}
+		return true;
+	}
+	
 	// Gestion de la caisse en arabie saoudi
 	public static boolean addSarPrice(PO po, Properties ctx, String trxName) {
 		MOrder ord = (MOrder) po;
