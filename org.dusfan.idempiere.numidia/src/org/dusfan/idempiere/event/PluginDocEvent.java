@@ -140,8 +140,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
-					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
-						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
+//					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
+//						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
 					EventOrder.setC_Activity_ID(MOrder.Table_Name, po, ctx,trxName);
 					EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
 				} else if (po instanceof MInvoice) {
