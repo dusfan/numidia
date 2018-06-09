@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
+import org.compiere.model.MEXPFormatLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
-import org.compiere.model.MPayment;
 import org.compiere.model.MProduct;
 import org.compiere.model.PO;
 import org.compiere.model.X_C_BP_Relation;
@@ -24,12 +24,7 @@ import org.dusfan.idempiere.model.MVolLine;
 public class EventOrder {
 
 	public static void setC_Activity_ID(String type, PO po, Properties ctx, String trxName) {
-		if (type.equals(MOrder.Table_Name)) {
-			MOrder ord = (MOrder) po;
-			int c_doctype_id = ord.getC_DocTypeTarget_ID();
-			if (c_doctype_id == 1000047 || c_doctype_id == 1000048)
-				ord.setC_Activity_ID(1000001);
-		} else if (type.equals(MOrderLine.Table_Name)) {
+		if (type.equals(MOrderLine.Table_Name)) {
 			MOrderLine line = (MOrderLine) po;
 			MOrder order = new MOrder(ctx, line.getC_Order_ID(), trxName);
 			line.setC_Activity_ID(order.getC_Activity_ID());
@@ -37,21 +32,11 @@ public class EventOrder {
 			MInvoiceLine line = (MInvoiceLine) po;
 			MInvoice invoice = new MInvoice(ctx, line.getC_Invoice_ID(), trxName);
 			line.setC_Activity_ID(invoice.getC_Activity_ID());
-		} else if (type.equals(MInvoice.Table_Name)) {
-			MInvoice inv = (MInvoice) po;
-			int c_doctype_id = inv.getC_DocTypeTarget_ID();
-			if (c_doctype_id == 1000051 || c_doctype_id == 1000052)
-				inv.setC_Activity_ID(1000001);
-		} else if (type.equals(MPayment.Table_Name)) {
-			MPayment pay = (MPayment) po;
-			int c_doctype_id = pay.getC_DocType_ID();
-			if (c_doctype_id == 1000049 || c_doctype_id == 1000050)
-				pay.setC_Activity_ID(1000001);
 		}
 	}
 
 	// Set Package and Taxe
-	public static void setPackageAndSarTax(PO po, Properties ctx, String trxName) {
+	public static void setPackage(PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
 		if (line.getM_Product_ID() > 0) {
 			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
@@ -60,21 +45,6 @@ public class EventOrder {
 				if (pr.get_ValueAsString("TypeRoom") != null && pr.get_ValueAsString("TypeRoom").length() > 0) {
 					line.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
 				}
-				MBPartner bp = new MBPartner(ctx, line.getC_BPartner_ID(), trxName);
-				MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
-//				if (bp.get_ValueAsString("isTaxSAR").equals("Y") && ord.getC_Activity_ID() == 1000001) {
-//					int no = DB.getSQLValue(trxName, "Select c_charge_id from c_orderline where c_order_id =" + 1000000
-//							+ " and c_orderline_id = " + ord.getC_Order_ID());
-//					if (no > 0)
-//						return;
-//					else {
-//						MOrderLine chline = new MOrderLine(ord);
-//						chline.setC_Charge_ID(1000000);
-//						chline.setQty(Env.ONE);
-//						chline.saveEx();
-//					}
-//
-//				}
 			} else {
 				line.set_ValueNoCheck("M_Sejour_ID", null);
 				line.set_ValueNoCheck("TypeRoom", null);
@@ -403,5 +373,93 @@ public class EventOrder {
 			// Delete from line
 			DB.executeUpdate("Delete from DU_POSARLine where C_Order_ID =" + ord.getC_Order_ID(), trxName);
 		}
+	}
+	
+	
+	// Gestion des chambre du hadj temporaire
+	public static void setTypeRoom (PO po, Properties ctx, String trxName) {
+		MOrderLine line = (MOrderLine)po;
+		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
+		String typeRoom = "";
+		String vip = "N";
+		if (ord.getAD_Org_ID()==1000002 && ord.getC_DocTypeTarget_ID()==1000057) {
+			int[] ol = PO.getAllIDs(MOrderLine.Table_Name, 
+					"C_Order_ID ="+ord.getC_Order_ID(), trxName);
+			for (int id : ol)
+			{
+				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
+						+ " c_orderline_id =?", id);
+				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
+				if (pr.getValue().equals("H02MN"))
+					typeRoom = "20";
+				if (pr.getValue().equals("H03MN"))
+					typeRoom = "30";
+				if (pr.getValue().equals("VH02MR")) {
+					typeRoom="20";
+					vip = "Y";
+				}
+				if (pr.getValue().equals("VH03MR")) {
+					typeRoom="30";
+					vip = "Y";
+				}
+				if (pr.getValue().equals("VH04MR")) {
+					typeRoom="40";
+					vip = "Y";
+				}
+				if (pr.getValue().equals("VH02S")) {
+					typeRoom="20";
+					vip = "Y";
+				}	
+				if (pr.getValue().equals("VH03S")) {
+					typeRoom="30";
+					vip = "Y";
+				}
+				if (pr.getValue().equals("VH04S")) {
+					typeRoom="40";
+					vip = "Y";
+				}
+				
+			}
+			if (ol.length == 1) {
+				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
+						+ " c_orderline_id =?", ol[0]);
+				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
+				if (pr.getValue().equals("HD-ECO")) {
+					typeRoom="40";
+				}
+			}
+			ord.set_ValueNoCheck("TypeRoom", typeRoom);
+			ord.set_ValueNoCheck("VIP", vip);
+			ord.saveEx();
+		}
+	}
+	
+	public static void setTypeRoomDelete (PO po, Properties ctx, String trxName) {
+		MOrderLine line = (MOrderLine)po;
+		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
+		String typeRoom = "";
+		String vip = "N";
+		if (ord.getAD_Org_ID()==1000002 && ord.getC_DocTypeTarget_ID()==1000057) {
+			int[] ol = PO.getAllIDs(MOrderLine.Table_Name, 
+					"C_Order_ID ="+ord.getC_Order_ID(), trxName);
+			
+			if (ol.length == 1) {
+				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
+						+ " c_orderline_id =?", ol[0]);
+				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
+				if (pr.getValue().equals("HD-ECO")) {
+					ord.set_ValueNoCheck("TypeRoom", "40");
+					ord.set_ValueNoCheck("VIP", vip);
+					ord.saveEx();
+				}
+			}
+			if (ol.length == 0) {
+				ord.set_ValueNoCheck("TypeRoom", null);
+				ord.set_ValueNoCheck("VIP", null);
+				ord.saveEx();
+			}
+			
+		}
+		
 	}
 }

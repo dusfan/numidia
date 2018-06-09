@@ -592,7 +592,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		order.setPaymentRule(bp.getPaymentRule());
 		order.setC_PaymentTerm_ID(bp.getC_PaymentTerm_ID());
 		order.setIsSOTrx(true);
-		order.setC_Activity_ID(1000001);
+//		order.setC_Activity_ID(1000001);
 		order.set_ValueNoCheck("DU_Vol_ID", imp.getDU_Vol_ID()); // set vol
 		if (imp.get_Value("DateDeposit") != null)
 			order.set_ValueNoCheck("DateDeposit", imp.get_Value("DateDeposit")); // Add date retour visa
@@ -602,7 +602,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		MOrderLine l1 = new MOrderLine(order);
 		l1.setM_Product_ID(imp.getM_Product_ID());
 		l1.setQty(Env.ONE);
-		l1.setC_Activity_ID(1000001);
+//		l1.setC_Activity_ID(1000001);
 		l1.saveEx();
 		
 		// create tax if exist
@@ -612,7 +612,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 			MCharge ch = new MCharge(getCtx(), imp.getC_Charge_ID(), get_TrxName());
 			l2.setQty(Env.ONE);
 			l2.setPrice(ch.getChargeAmt());
-			l2.setC_Activity_ID(1000001);
+//			l2.setC_Activity_ID(1000001);
 			l2.saveEx();
 		}
 		

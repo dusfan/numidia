@@ -46,8 +46,14 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MBPartner.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MBPartner.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MOrderLine.Table_Name);
 		// DOC
 		// Order
+		
+		// After Delete
+		registerTableEvent(IEventTopics.PO_AFTER_DELETE, MOrderLine.Table_Name);
+		
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_VOID, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
@@ -81,7 +87,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 			if (type.equals(IEventTopics.PO_BEFORE_NEW)) {
 				if (po instanceof MOrderLine) {
 					EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
-					EventOrder.setPackageAndSarTax(po,ctx,trxName);
+					EventOrder.setPackage(po,ctx,trxName);
 					EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
 					EventOrder.setremiseBillet(po,ctx,trxName);
 				} else if (po instanceof MInvoiceLine) {
@@ -92,12 +98,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 								+ "le code client ne sont pas compatible");
 					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
 						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
-					EventOrder.setC_Activity_ID(MOrder.Table_Name, po, ctx,trxName);
 					EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
 					EventOrder.setDateOrderedByFlight(po, ctx, trxName);
 				} else if (po instanceof MInvoice) {
-					EventOrder.setC_Activity_ID(MInvoice.Table_Name, po, ctx,trxName);
-					EventInvoice.setDateAcct (po);
+//					EventInvoice.setDateAcct (po);
 				} else if (po instanceof MPayment) {
 					if (!EventPayment.CheckPaymentRules(po, ctx, trxName)) {
 						throw new AdempiereUserError("Attention "
@@ -110,7 +114,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
 						throw new AdempiereUserError("Attention "
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
-					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MBPartner ) {
 //					if (!EventPartner.checkCodeClient(po, trxName, ctx))
 //						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
@@ -129,6 +132,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName);
 				}
+				else if (po instanceof MOrderLine) {
+					EventOrder.setTypeRoom(po, ctx, trxName);
+				}
 			}
 			// End After new 
 			// before change
@@ -136,18 +142,17 @@ public class PluginDocEvent extends AbstractEventHandler {
 				if (po instanceof MOrderLine) {
 					EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
 					EventOrder.setremiseBillet(po,ctx,trxName);
-					EventOrder.setPackageAndSarTax(po,ctx,trxName);
+					EventOrder.setPackage(po,ctx,trxName);
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
 //					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
 //						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
-					EventOrder.setC_Activity_ID(MOrder.Table_Name, po, ctx,trxName);
 					EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
 				} else if (po instanceof MInvoice) {
-					EventOrder.setC_Activity_ID(MInvoice.Table_Name, po, ctx,trxName);
+//					EventOrder.setC_Activity_ID(MInvoice.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MPayment) {
-					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
+//					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				}
 				else if (po instanceof MBPartner ) {
 //					if (!EventPartner.checkCodeClient(po, trxName, ctx))
@@ -162,7 +167,19 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventPartner.deleteSpace(po, trxName, ctx);
 					EventPartner.setImage(po, trxName, ctx);
 				}
+				else if (po instanceof MOrderLine) {
+					EventOrder.setTypeRoom(po, ctx, trxName);
+				}
 			}
+			
+			// After delete HAdj
+			if (type.equals(IEventTopics.PO_AFTER_DELETE)) {
+				if (po instanceof MOrderLine) {
+					EventOrder.setTypeRoomDelete(po, ctx, trxName);
+				}
+			}
+			// End after delete
+			
 			// End After change 
 			if (type.equals(IEventTopics.DOC_BEFORE_COMPLETE)) {
 				if (po instanceof MInvoice) {

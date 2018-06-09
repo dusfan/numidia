@@ -7,13 +7,6 @@ import org.compiere.model.MOrder;
 import org.compiere.model.PO;
 
 public class EventInvoice {
-
-	public static void setDateAcct (PO po) {
-		MInvoice inv = (MInvoice)po;
-		if (inv.getC_Activity_ID() == 1000001) {
-			inv.setDateAcct(inv.getDateInvoiced());
-		}
-	}
 	
 	public static void SetDU_Vol_ID (PO po, Properties ctx, String trxName) {
 		MInvoice inv = (MInvoice)po;

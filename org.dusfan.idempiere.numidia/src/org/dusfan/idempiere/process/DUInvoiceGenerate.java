@@ -152,7 +152,7 @@ public class DUInvoiceGenerate extends SvrProcess {
 	        			+ "c_orderline where C_Order_ID = o.C_Order_ID and m_product_id in (" + p_M_Product_ID + ")" +") ";
 				sql.append(sqlv);
 			}
-			sql.append(" AND o.C_ACtivity_ID=1000001 "); // activites OMRA
+			sql.append(" AND o.AD_Org_ID=1000002 "); // ORG OMRA
 			//
 			sql.append(" AND EXISTS (SELECT * FROM C_OrderLine ol ")
 					.append("WHERE o.C_Order_ID=ol.C_Order_ID AND ol.QtyOrdered<>ol.QtyInvoiced) ")

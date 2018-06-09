@@ -35,15 +35,10 @@ public class CalloutNumidiaOrder implements IColumnCallout {
 			}
 
 		} else if (mField.getColumnName().equals("C_DocTypeTarget_ID")) {
-			if (mTab.getValue("C_DocTypeTarget_ID") == null)
-				mTab.setValue("C_Activity_ID", null);
-			else {
+			if (mTab.getValue("C_DocTypeTarget_ID") != null) {
 				int c_doctype_id = (int) mTab.getValue("C_DocTypeTarget_ID");
-				if (c_doctype_id == 1000047 || c_doctype_id == 1000048 || c_doctype_id == 1000057) {
-					mTab.setValue("C_Activity_ID", 1000001);
-					if(c_doctype_id == 1000057)
-						mTab.setValue("C_BPartnerRelation_ID", 1002081);
-				}
+				if(c_doctype_id == 1000057)
+					mTab.setValue("C_BPartnerRelation_ID", 1002081);
 			}
 				
 		} else if (mField.getColumnName().equals("DU_Vol_ID")) { // Link Dateordered to flight depart

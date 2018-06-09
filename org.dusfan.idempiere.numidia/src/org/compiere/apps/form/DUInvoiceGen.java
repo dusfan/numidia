@@ -92,7 +92,7 @@ public class DUInvoiceGen extends GenForm
 	            + " AND ic.C_BPartner_ID=bp.C_BPartner_ID"
 	            + " AND ic.C_DocType_ID=dt.C_DocType_ID"
 	            + " AND ic.AD_Client_ID=?"
-	    		+ " AND ord.C_ACtivity_ID=1000001"); // set to omra costomisation
+	    		+ " AND ord.AD_Org_ID=1000002"); // set to omra costomisation
 
         if (m_AD_Org_ID != null)
             sql.append(" AND ic.AD_Org_ID=").append(m_AD_Org_ID);
