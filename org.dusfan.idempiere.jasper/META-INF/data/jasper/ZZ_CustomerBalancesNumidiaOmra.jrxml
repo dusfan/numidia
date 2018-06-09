@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="47"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.245Local"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="147"/>
@@ -43,7 +43,7 @@ INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType = 'ARI'
 WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
-and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
+and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_org_id=1000002 and i.ad_client_id = $P{AD_Client_ID}
 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))+
 (select COALESCE(sum(currencyConvert(i.GRANDTOTAL, i.C_Currency_ID, 235, i.DATEInvoiced, null, i.AD_Client_ID, i.AD_Org_ID)),0)*-1
 from C_INVOICE i
@@ -51,14 +51,14 @@ INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType = 'ARC'
 WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
-and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_client_id = $P{AD_Client_ID}
+and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_org_id=1000002 and i.ad_client_id = $P{AD_Client_ID}
 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as suminv,
 (select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0)
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL') and p.tendertype='X' and p.c_currency_id =235
-and p.C_BPartner_ID = bp.C_BPARTNER_ID
+and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000002 
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}
 ) as sumdzdpaycash,
 (select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
@@ -66,7 +66,7 @@ from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}  
 and p.docstatus in ('CO', 'CL') and p.tendertype <> 'X' and p.c_currency_id =235
-and p.C_BPartner_ID = bp.C_BPARTNER_ID
+and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000002 
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}
 ) as sumdzdpayother,
 (select COALESCE((sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)),0) as sumdevisepay
@@ -74,29 +74,29 @@ from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}
 and p.docstatus in ('CO', 'CL')
-and p.C_BPartner_ID = bp.C_BPARTNER_ID
+and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000002 
 and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (235) and p.ad_client_id = $P{AD_Client_ID}) as sumdevisepay,
 (select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate}
 and p.docstatus in ('CO', 'CL')
-and p.C_BPartner_ID = bp.C_BPARTNER_ID
+and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000002 
 and p.ISRECEIPT = 'Y' and p.ad_client_id = $P{AD_Client_ID}) as sumpaytotal,
-(Select count(1) from c_order where c_bpartnerrelation_id = bp.c_bpartner_id
+(Select count(1) from c_order where c_bpartnerrelation_id = bp.c_bpartner_id and ad_org_id=1000002 
 and trunc(dateordered) >=  $P{StartDate} 
 and trunc(dateordered) <= $P{EndDate}
 and docstatus in ('CO','CL')) as nbr,
-getnbomrarmoudjah($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrmoudj,
-getnbomrachdaveclit($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrchdlit,
-getnbomrachd($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrchd,
-getnbomrasingle($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrsingle,
-getnbomradouble($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrdouble,
-getnbomratriple($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as triple,
-getnbomraquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrquad,
-getnbomrainf($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrinf,
-getnbomragratuit($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrgratuit,
-getnbomraplusquad($P{StartDate},$P{EndDate},$P{AD_Client_ID},bp.C_BPartner_ID,$P{C_Activity_ID}) as nbrplusquad
+getnbomrarmoudjah($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrmoudj,
+getnbomrachdaveclit($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrchdlit,
+getnbomrachd($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrchd,
+getnbomrasingle($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrsingle,
+getnbomradouble($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrdouble,
+getnbomratriple($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as triple,
+getnbomraquad($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrquad,
+getnbomrainf($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrinf,
+getnbomragratuit($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrgratuit,
+getnbomraplusquad($P{StartDate},$P{EndDate},bp.C_BPartner_ID) as nbrplusquad
 from C_BPARTNER bp
 INNER JOIN AD_Client c ON bp.AD_Client_ID=c.AD_Client_ID
 where bp.isCustomer = 'Y'
