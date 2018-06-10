@@ -17,6 +17,7 @@
 	<parameter name="M_PriceList_Version_ID" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="AD_ROLE_ID" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="M_Sejour_ID" class="java.lang.Integer"/>
+	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT cod.value AS codevalue,
        cod.name AS codeclient,
@@ -80,6 +81,7 @@ where o.docstatus in ('DR','IP','CO') and p.isbom = 'Y'
 and ($P{DU_Vol_ID} is null or o.du_vol_id = $P{DU_Vol_ID})   and ($P{AD_User_ID} is null or o.salesrep_id = $P{AD_User_ID})
 and ($P{M_Sejour_ID} is null or ol.M_Sejour_ID = $P{M_Sejour_ID})
 and ($P{C_BPartner_ID} is null or o.C_BPartnerRelation_ID = $P{C_BPartner_ID})
+and o.AD_Org_ID =  $P{AD_Org_ID} 
 order by cod.c_bpartner_id, o.salesrep_id]]>
 	</queryString>
 	<field name="codevalue" class="java.lang.String">
