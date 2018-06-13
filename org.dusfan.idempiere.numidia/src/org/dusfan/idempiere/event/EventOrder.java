@@ -390,66 +390,40 @@ public class EventOrder {
 				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
 						+ " c_orderline_id =?", id);
 				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
-				if (pr.getValue().equals("H02MN"))
+				
+				if (pr.get_ValueAsString("TypeRoom").equals("20"))
 					typeRoom = "20";
-				if (pr.getValue().equals("H03MN"))
+				if (pr.get_ValueAsString("TypeRoom").equals("30"))
 					typeRoom = "30";
-				if (pr.getValue().equals("VH02MR") || 
-						pr.getValue().equals("VH02F") || pr.getValue().equals("VH02I") || pr.getValue().equals("VH02S")) {
-					typeRoom="20";
+				if (pr.get_ValueAsString("TypeRoom").equals("40"))
+					typeRoom = "40";
+				
+				if (pr.get_ValueAsString("TypeRoom").equals("20") && pr.get_ValueAsString("VIP").equals("Y")) {
+					typeRoom = "20";
 					vip = "Y";
 				}
-				if (pr.getValue().equals("VH03MR") || 
-						pr.getValue().equals("VH03F") || pr.getValue().equals("VH03I") || pr.getValue().equals("VH03S")) {
-					typeRoom="30";
+				if (pr.get_ValueAsString("TypeRoom").equals("30") && pr.get_ValueAsString("VIP").equals("Y")) {
+					typeRoom = "30";
 					vip = "Y";
 				}
-				if (pr.getValue().equals("VH04MR") || 
-						pr.getValue().equals("VH04F") || pr.getValue().equals("VH04I") || pr.getValue().equals("VH04S")) {
-					typeRoom="40";
+				if (pr.get_ValueAsString("TypeRoom").equals("40") && pr.get_ValueAsString("VIP").equals("Y")) {
+					typeRoom = "40";
 					vip = "Y";
 				}
 				
 			}
-			if (ol.length == 1) {
-				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
-						+ " c_orderline_id =?", ol[0]);
-				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
-				if (pr.getValue().equals("HD-ECO")) {
+			if (ol.length == 1 || typeRoom.equals("")) {
+				int count = DB.getSQLValue(trxName, "Select count(1) from c_orderline l inner join m_product p "
+						+ " on p.m_product_id=l.m_product_id where p.value='HD-ECO'"
+						+ " and l.c_order_id ="+line.getC_Order_ID());
+				
+				if (count > 1) 
 					typeRoom="40";
-				}
 			}
-			ord.set_ValueNoCheck("TypeRoom", typeRoom);
+			ord.set_ValueNoCheck("TypeRoom", typeRoom.equals("")? null : typeRoom);
 			ord.set_ValueNoCheck("VIP", vip);
 			ord.saveEx();
 		}
 	}
 	
-	public static void setTypeRoomDelete (PO po, Properties ctx, String trxName) {
-		MOrderLine line = (MOrderLine)po;
-		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
-		String vip = "N";
-		if (ord.getAD_Org_ID()==1000002 && ord.getC_DocTypeTarget_ID()==1000057) {
-			int[] ol = PO.getAllIDs(MOrderLine.Table_Name, 
-					"C_Order_ID ="+ord.getC_Order_ID(), trxName);
-			
-			if (ol.length == 1) {
-				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
-						+ " c_orderline_id =?", ol[0]);
-				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
-				if (pr.getValue().equals("HD-ECO")) {
-					ord.set_ValueNoCheck("TypeRoom", "40");
-					ord.set_ValueNoCheck("VIP", vip);
-					ord.saveEx();
-				}
-			}
-			if (ol.length == 0) {
-				ord.set_ValueNoCheck("TypeRoom", null);
-				ord.set_ValueNoCheck("VIP", null);
-				ord.saveEx();
-			}
-			
-		}
-		
-	}
 }

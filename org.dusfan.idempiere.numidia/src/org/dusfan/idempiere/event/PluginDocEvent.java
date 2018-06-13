@@ -175,7 +175,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// After delete HAdj
 			if (type.equals(IEventTopics.PO_AFTER_DELETE)) {
 				if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoomDelete(po, ctx, trxName);
+					EventOrder.setTypeRoom(po, ctx, trxName);
 				}
 			}
 			// End after delete
