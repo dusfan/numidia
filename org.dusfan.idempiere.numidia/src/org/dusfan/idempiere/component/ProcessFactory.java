@@ -7,6 +7,7 @@ import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
+import org.dusfan.idempiere.process.DeleteOldDataByPeriode;
 import org.dusfan.idempiere.process.ExploseBom;
 import org.dusfan.idempiere.process.ExportSrdox;
 import org.dusfan.idempiere.process.ExportSrdox2;
@@ -81,6 +82,9 @@ public class ProcessFactory implements IProcessFactory {
 			return new ProcessOrder();	
 		else if (className.equals(VoidOrderByGroup.class.getName()))
 			return new VoidOrderByGroup();
+		else if (className.equals(DeleteOldDataByPeriode.class.getName()))
+			return new DeleteOldDataByPeriode();
+		
 		return null;
 	}
 }

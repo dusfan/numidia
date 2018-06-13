@@ -394,27 +394,18 @@ public class EventOrder {
 					typeRoom = "20";
 				if (pr.getValue().equals("H03MN"))
 					typeRoom = "30";
-				if (pr.getValue().equals("VH02MR")) {
+				if (pr.getValue().equals("VH02MR") || 
+						pr.getValue().equals("VH02F") || pr.getValue().equals("VH02I") || pr.getValue().equals("VH02S")) {
 					typeRoom="20";
 					vip = "Y";
 				}
-				if (pr.getValue().equals("VH03MR")) {
+				if (pr.getValue().equals("VH03MR") || 
+						pr.getValue().equals("VH03F") || pr.getValue().equals("VH03I") || pr.getValue().equals("VH03S")) {
 					typeRoom="30";
 					vip = "Y";
 				}
-				if (pr.getValue().equals("VH04MR")) {
-					typeRoom="40";
-					vip = "Y";
-				}
-				if (pr.getValue().equals("VH02S")) {
-					typeRoom="20";
-					vip = "Y";
-				}	
-				if (pr.getValue().equals("VH03S")) {
-					typeRoom="30";
-					vip = "Y";
-				}
-				if (pr.getValue().equals("VH04S")) {
+				if (pr.getValue().equals("VH04MR") || 
+						pr.getValue().equals("VH04F") || pr.getValue().equals("VH04I") || pr.getValue().equals("VH04S")) {
 					typeRoom="40";
 					vip = "Y";
 				}
@@ -437,7 +428,6 @@ public class EventOrder {
 	public static void setTypeRoomDelete (PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine)po;
 		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
-		String typeRoom = "";
 		String vip = "N";
 		if (ord.getAD_Org_ID()==1000002 && ord.getC_DocTypeTarget_ID()==1000057) {
 			int[] ol = PO.getAllIDs(MOrderLine.Table_Name, 
