@@ -20,6 +20,7 @@ import org.dusfan.idempiere.model.MVisaGroup;
 import org.dusfan.idempiere.model.MVisaGroupLine;
 import org.dusfan.idempiere.model.MVol;
 import org.dusfan.idempiere.model.MVolLine;
+import org.dusfan.idempiere.model.X_DU_IOrderAgence;
 import org.dusfan.idempiere.model.X_I_ImportOmraBP;
 
 public class ModelFactory implements IModelFactory {
@@ -61,6 +62,8 @@ public class ModelFactory implements IModelFactory {
 			return MPOSAR.class;
 		else if (tableName.equals(MPOSARLine.Table_Name))
 			return MPOSAR.class;
+		else if (tableName.equals(X_DU_IOrderAgence.Table_Name))
+			return X_DU_IOrderAgence.class;
 		
 		return null;
 	}
@@ -99,6 +102,8 @@ public class ModelFactory implements IModelFactory {
 			return new MPOSAR(Env.getCtx(), Record_ID, trxName);
 		else if (tableName.equals(MPOSARLine.Table_Name))
 			return new MPOSARLine(Env.getCtx(), Record_ID, trxName);
+		else if (tableName.equals(X_DU_IOrderAgence.Table_Name))
+			return new X_DU_IOrderAgence(Env.getCtx(), Record_ID, trxName);
 		return null;
 	}
 
@@ -136,6 +141,8 @@ public class ModelFactory implements IModelFactory {
 			return new MPOSAR(Env.getCtx(), rs, trxName);
 		else if (tableName.equals(MPOSARLine.Table_Name))
 			return new MPOSARLine(Env.getCtx(), rs, trxName);
+		else if (tableName.equals(X_DU_IOrderAgence.Table_Name))
+			return new X_DU_IOrderAgence(Env.getCtx(), rs, trxName);
 		return null;
 	}
 
