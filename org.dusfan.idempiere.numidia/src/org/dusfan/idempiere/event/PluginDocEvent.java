@@ -11,6 +11,7 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MPayment;
+import org.compiere.model.MProduct;
 import org.compiere.model.PO;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.CLogger;
@@ -48,6 +49,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MBPartner.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrderLine.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MProduct.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MProduct.Table_Name);
 		// DOC
 		// Order
 		
@@ -128,6 +131,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventPartner.setAdresse((MBPartner)po, trxName, ctx);
 					EventPartner.deleteSpace(po, trxName, ctx);
 					EventPartner.setImage(po, trxName, ctx);
+					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName);
@@ -169,6 +173,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 				else if (po instanceof MOrderLine) {
 					EventOrder.setTypeRoom(po, ctx, trxName);
+				}
+				else if (po instanceof MProduct) {
+					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 			}
 			
