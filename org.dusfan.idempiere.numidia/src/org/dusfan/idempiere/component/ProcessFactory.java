@@ -14,6 +14,7 @@ import org.dusfan.idempiere.process.ExportSrdox2;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
+import org.dusfan.idempiere.process.ImportTourismeBP;
 import org.dusfan.idempiere.process.ProcessOrder;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
 import org.dusfan.idempiere.process.SetGratuiteSV;
@@ -84,6 +85,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new VoidOrderByGroup();
 		else if (className.equals(DeleteOldDataByPeriode.class.getName()))
 			return new DeleteOldDataByPeriode();
+		else if (className.equals(ImportTourismeBP.class.getName()))
+			return new ImportTourismeBP ();
 		
 		return null;
 	}
