@@ -132,13 +132,15 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventPartner.setAdresse((MBPartner)po, trxName, ctx);
 					EventPartner.deleteSpace(po, trxName, ctx);
 					EventPartner.setImage(po, trxName, ctx);
-					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName); // a voir avec le tourisme
 				}
 				else if (po instanceof MOrderLine) {
 					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
+				}
+				else if (po instanceof MProduct) {
+					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 			}
 			// End After new 
