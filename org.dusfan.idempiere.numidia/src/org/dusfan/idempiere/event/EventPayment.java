@@ -12,12 +12,13 @@ public class EventPayment {
 		MPayment pay = (MPayment)po;
 		if (pay.getAD_Client_ID() == 1000002) {
 			if (pay.getTenderType().equals("X") && (pay.getC_BankAccount_ID()==1000001 || 
-					pay.getC_BankAccount_ID()==1000003)) {
+					pay.getC_BankAccount_ID()==1000013)) {
 				return false;
 			}
-			if (pay.getTenderType().equals("K") && (pay.getC_BankAccount_ID()==1000000 ||
-					pay.getC_BankAccount_ID()==1000006 || pay.getC_BankAccount_ID()==1000007 ||
-							pay.getC_BankAccount_ID()==1000004 || pay.getC_BankAccount_ID()==1000005)) {
+			if (pay.getTenderType().equals("K") && (pay.getC_BankAccount_ID() == 1000000
+					|| pay.getC_BankAccount_ID() == 1000006 || pay.getC_BankAccount_ID() == 1000007
+					|| pay.getC_BankAccount_ID() == 1000004 || pay.getC_BankAccount_ID() == 1000005
+					|| pay.getC_BankAccount_ID() == 1000011 || pay.getC_BankAccount_ID() == 1000012)) {
 				return false;
 			}
 		}
