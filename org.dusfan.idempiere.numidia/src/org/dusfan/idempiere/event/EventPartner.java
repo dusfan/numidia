@@ -68,7 +68,7 @@ public class EventPartner {
 	
 	public static void deleteSpace (PO po, String trxName, Properties ctx) {
 		MBPartner bp = (MBPartner) po;
-		DB.executeUpdate("Update C_BPartner set value='"+ bp.getValue().trim() +"' where C_BPartner_ID ="
+		DB.executeUpdate("Update C_BPartner set name=upper(name), name2=upper(name2), value='"+ bp.getValue().trim() +"' where C_BPartner_ID ="
 				+ bp.getC_BPartner_ID(), trxName);
 	}
 	

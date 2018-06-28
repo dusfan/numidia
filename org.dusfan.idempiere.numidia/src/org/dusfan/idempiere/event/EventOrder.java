@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
-import org.compiere.model.MEXPFormatLine;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
@@ -55,7 +54,7 @@ public class EventOrder {
 	// Set remise for code clients
 	public static void setRemiseMargeCodeClient(PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
-		if (line.getM_Product_ID() > 0) {
+		if (line.getM_Product_ID() > 0 && line.getAD_Org_ID() == 1000002) { // add org filter
 			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
 			if (pr.get_ValueAsString("TypeService").equals("5")) {
 				int c_bpartnerRelation_id = DB.getSQLValue(trxName,
@@ -90,7 +89,9 @@ public class EventOrder {
 	}
 
 	public static void setremiseBillet(PO po, Properties ctx, String trxName) {
+		
 		MOrderLine line = (MOrderLine) po;
+		if (line.getAD_Org_ID() == 1000002){
 		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
 		int c_doctype_id = ord.getC_DocTypeTarget_ID();
 		if (c_doctype_id == 1000047 || c_doctype_id == 1000048) {
@@ -116,6 +117,7 @@ public class EventOrder {
 					line.set_ValueNoCheck("RemiseCompt", Env.ZERO);
 				}
 			}
+		}
 		}
 		
 	}
@@ -154,15 +156,6 @@ public class EventOrder {
 		
 
     	}
-			//else if (type.equals(MPayment.Table_Name)) {
-//			MPayment pay = (MPayment) po;
-//			if (pay.getC_DocType_ID() == 1000049) {
-//				int codeclient = DB.getSQLValue(trxName, "select c_bpartner_id from c_bpartner where value='470200'");
-//				pay.set_ValueNoCheck("C_BPartnerRelation_ID", codeclient);
-//			} else if (pay.getC_DocType_ID() == 1000050) {
-//				pay.set_ValueNoCheck("C_BPartnerRelation_ID", pay.getC_BPartner_ID());
-//			}
-//		}
 	}
 
 	// Mettre la date de l ordre de vente paraport a la date de depart de vol
@@ -178,7 +171,7 @@ public class EventOrder {
 	public static void addFlightLine(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
 		if (order.isSOTrx() && order.get_ValueAsInt("DU_Vol_ID") > 0
-				&& (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048 || order.getC_DocType_ID()==1000057)) {
+				&& (order.getAD_Org_ID() == 1000002 || order.getAD_Org_ID() == 1000004)) {
 			String sql = "Select du_volLine_id from du_volLine where c_order_id =" + order.getC_Order_ID();
 			int du_mvolline_id = DB.getSQLValue(trxName, sql);
 			if (du_mvolline_id > 0) {
@@ -210,8 +203,7 @@ public class EventOrder {
 
 	public static void deleteFlight(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
-		if (order.isSOTrx() && (order.getC_DocType_ID()==1000057
-				|| order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048)) {
+		if (order.isSOTrx() && (order.getAD_Org_ID() == 1000002 || order.getAD_Org_ID() == 1000004)) {
 			// Delete line in vol
 			String sql = "Select du_volLine_id from du_volLine where c_order_id = " + order.getC_Order_ID();
 			int du_mvolline_id = DB.getSQLValue(trxName, sql);
@@ -232,12 +224,10 @@ public class EventOrder {
 	}
 
 	// Add flight in vol line if not yet add at prepare, do it at complete
-	// document
-	// if the document don't contain flight return error
+	// if the document don't contain flight return error for only omra organization
 	public static void AddAndCheckFlightBeforeComplete(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
-		if (order.isSOTrx() && (order.getC_DocType_ID() == 1000047 || order.getC_DocType_ID() == 1000048 || 
-				order.getC_DocType_ID() == 1000057)) {
+		if (order.isSOTrx() && (order.getAD_Org_ID() == 1000002 || order.getAD_Org_ID() == 1000004)) {
 			if (order.get_ValueAsInt("DU_Vol_ID") > 0) {
 				String sql = "Select du_volLine_id from du_volLine where c_order_id = " + order.getC_Order_ID();
 				int du_mvolline_id = DB.getSQLValue(trxName, sql);
@@ -254,8 +244,11 @@ public class EventOrder {
 					line.setIsInclude(setIsInclude(trxName, order.getC_Order_ID()));
 					line.saveEx();
 				}
-			} else
-				throw new AdempiereUserError("Vous ne pouvez traiter le document sans avoir renseigner le VOL");
+			} else {
+				if (order.getAD_Org_ID() == 1000002)
+					throw new AdempiereUserError("Vous ne pouvez traiter"
+							+ " le document sans avoir renseigner le VOL");
+			}
 		}
 	}
 	

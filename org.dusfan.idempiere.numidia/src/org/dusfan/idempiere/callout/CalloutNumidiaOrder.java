@@ -58,15 +58,4 @@ public class CalloutNumidiaOrder implements IColumnCallout {
 	}
 	
 	
-//	private void chackDoubleOrder (int C_Bpartner_ID, GridTab mTab) {
-//		int count = DB.getSQLValue(null, "Select count(1) from c_order where "
-//				+ " docstatus in ('IP','DR','CO','CL') and c_bpartner_id = ?", C_Bpartner_ID);
-//		if (count > 0) {
-//			MBPartner bp = new MBPartner(Env.getCtx(), C_Bpartner_ID, null);
-//			mTab.fireDataStatusEEvent("Attention il existe un ordre de vente pour = " 
-//			+ bp.getValue(), null, false);
-//		}
-//	}
-	
-	
 }

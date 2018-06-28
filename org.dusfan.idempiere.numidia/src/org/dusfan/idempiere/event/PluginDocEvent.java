@@ -30,43 +30,49 @@ public class PluginDocEvent extends AbstractEventHandler {
 	protected void initialize() {
 		// register EventTopics and TableNames
 		registerEvent(IEventTopics.AFTER_LOGIN);
+		
+		// MOrder
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MOrder.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoice.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MOrderLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MOrderLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoiceLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MBPartner.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MBPartner.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
-		
-		registerTableEvent(IEventTopics.PO_AFTER_NEW, MBPartner.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrder.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MBPartner.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrderLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MOrderLine.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MProduct.Table_Name);
-		registerTableEvent(IEventTopics.PO_AFTER_NEW, MProduct.Table_Name);
-		// DOC
-		// Order
-		
-		// After Delete
-		registerTableEvent(IEventTopics.PO_AFTER_DELETE, MOrderLine.Table_Name);
-		
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_VOID, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_PREPARE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_VOID, MOrder.Table_Name);
-		// Invoice
+		
+		// MOrderLine
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MOrderLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_DELETE, MOrderLine.Table_Name);
+		
+		// Minvoice
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MInvoice.Table_Name);
-		// Payment
+		
+		// MInvoiceLine
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoiceLine.Table_Name);
+		
+		// MPayment
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MPayment.Table_Name);
 		
+		// MBpartner
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MBPartner.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MBPartner.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MBPartner.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MBPartner.Table_Name);
+		
+		// MProduct
+		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MProduct.Table_Name);
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MProduct.Table_Name);
+
 		log.info("PluginDocEvent .. IS NOW INITIALIZED");
 	}
 
@@ -86,7 +92,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 			setTrxName(po.get_TrxName());
 			setCtx();
 			log.info(" topic=" + event.getTopic() + " po=" + po);
-			// before new
+			
+			// BEFORE NEW
 			if (type.equals(IEventTopics.PO_BEFORE_NEW)) {
 				if (po instanceof MOrderLine) {
 					EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
@@ -103,8 +110,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
 					EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
 					EventOrder.setDateOrderedByFlight(po, ctx, trxName);
-				} else if (po instanceof MInvoice) {
-//					EventInvoice.setDateAcct (po);
 				} else if (po instanceof MPayment) {
 					if (!EventPayment.CheckPaymentRules(po, ctx, trxName)) {
 						throw new AdempiereUserError("Attention "
@@ -117,13 +122,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
 						throw new AdempiereUserError("Attention "
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
-				} else if (po instanceof MBPartner ) {
-//					if (!EventPartner.checkCodeClient(po, trxName, ctx))
-//						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
-//								+ " contacter l administrateur");
-				}				
+				}		
 				
-			} // end before new
+			} // End BEFORE NEW
 			
 			// After NEw
 			if (type.equals(IEventTopics.PO_AFTER_NEW)) {
@@ -134,13 +135,14 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 				else if (po instanceof MOrder) {
-					EventOrder.setRelation(po, ctx, trxName);
+					EventOrder.setRelation(po, ctx, trxName); // a voir avec le tourisme
 				}
 				else if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoom(po, ctx, trxName);
+					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
 				}
 			}
 			// End After new 
+			
 			// before change
 			if (type.equals(IEventTopics.PO_BEFORE_CHANGE)) {
 				if (po instanceof MOrderLine) {
@@ -150,20 +152,11 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
-//					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
-//						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
 					EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
-				} else if (po instanceof MInvoice) {
-//					EventOrder.setC_Activity_ID(MInvoice.Table_Name, po, ctx,trxName);
-				} else if (po instanceof MPayment) {
-//					EventOrder.setC_Activity_ID(MPayment.Table_Name, po, ctx,trxName);
 				}
-				else if (po instanceof MBPartner ) {
-//					if (!EventPartner.checkCodeClient(po, trxName, ctx))
-//						throw new AdempiereUserError("Pour creer/modifier un code client ou rabatteur,"
-//								+ " contacter l administrateur");
-				}
+
 			} // before change
+			
 			// After change
 			if (type.equals(IEventTopics.PO_AFTER_CHANGE)) {
 				if (po instanceof MBPartner) {
@@ -178,44 +171,57 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 			}
+			// End After change 
 			
-			// After delete HAdj
+			// After Delete
 			if (type.equals(IEventTopics.PO_AFTER_DELETE)) {
 				if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoom(po, ctx, trxName);
+					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
 				}
 			}
-			// End after delete
+			// End After delete
 			
-			// End After change 
+			// Before Complete
 			if (type.equals(IEventTopics.DOC_BEFORE_COMPLETE)) {
 				if (po instanceof MInvoice) {
 					EventOrder.setCodeClient(po, MInvoice.Table_Name,ctx,trxName);
 					EventInvoice.SetDU_Vol_ID(po, ctx, trxName);
-				} else if (po instanceof MPayment) {
-					EventOrder.setCodeClient(po, MPayment.Table_Name,ctx,trxName);
 				} else if (po instanceof MOrder) {
 					EventOrder.AddAndCheckFlightBeforeComplete(po, ctx, trxName);
 				}
 			}
-			if (type.equals(IEventTopics.DOC_AFTER_PREPARE)) {
-				if(po instanceof MOrder)
-					EventOrder.addFlightLine(po,ctx, trxName);
-			}
-			if (type.equals(IEventTopics.DOC_AFTER_VOID)) {
-				if(po instanceof MOrder)
-					EventOrder.deleteFlight(po, ctx, trxName);
-			}
-			if (type.equals(IEventTopics.DOC_BEFORE_VOID)) {
-				if (po instanceof MOrder)
-					EventOrder.subSarPrice(po, ctx, trxName);
-			}
+			// End Before Complete
+			
+			// After Complete
 			if (type.equals(IEventTopics.DOC_AFTER_COMPLETE)) {
 				if (po instanceof MOrder) {
 					if (!EventOrder.addSarPrice(po, ctx, trxName))
 						throw new AdempiereUserError("Erreur la caisse est epuisee");
 				}
 			}
+			// End After Complete
+			
+			// After Prepare
+			if (type.equals(IEventTopics.DOC_AFTER_PREPARE)) {
+				if(po instanceof MOrder)
+					EventOrder.addFlightLine(po,ctx, trxName);
+			}
+			// End After Prepare
+			
+			// Before Void
+			if (type.equals(IEventTopics.DOC_BEFORE_VOID)) {
+				if (po instanceof MOrder)
+					EventOrder.subSarPrice(po, ctx, trxName);
+			}
+			// End Before Void
+			
+			// After Void
+			if (type.equals(IEventTopics.DOC_AFTER_VOID)) {
+				if(po instanceof MOrder)
+					EventOrder.deleteFlight(po, ctx, trxName);
+			}
+			// End After Void
+			
 		}
 
 	}

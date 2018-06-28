@@ -111,6 +111,14 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 			mTab.setValue("PO_PaymentTerm_ID", 1000001);
 			mTab.setValue("M_PriceList_ID", 1000002);
 			mTab.setValue("Invoice_PrintFormat_ID", 1000018);
+		} else if (c_bp_group_id == 1000003) {
+			mTab.setValue("InvoiceRule", MOrder.INVOICERULE_Immediate);
+			mTab.setValue("DeliveryRule", MOrder.DELIVERYRULE_Availability);
+			mTab.setValue("PaymentRule", MOrder.PAYMENTRULE_OnCredit);
+			mTab.setValue("PaymentRulePO", MOrder.PAYMENTRULE_OnCredit);
+			mTab.setValue("C_PaymentTerm_ID", 1000004);
+			mTab.setValue("PO_PaymentTerm_ID", 1000004);
+			mTab.setValue("M_PriceList_ID", 1000006);
 		}
 	}
 	
