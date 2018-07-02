@@ -274,7 +274,8 @@ public class EventOrder {
 	// Set tiere facturation auto après l'annulation et la création d'un ordre de vente
 	public static void setRelation (PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
-		if (order.isSOTrx() && order.getC_DocTypeTarget_ID() == 1000048) {
+		if (order.isSOTrx() && (order.getC_DocTypeTarget_ID() == 1000048 || 
+				order.getC_DocTypeTarget_ID() == 1000060)) {
 			int c_bpartner_id = order.getC_BPartner_ID();
 			int c_bpartnerRelation_id = order.get_Value("C_BPartnerRelation_ID")!=null
 					? order.get_ValueAsInt("C_BPartnerRelation_ID") : 0;

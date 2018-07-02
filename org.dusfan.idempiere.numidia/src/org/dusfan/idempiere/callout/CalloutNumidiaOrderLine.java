@@ -23,15 +23,17 @@ public class CalloutNumidiaOrderLine implements IColumnCallout {
 	@Override
 	public String start(Properties ctx, int WindowNo, GridTab mTab, GridField mField, Object value, Object oldValue) {
 		if (mField.getColumnName().equals("M_Product_ID")) {
-			mTab.setValue("RemiseCompt", Env.ZERO);
-			mTab.setValue("DU_RemiseChd_ID", null);
-			mTab.setValue("DU_RemiseMoudj_ID", null);
+			if ((int)mTab.getValue("AD_Org_ID") == 1000002) {
+				mTab.setValue("RemiseCompt", Env.ZERO);
+				mTab.setValue("DU_RemiseChd_ID", null);
+				mTab.setValue("DU_RemiseMoudj_ID", null);
+			}
 		} else if (mField.getColumnName().equals("DU_RemiseChd_ID")) { 
 			setRemiseCHD(mTab, ctx);
 		} 
 		else if (mField.getColumnName().equals("DU_RemiseMoudj_ID")) { 
 			setRemiseMoudjahidine(mTab, ctx);
-		} else if (mField.getColumnName().equals("RemiseCompt")) { 
+		} else if (mField.getColumnName().equals("RemiseCompt")) {
 			setRemiseComptoire(mTab, ctx);
 		} else if (mField.getColumnName().equals("DU_RemiseGP_ID")) { 
 			setRemiseGP(mTab, ctx);

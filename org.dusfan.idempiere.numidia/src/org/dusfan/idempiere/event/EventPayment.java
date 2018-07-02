@@ -39,7 +39,7 @@ public class EventPayment {
 	
 	public static boolean checkHadjPayment (PO po, Properties ctx, String trxName) {
 		MPayment pay = (MPayment)po;
-		if (pay.getAD_Org_ID() == 1000002 && pay.isReceipt()) {
+		if (pay.getAD_Org_ID() == 1000002 && pay.isReceipt() && pay.getTenderType().equals("X")) {
 			if (pay.getC_BankAccount_ID()==1000009 && pay.get_ValueAsInt("C_BPartnerRelation_ID")!=1002081) {
 				return false;
 			}

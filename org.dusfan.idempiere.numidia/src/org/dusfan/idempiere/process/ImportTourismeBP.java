@@ -85,20 +85,9 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		if (log.isLoggable(Level.CONFIG))
 			log.config("Merci de mettre le package =" + no);
 		
-//		// Check Doublon
-//		sql = new StringBuilder("UPDATE DU_IOrderAgence ")
-//				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Erreur la cle est double, ' ")
-//				.append("WHERE value IN (Select value from (Select count(value), value from DU_IOrderAgence "
-//						+ " group by value HAVING COUNT(value) > 1) dbl ) ")
-//				.append(" AND I_IsImported<>'Y'").append(clientCheck);
-//		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
-//		if (log.isLoggable(Level.CONFIG))
-//			log.config("La cle est obligatoire=" + no);
-		
 		commitEx();
 		
 		int noInsert = 0;
-		int noUpdate = 0;
 		
 //		Go through Records
 		sql = new StringBuilder("SELECT * FROM DU_IOrderAgence ").append("WHERE I_IsImported='N' ").append(clientCheck);
@@ -180,7 +169,6 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		
 		bp.setClientOrg(imp.getAD_Client_ID(), imp.getAD_Org_ID());
 		bp.setC_BP_Group_ID(1000003); // set tourisme group default
-		bp.set_ValueNoCheck("C_BPartnerRelation_ID", imp.getC_BPartnerRelation_ID());
 		bp.setName2(imp.getName2()); // prénom
 		bp.setName(imp.getName()); // Nom
 		bp.set_ValueNoCheck("Phone", imp.getPhone());
@@ -191,8 +179,7 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		bp.setInvoiceRule(MOrder.INVOICERULE_Immediate);
 		bp.setDeliveryRule(MOrder.DELIVERYRULE_Availability);
 		bp.setPaymentRule(MOrder.PAYMENTRULE_OnCredit);
-		bp.setC_PaymentTerm_ID(1000001); // set immediatly
-		bp.setInvoice_PrintFormat_ID(1000018); // set print format invoice
+		bp.setC_PaymentTerm_ID(1000004); // set immediatly
 		
 		bp.saveEx();
 		
@@ -212,7 +199,7 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		bprel.setC_BPartnerRelation_ID(c_BPartnerRelation_ID);
 		bprel.setIsBillTo(true);
 		int locbp_id = DB.getSQLValue(get_TrxName(),
-				"Select C_BPartner_Location_ID from C_BPartner_Location where c_bpartner_id = ?",
+				"Select max(C_BPartner_Location_ID) from C_BPartner_Location where c_bpartner_id = ?",
 				c_BPartnerRelation_ID);
 		bprel.setC_BPartnerRelation_Location_ID(locbp_id);
 		bprel.saveEx();
@@ -225,14 +212,15 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		bp.load(get_TrxName());
 		MOrder order = new MOrder(getCtx(), 0, get_TrxName());
 		order.setClientOrg(imp.getAD_Client_ID(), imp.getAD_Org_ID());
-		order.setC_DocTypeTarget_ID(1000048);
+		order.setC_DocTypeTarget_ID(1000060);
+		order.set_ValueNoCheck("C_BPartnerRelation_ID", imp.getC_BPartnerRelation_ID());
 		if (imp.getDU_Vol_ID() > 0)
 			order.set_ValueNoCheck("DU_Vol_ID", imp.getDU_Vol_ID());
 		order.setDateOrdered(m_DateValue);
 		order.setDateAcct(m_DateValue);
 		order.setC_BPartner_ID(bp.getC_BPartner_ID());
-		int c_bplocation_id = DB.getSQLValue(get_TrxName(), "Select C_BPartner_Location_ID "
-				+ " from C_BPartner_Location where isactive='Y' and c_bpartner_id = ? and limit 1", bp.getC_BPartner_ID());
+		int c_bplocation_id = DB.getSQLValue(get_TrxName(), "Select max(C_BPartner_Location_ID) "
+				+ " from C_BPartner_Location where isactive='Y' and c_bpartner_id = ?", bp.getC_BPartner_ID());
 		order.setC_BPartner_Location_ID(c_bplocation_id);
 		
 		if (bprel != null) {
@@ -240,7 +228,6 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 			order.setBill_Location_ID(bprel.getC_BPartnerRelation_Location_ID());
 		}
 	
-		order.set_ValueNoCheck("C_BPartnerRelation_ID", imp.getC_BPartnerRelation_ID());
 		order.setSalesRep_ID(order.getCreatedBy());
 		
 		order.setM_PriceList_ID(bp.getM_PriceList_ID());
