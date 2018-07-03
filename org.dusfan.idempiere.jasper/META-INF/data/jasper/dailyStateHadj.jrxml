@@ -14,7 +14,9 @@
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="AD_User_ID" class="java.lang.Integer"/>
-	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
+	<parameter name="AD_Org_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select o.docstatus, bp.value, bp.name||' '||bp.name2 as name,
  Coalesce(Extract(year FROM Age(current_date, bp.birth_date)), 0) AS age,
@@ -546,6 +548,9 @@ order by o.du_agence_id, bp.name, o.createdby,  o.docstatus]]>
 				<reportElement x="0" y="0" width="802" height="28" uuid="5c9fdc36-a221-4657-8749-d6ce25f58151"/>
 				<subreportParameter name="RESOURCE_DIR">
 					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DU_Vol_ID">
+					<subreportParameterExpression><![CDATA[$P{DU_Vol_ID}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
