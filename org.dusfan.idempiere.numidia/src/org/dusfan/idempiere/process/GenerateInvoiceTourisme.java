@@ -33,6 +33,7 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 		if (status!=null && !status.equals("RE"))
 			throw new AdempiereUserError("Une facture acheve existe deja");
 		else if (pay.getDocStatus().equals("CO")) {
+			// Create invoice
 			MInvoice inv = new MInvoice(getCtx(), 0, get_TrxName());
 			inv.setAD_Org_ID(pay.getAD_Org_ID());
 			inv.setC_DocTypeTarget_ID(1000059);
@@ -42,6 +43,10 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			inv.set_ValueNoCheck("C_BPartnerRelation_ID", pay.get_Value("C_BPartnerRelation_ID"));
 			inv.set_ValueNoCheck("C_BPartner_PR_ID", pay.get_Value("C_BPartner_PR_ID"));
 			inv.setDescription(pay.getDescription());
+			inv.set_ValueNoCheck("T_SumDevise", pay.get_Value("T_SumDevise"));
+			inv.set_ValueNoCheck("T_PriceCost", pay.get_Value("T_PriceCost"));
+			inv.set_ValueNoCheck("T_PriceVente", pay.get_Value("T_PriceVente"));
+			inv.set_ValueNoCheck("T_Marge", pay.get_Value("T_Marge"));
 			inv.saveEx();
 			// Create line
 			MInvoiceLine line = new MInvoiceLine(inv);
@@ -58,18 +63,17 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			pay.saveEx();
 			
 			// Create Affectattion
-			createAllocation(pay.getC_Currency_ID(), pay.getDescription(),
-					pay.getDateAcct(), pay.getPayAmt(), pay.getDiscountAmt(), pay.getWriteOffAmt(), 
-					pay.getOverUnderAmt(), pay.getC_BPartner_ID(), pay.getC_Payment_ID(), inv.getC_Invoice_ID(), 
-					pay.getAD_Org_ID());
+			createAllocation(pay.getC_Currency_ID(), pay.getDescription(), pay.getDateAcct(), pay.getPayAmt(),
+					pay.getDiscountAmt(), pay.getWriteOffAmt(), pay.getOverUnderAmt(), pay.getC_BPartner_ID(),
+					pay.getC_Payment_ID(), inv.getC_Invoice_ID(), pay.getAD_Org_ID());
 			
 			// Allocation
-			if (m_allocation != null) {
+			if (m_allocation != null)
 				m_allocation.processIt(MAllocationHdr.DOCACTION_Complete);
-			}
+			
 		}
 		
-		return "Traitement termine";
+		return "Traitement terminer";
 	}
 
 	
@@ -90,5 +94,5 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 		aLine.setC_Invoice_ID(C_Invoice_ID);
 		aLine.saveEx();
 		
-	} // createAllocation
+	} // CreateAllocation
 }
