@@ -23,10 +23,10 @@ public class ProcessOrder extends SvrProcess {		private int cpt_completed;	p
 
 		for (MOrder order:lines){
 			String a = order.getDocumentNo();						if (p_DocAction.equals(DocAction.ACTION_Complete)){				completeOrder(order);			}			if (p_DocAction.equals(DocAction.ACTION_ReActivate)){				reActivateOrder(order);			}
-			if (p_DocAction.equals(DocAction.ACTION_Void)){				voidOrder(order);			}
+			if (p_DocAction.equals(DocAction.ACTION_Prepare)){				prpareOrder(order);			}
 			log.info("Selected order ID = "+a);
 
 		}		return "Order processed : "+ cpt_completed;
 
-	}	private void completeOrder (MOrder order){		if (order.getDocStatus().equals(DocAction.ACTION_Complete))			return;		else {			if (order.processIt(DocAction.ACTION_Complete))				if ( order.save()){					cpt_completed ++;				}		}			}		private void voidOrder(MOrder order) {		if (!order.getDocStatus().equals(DocAction.ACTION_Complete))			return;		else {			if (order.processIt(DocAction.ACTION_Void))				if ( order.save()){					cpt_completed ++;				}		}	}	private void reActivateOrder(MOrder order) {		if (!order.getDocStatus().equals(DocAction.ACTION_Complete))			return;		else {			if (order.processIt(DocAction.ACTION_ReActivate))				if ( order.save()){					cpt_completed ++;				}		}	}
+	}	private void completeOrder (MOrder order){		if (order.getDocStatus().equals(DocAction.ACTION_Complete))			return;		else {			if (order.processIt(DocAction.ACTION_Complete))				if ( order.save()){					cpt_completed ++;				}		}			}		private void prpareOrder(MOrder order) {		if (!order.getDocStatus().equals(DocAction.STATUS_Drafted))			return;		else {			if (order.processIt(DocAction.ACTION_Prepare))				if ( order.save()){					cpt_completed ++;				}		}	}	private void reActivateOrder(MOrder order) {		if (!order.getDocStatus().equals(DocAction.ACTION_Complete))			return;		else {			if (order.processIt(DocAction.ACTION_ReActivate))				if ( order.save()){					cpt_completed ++;				}		}	}
 }
