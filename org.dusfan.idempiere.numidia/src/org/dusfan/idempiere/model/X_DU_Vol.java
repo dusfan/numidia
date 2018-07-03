@@ -34,7 +34,7 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180302L;
+	private static final long serialVersionUID = 20180703L;
 
     /** Standard Constructor */
     public X_DU_Vol (Properties ctx, int DU_Vol_ID, String trxName)
@@ -92,17 +92,17 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 		return bd;
 	}
 
-	/** Set Affecter les guides.
+	/** Set Create lines from.
 		@param CreateFrom 
-		Affecter les guides
+		Process which will generate a new document lines based on an existing document
 	  */
 	public void setCreateFrom (String CreateFrom)
 	{
 		set_Value (COLUMNNAME_CreateFrom, CreateFrom);
 	}
 
-	/** Get Affecter les guides.
-		@return Affecter les guides
+	/** Get Create lines from.
+		@return Process which will generate a new document lines based on an existing document
 	  */
 	public String getCreateFrom () 
 	{
@@ -154,6 +154,10 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 		return (String)get_Value(COLUMNNAME_Description);
 	}
 
+	public I_DU_Compa getDU_Compa() throws RuntimeException
+    {
+		return (I_DU_Compa)MTable.get(getCtx(), I_DU_Compa.Table_Name)
+			.getPO(getDU_Compa_ID(), get_TrxName());	}
 
 	/** Set Company.
 		@param DU_Compa_ID Company	  */
@@ -209,6 +213,20 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 		return (String)get_Value(COLUMNNAME_DU_Vol_UU);
 	}
 
+	/** Set Export SRDOCS.
+		@param ESRDOCS Export SRDOCS	  */
+	public void setESRDOCS (String ESRDOCS)
+	{
+		set_Value (COLUMNNAME_ESRDOCS, ESRDOCS);
+	}
+
+	/** Get Export SRDOCS.
+		@return Export SRDOCS	  */
+	public String getESRDOCS () 
+	{
+		return (String)get_Value(COLUMNNAME_ESRDOCS);
+	}
+
 	/** Direct = DI */
 	public static final String FLIGHTTYPE_Direct = "DI";
 	/** Escale = ES */
@@ -226,6 +244,30 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 	public String getFlightType () 
 	{
 		return (String)get_Value(COLUMNNAME_FlightType);
+	}
+
+	/** Set Closed Status.
+		@param IsClosed 
+		The status is closed
+	  */
+	public void setIsClosed (boolean IsClosed)
+	{
+		set_Value (COLUMNNAME_IsClosed, Boolean.valueOf(IsClosed));
+	}
+
+	/** Get Closed Status.
+		@return The status is closed
+	  */
+	public boolean isClosed () 
+	{
+		Object oo = get_Value(COLUMNNAME_IsClosed);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Numéro de vol de Départ.
@@ -368,6 +410,20 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
 		return (String)get_Value(COLUMNNAME_PrintManifest);
 	}
 
+	/** Set Imprimer Manifest SV.
+		@param PrintManifestSV Imprimer Manifest SV	  */
+	public void setPrintManifestSV (String PrintManifestSV)
+	{
+		set_Value (COLUMNNAME_PrintManifestSV, PrintManifestSV);
+	}
+
+	/** Get Imprimer Manifest SV.
+		@return Imprimer Manifest SV	  */
+	public String getPrintManifestSV () 
+	{
+		return (String)get_Value(COLUMNNAME_PrintManifestSV);
+	}
+
 	/** Set Imprimer etat réservation.
 		@param PrintStateReser Imprimer etat réservation	  */
 	public void setPrintStateReser (String PrintStateReser)
@@ -500,5 +556,4 @@ public class X_DU_Vol extends PO implements I_DU_Vol, I_Persistent
     {
         return new KeyNamePair(get_ID(), getValue());
     }
-
 }

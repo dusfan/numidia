@@ -92,13 +92,13 @@ public interface I_DU_Vol
     /** Column name CreateFrom */
     public static final String COLUMNNAME_CreateFrom = "CreateFrom";
 
-	/** Set Affecter les guides.
-	  * Affecter les guides
+	/** Set Create lines from.
+	  * Process which will generate a new document lines based on an existing document
 	  */
 	public void setCreateFrom (String CreateFrom);
 
-	/** Get Affecter les guides.
-	  * Affecter les guides
+	/** Get Create lines from.
+	  * Process which will generate a new document lines based on an existing document
 	  */
 	public String getCreateFrom();
 
@@ -142,6 +142,7 @@ public interface I_DU_Vol
 	/** Get Company	  */
 	public int getDU_Compa_ID();
 
+	public I_DU_Compa getDU_Compa() throws RuntimeException;
 
     /** Column name DU_Vol_ID */
     public static final String COLUMNNAME_DU_Vol_ID = "DU_Vol_ID";
@@ -160,6 +161,15 @@ public interface I_DU_Vol
 
 	/** Get DU_Vol_UU	  */
 	public String getDU_Vol_UU();
+
+    /** Column name ESRDOCS */
+    public static final String COLUMNNAME_ESRDOCS = "ESRDOCS";
+
+	/** Set Export SRDOCS	  */
+	public void setESRDOCS (String ESRDOCS);
+
+	/** Get Export SRDOCS	  */
+	public String getESRDOCS();
 
     /** Column name FlightType */
     public static final String COLUMNNAME_FlightType = "FlightType";
@@ -182,6 +192,19 @@ public interface I_DU_Vol
 	  * The record is active in the system
 	  */
 	public boolean isActive();
+
+    /** Column name IsClosed */
+    public static final String COLUMNNAME_IsClosed = "IsClosed";
+
+	/** Set Closed Status.
+	  * The status is closed
+	  */
+	public void setIsClosed (boolean IsClosed);
+
+	/** Get Closed Status.
+	  * The status is closed
+	  */
+	public boolean isClosed();
 
     /** Column name NumDepartFlight_Direct */
     public static final String COLUMNNAME_NumDepartFlight_Direct = "NumDepartFlight_Direct";
@@ -272,6 +295,15 @@ public interface I_DU_Vol
 
 	/** Get Imprimer Manifest	  */
 	public String getPrintManifest();
+
+    /** Column name PrintManifestSV */
+    public static final String COLUMNNAME_PrintManifestSV = "PrintManifestSV";
+
+	/** Set Imprimer Manifest SV	  */
+	public void setPrintManifestSV (String PrintManifestSV);
+
+	/** Get Imprimer Manifest SV	  */
+	public String getPrintManifestSV();
 
     /** Column name PrintStateReser */
     public static final String COLUMNNAME_PrintStateReser = "PrintStateReser";

@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.adempiere.base.event.AbstractEventHandler;
 import org.adempiere.base.event.IEventTopics;
 import org.adempiere.base.event.LoginEventData;
+import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
@@ -135,6 +136,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName); // a voir avec le tourisme
+					if (Env.getAD_Org_ID(ctx)==1000002){
+						if (EventOrder.checkClosedFlight(po,ctx,trxName))
+							throw new AdempiereException("Le vol est Clôturé par l'administrateur, veuillez le contacter!");;
+					}
 				}
 				else if (po instanceof MOrderLine) {
 					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
@@ -154,7 +159,12 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
-					EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
+					if (Env.getAD_Org_ID(ctx)==1000002){
+						EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
+						if (EventOrder.checkClosedFlight(po,ctx,trxName))
+							throw new AdempiereException("Le vol est Clôturé par l'administrateur, veuillez le contacter!");;
+					}
+					
 				}
 
 			} // before change
