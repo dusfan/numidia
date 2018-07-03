@@ -1,7 +1,7 @@
 package org.dusfan.idempiere.component;
 import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
-import org.dusfan.idempiere.process.AddUpdateRemise;
+import org.dusfan.idempiere.process.GenerateInvoiceTourisme;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
@@ -42,8 +42,8 @@ public class ProcessFactory implements IProcessFactory {
 		else if (className.equals(ImportBPartnerOmraGuide.class.getName())) {
 			return new ImportBPartnerOmraGuide();
 		}
-		else if (className.equals(AddUpdateRemise.class.getName())) {
-			return new AddUpdateRemise ();
+		else if (className.equals(GenerateInvoiceTourisme.class.getName())) {
+			return new GenerateInvoiceTourisme ();
 		}
 		else if (className.equals(CreateAffectationLineVol.class.getName())) {
 			return new CreateAffectationLineVol ();
