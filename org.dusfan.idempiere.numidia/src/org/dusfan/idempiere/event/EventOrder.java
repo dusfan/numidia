@@ -422,7 +422,7 @@ public class EventOrder {
 
 	public static boolean checkClosedFlight(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder)po;
-		int volID = order.get_ValueAsInt("DU_Vol_ID");
+		int volID = order.get_ValueOldAsInt("DU_Vol_ID");
 		if(volID>0){
 			MVol vol = new MVol(ctx, volID, null);
 			if (vol.isClosed())
