@@ -159,7 +159,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 				} else if (po instanceof MOrder) {
-					if (Env.getAD_Org_ID(ctx)==1000002){
+					if (po.getAD_Org_ID()==1000002){
 						EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
 						if (EventOrder.checkClosedFlight(po,ctx,trxName))
 							throw new AdempiereException("Le vol est Clôturé par l'administrateur, veuillez le contacter!");;
