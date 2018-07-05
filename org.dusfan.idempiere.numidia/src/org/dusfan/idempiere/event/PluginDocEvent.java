@@ -136,7 +136,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 				else if (po instanceof MOrder) {
 					EventOrder.setRelation(po, ctx, trxName); // a voir avec le tourisme
-					if (Env.getAD_Org_ID(ctx)==1000002){
+					if (po.getAD_Org_ID()==1000002){
 						if (EventOrder.checkClosedFlight(po,ctx,trxName))
 							throw new AdempiereException("Le vol est Clôturé par l'administrateur, veuillez le contacter!");;
 					}
