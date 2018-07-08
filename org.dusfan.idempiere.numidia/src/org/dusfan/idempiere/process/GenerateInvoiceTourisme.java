@@ -40,10 +40,14 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			inv.setC_BPartner_ID(pay.getC_BPartner_ID());
 			inv.setSalesRep_ID(pay.getCreatedBy());
 			inv.setC_Activity_ID(pay.getC_Activity_ID());
+			inv.setC_Currency_ID(pay.getC_Currency_ID());
 			inv.set_ValueNoCheck("C_BPartnerRelation_ID", pay.get_Value("C_BPartnerRelation_ID"));
 			inv.set_ValueNoCheck("C_BPartner_PR_ID", pay.get_Value("C_BPartner_PR_ID"));
+			inv.set_ValueNoCheck("C_T_Curr_ID", pay.get_Value("C_T_Curr_ID"));
 			inv.setDescription(pay.getDescription());
-			inv.set_ValueNoCheck("T_SumDevise", pay.get_Value("T_SumDevise"));
+			BigDecimal prixachat = ((BigDecimal)pay.get_Value("T_SumDevise")).
+					divide((BigDecimal)pay.get_Value("Rate"));
+			inv.set_ValueNoCheck("T_SumDevise", prixachat);
 			inv.set_ValueNoCheck("T_PriceCost", pay.get_Value("T_PriceCost"));
 			inv.set_ValueNoCheck("T_PriceVente", pay.get_Value("T_PriceVente"));
 			inv.set_ValueNoCheck("T_Marge", pay.get_Value("T_Marge"));
@@ -57,6 +61,8 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			line.setLineNetAmt();
 			line.saveEx();
 			// Complete Invoice
+			inv.setC_Currency_ID(pay.getC_Currency_ID());
+			inv.setC_ConversionType_ID(114);
 			inv.processIt(DocAction.ACTION_Complete);
 			inv.saveEx();
 			pay.setC_Invoice_ID(inv.getC_Invoice_ID());

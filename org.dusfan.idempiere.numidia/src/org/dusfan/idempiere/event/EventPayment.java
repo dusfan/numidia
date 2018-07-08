@@ -1,10 +1,12 @@
 package org.dusfan.idempiere.event;
 
+import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.compiere.model.MBankAccount;
 import org.compiere.model.MPayment;
 import org.compiere.model.PO;
+import org.compiere.util.Env;
 
 public class EventPayment {
 
@@ -46,6 +48,16 @@ public class EventPayment {
 			if (pay.getC_BankAccount_ID()!=1000009 && pay.get_ValueAsInt("C_BPartnerRelation_ID")==1002081) {
 				return false;
 			}
+		}
+		return true;
+	}
+	
+	public static boolean checkSalesAmount (PO po, Properties ctx, String trxName) {
+		MPayment pay = (MPayment)po;
+		if (pay.getAD_Org_ID() == 1000004 && pay.isReceipt()) {
+			if (pay.get_Value("TypeTransaction").equals("1") && 
+					((BigDecimal)pay.get_Value("T_PriceVente")).compareTo(Env.ZERO)==0)
+					return false;
 		}
 		return true;
 	}

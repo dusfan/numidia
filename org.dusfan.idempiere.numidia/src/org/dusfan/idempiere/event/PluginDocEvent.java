@@ -61,7 +61,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 		// MPayment
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MPayment.Table_Name);
-		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MPayment.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MPayment.Table_Name);
 		
 		// MBpartner
@@ -123,6 +122,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
 						throw new AdempiereUserError("Attention "
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
+					if (!EventPayment.checkSalesAmount(po, ctx, trxName))
+						throw new AdempiereUserError("Vous n'avez pas terminer la vente");
 				}		
 				
 			} // End BEFORE NEW

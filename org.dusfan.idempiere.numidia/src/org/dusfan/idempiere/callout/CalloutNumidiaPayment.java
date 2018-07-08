@@ -43,6 +43,16 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 			
 				setPriceTourisme(mTab);
 			}
+			if (mField.getColumnName().equals("C_Currency_ID") || mField.getColumnName().equals("C_T_Curr_ID")) {
+				int c_currency_id_so = (int) mTab.getValue("C_Currency_ID");
+				int c_currency_id_po = (int) mTab.getValue("C_T_Curr_ID");
+				if (c_currency_id_po > 0 && c_currency_id_so > 0 && 
+						c_currency_id_so!=235 && c_currency_id_po==c_currency_id_so) {
+					mTab.setValue("Rate", Env.ONE);
+					setPriceTourisme(mTab);
+				}
+					
+			}
 		}
 		
 		return null;
