@@ -8,6 +8,7 @@ import org.dusfan.idempiere.process.CreateAffectationLineVol;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
 import org.dusfan.idempiere.process.DeleteOldDataByPeriode;
+import org.dusfan.idempiere.process.DeleteUnusedData;
 import org.dusfan.idempiere.process.ExploseBom;
 import org.dusfan.idempiere.process.ExportSrdox;
 import org.dusfan.idempiere.process.ExportSrdox2;
@@ -87,6 +88,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new DeleteOldDataByPeriode();
 		else if (className.equals(ImportTourismeBP.class.getName()))
 			return new ImportTourismeBP ();
+		else if (className.equals(DeleteUnusedData.class.getName()))
+			return new DeleteUnusedData ();
 		
 		return null;
 	}
