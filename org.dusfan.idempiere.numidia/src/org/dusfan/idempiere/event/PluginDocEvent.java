@@ -6,7 +6,9 @@ import org.adempiere.base.event.AbstractEventHandler;
 import org.adempiere.base.event.IEventTopics;
 import org.adempiere.base.event.LoginEventData;
 import org.adempiere.exceptions.AdempiereException;
+import org.compiere.acct.FactLine;
 import org.compiere.model.MBPartner;
+import org.compiere.model.MFactAcct;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
@@ -72,7 +74,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 		// MProduct
 		registerTableEvent(IEventTopics.PO_AFTER_CHANGE, MProduct.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MProduct.Table_Name);
-
+		
+		// MFactacct
+		registerTableEvent(IEventTopics.PO_AFTER_NEW, MFactAcct.Table_Name);
+		
 		log.info("PluginDocEvent .. IS NOW INITIALIZED");
 	}
 
@@ -147,6 +152,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 				else if (po instanceof MProduct) {
 					EventProduct.setProductVendor(po, ctx, trxName);
+				}
+				else if (po instanceof FactLine) {
+					if (po.getAD_Org_ID() == 1000004)
+						EventFact.SetActivity(po, ctx, trxName);
 				}
 			}
 			// End After new 

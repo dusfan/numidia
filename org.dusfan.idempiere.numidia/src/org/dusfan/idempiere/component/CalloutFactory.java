@@ -7,6 +7,7 @@ import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MInvoice;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
 import org.compiere.model.MPayment;
@@ -14,6 +15,7 @@ import org.compiere.model.MPriceListVersion;
 import org.compiere.model.MProductPrice;
 import org.dusfan.idempiere.callout.CalloutNumidiaImportOmra;
 import org.dusfan.idempiere.callout.CalloutNumidiaInvoice;
+import org.dusfan.idempiere.callout.CalloutNumidiaInvoiceLine;
 import org.dusfan.idempiere.callout.CalloutNumidiaMPriceVersion;
 import org.dusfan.idempiere.callout.CalloutNumidiaOrder;
 import org.dusfan.idempiere.callout.CalloutNumidiaOrderLine;
@@ -49,6 +51,9 @@ public class CalloutFactory implements IColumnCalloutFactory {
 		}
 		else if (tableName.equals(MCreatePackage.Table_Name)) {
 			callout.add(new CalloutNumidiaPackage());
+		}
+		else if (tableName.equals(MInvoiceLine.Table_Name)) {
+			callout.add(new CalloutNumidiaInvoiceLine());
 		}
 
 		return callout != null ? callout.toArray(new IColumnCallout[0]) : new IColumnCallout[0];

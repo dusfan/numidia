@@ -55,7 +55,7 @@ public class EventPayment {
 	public static boolean checkSalesAmount (PO po, Properties ctx, String trxName) {
 		MPayment pay = (MPayment)po;
 		if (pay.getAD_Org_ID() == 1000004 && pay.isReceipt()) {
-			if (pay.get_Value("TypeTransaction").equals("1") && 
+			if (pay.get_Value("TypeTransaction")!=null && pay.get_Value("TypeTransaction").equals("1") && 
 					((BigDecimal)pay.get_Value("T_PriceVente")).compareTo(Env.ZERO)==0)
 					return false;
 		}
