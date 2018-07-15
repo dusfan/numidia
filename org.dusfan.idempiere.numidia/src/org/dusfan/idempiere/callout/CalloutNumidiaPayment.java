@@ -88,8 +88,10 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 		// Prix de vente
 		BigDecimal T_PriceVente = mTab.getValue("T_PriceVente") != null ? (BigDecimal) mTab.getValue("T_PriceVente")
 				: Env.ZERO;
+		
 		// Marge
-		mTab.setValue("T_Marge", T_PriceVente.subtract(T_PriceCost));
+		BigDecimal marge = (T_PriceVente.subtract(T_PriceCost)).add(T_PriceOtherD.multiply(rate));
+		mTab.setValue("T_Marge", marge);
 		// Set price 
 		mTab.setValue("PriceList", T_PriceVente);
 		mTab.setValue("PriceStd", T_PriceVente);
