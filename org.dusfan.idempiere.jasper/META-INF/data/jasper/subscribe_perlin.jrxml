@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subscribe_perlin" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="37b9f1b0-133c-478c-9766-6f6648be0afc">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="TypeActivity" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT VALUE, NAME, NAME2 FROM C_BPARTNER 
-WHERE C_BPartner_ID = $P{C_BPartner_ID} ]]>
+WHERE C_BPartner_ID = $P{C_BPartner_ID}]]>
 	</queryString>
 	<field name="value" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="value"/>
@@ -71,21 +72,21 @@ WHERE C_BPartner_ID = $P{C_BPartner_ID} ]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ "- MR/Mme  : "+$F{name}+"  "+$F{name2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["- MR/Mme  : "+$F{name}+"  "+$F{name2}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="233" width="410" height="30" uuid="d484b3d6-a37b-41d7-b802-9581f9c7eb21"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ "- N° PASSPORT  :  "+$F{value}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["- N° PASSPORT  :  "+$F{value}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="263" width="380" height="30" uuid="c9311087-3082-4100-832f-eb575bb9146b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["- Est inscrit au programme OMRA "+ Calendar.getInstance().get(Calendar.YEAR)]]></textFieldExpression>
+				<textFieldExpression><![CDATA["- Est inscrit au programme"+($P{TypeActivity}.equals("1") ? " OMRA ":" HADJ " )+( Calendar.getInstance().get(Calendar.YEAR))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="280" y="480" width="276" height="30" uuid="0fa04afe-98ee-4f2e-bbb9-0d1f60816f8f"/>
