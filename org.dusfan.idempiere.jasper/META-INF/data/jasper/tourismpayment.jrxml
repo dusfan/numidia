@@ -173,10 +173,11 @@
 				<textFieldExpression><![CDATA["Nom : "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="377" y="143" width="100" height="17" uuid="34bdbc66-224f-4c2f-9a4b-2d5c1edb7da7">
+				<reportElement x="377" y="143" width="167" height="40" uuid="34bdbc66-224f-4c2f-9a4b-2d5c1edb7da7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Middle"/>
+				<box topPadding="2"/>
+				<textElement verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -184,21 +185,7 @@
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{adresse}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="227" y="164" width="141" height="17" uuid="2a92a300-dc52-4b18-a136-f1a7d59115f9">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Lieu et date de naissance : "]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="377" y="164" width="167" height="17" uuid="b586cca3-eb32-4f44-b698-cf2241dbef77">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[(new SimpleDateFormat("dd/MM/yyyy").format($F{birth_date}))+ ($F{birthcity}!=null && $F{birthcity}.length()>0 ? " à " +$F{birthcity} : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name2}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="227" y="184" width="100" height="17" uuid="c8554708-2383-45f9-bcac-992edce1d32c">
@@ -208,14 +195,14 @@
 				<textFieldExpression><![CDATA["Tel : "]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="377" y="183" width="100" height="17" uuid="5e1546b4-7b49-4ebf-89da-26a9ff592db1">
+				<reportElement x="377" y="183" width="167" height="17" uuid="5e1546b4-7b49-4ebf-89da-26a9ff592db1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="378" y="204" width="100" height="17" uuid="78a5ad6f-bd32-4b95-b7de-7726609d1cc0">
+				<reportElement x="377" y="204" width="167" height="17" uuid="78a5ad6f-bd32-4b95-b7de-7726609d1cc0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
