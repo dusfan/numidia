@@ -206,8 +206,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// Before Complete
 			if (type.equals(IEventTopics.DOC_BEFORE_COMPLETE)) {
 				if (po instanceof MInvoice) {
-					EventOrder.setCodeClient(po, MInvoice.Table_Name,ctx,trxName);
-					EventInvoice.SetDU_Vol_ID(po, ctx, trxName);
+					if (po.getAD_Org_ID() == 1000002){
+						EventOrder.setCodeClient(po, MInvoice.Table_Name,ctx,trxName);
+						EventInvoice.SetDU_Vol_ID(po, ctx, trxName);
+					}
 				} else if (po instanceof MOrder) {
 					EventOrder.AddAndCheckFlightBeforeComplete(po, ctx, trxName);
 				}

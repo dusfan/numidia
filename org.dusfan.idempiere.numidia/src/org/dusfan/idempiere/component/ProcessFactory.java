@@ -1,7 +1,6 @@
 package org.dusfan.idempiere.component;
 import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
-import org.dusfan.idempiere.process.GenerateInvoiceTourisme;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
@@ -12,8 +11,10 @@ import org.dusfan.idempiere.process.DeleteUnusedData;
 import org.dusfan.idempiere.process.ExploseBom;
 import org.dusfan.idempiere.process.ExportSrdox;
 import org.dusfan.idempiere.process.ExportSrdox2;
+import org.dusfan.idempiere.process.GenerateInvoiceTourisme;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
+import org.dusfan.idempiere.process.ImportInvoiceBooking;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.ImportTourismeBP;
 import org.dusfan.idempiere.process.ProcessOrder;
@@ -90,6 +91,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ImportTourismeBP ();
 		else if (className.equals(DeleteUnusedData.class.getName()))
 			return new DeleteUnusedData ();
+		else if (className.equals(ImportInvoiceBooking.class.getName()))
+			return new ImportInvoiceBooking();
 		
 		return null;
 	}
