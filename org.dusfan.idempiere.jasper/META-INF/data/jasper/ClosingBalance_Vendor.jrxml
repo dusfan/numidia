@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ClosingBalance_Vendor" pageWidth="535" pageHeight="842" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="95be4cc9-c7eb-4bdd-8675-e822d2d3d554">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="C_BPartner_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(1000028)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DateAcctTo" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select (
+( Select (
+(select COALESCE(SUM(CASE WHEN doc.docbasetype='APC' THEN currencyConvert(iap.GRANDTOTAL, iap.C_Currency_ID, 235, iap.DATEInvoiced, null, iap.AD_Client_ID, iap.AD_Org_ID)*-1 ELSE currencyConvert(iap.GRANDTOTAL, iap.C_Currency_ID, 235, iap.DATEInvoiced, null, iap.AD_Client_ID, iap.AD_Org_ID) END),0) as APInvoices
+from C_INVOICE iap,C_DOCTYPE doc
+where doc.docbasetype IN ('API','APC')
+AND iap.DOCSTATUS IN ('CO','CL')
+AND iap.C_BPARTNER_ID =$P{C_BPartner_ID} AND iap.C_DOCTYPE_ID=doc.C_DOCTYPE_ID
+AND iap.DATEINVOICED <= $P{DateAcctTo})
+) as Invoices) -
+
+( Select (
+(select COALESCE(sum(currencyConvert((pap.PAYAMT+ pap.discountamt), pap.C_Currency_ID, 235, pap.DATETRX, null, pap.AD_Client_ID, pap.AD_Org_ID)),0) as APPayments from C_PAYMENT pap,C_DOCTYPE doc
+where doc.docbasetype ='APP'
+AND pap.DOCSTATUS IN ('CO','CL') AND pap.C_BPARTNER_ID =$P{C_BPartner_ID}
+AND pap.C_DOCTYPE_ID=doc.C_DOCTYPE_ID
+AND pap.DATETRX <= $P{DateAcctTo})) as Payments)
+) as ClosingBal]]>
+	</queryString>
+	<field name="closingbal" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" mode="Opaque" x="339" y="1" width="195" height="16" backcolor="#FFFFFF" uuid="bbd081ba-1172-41ca-ab87-967a88ae1b36"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{closingbal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="element-90" mode="Opaque" x="0" y="1" width="339" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="7eb7aa48-11ff-48e6-be59-cc29086a5dca"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOLDE FIN]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
