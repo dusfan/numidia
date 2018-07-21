@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.100.245.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="219"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="770"/>
@@ -106,7 +106,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<textFieldExpression><![CDATA[$F{clientname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="161" y="21" width="306" height="16" uuid="2e58e6e1-84e9-4c2b-baed-bf7c6a0b9c91">
+				<reportElement x="161" y="21" width="369" height="16" uuid="2e58e6e1-84e9-4c2b-baed-bf7c6a0b9c91">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -117,7 +117,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<textFieldExpression><![CDATA[$F{addr1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="161" y="37" width="306" height="16" uuid="bfce3cf3-bca4-43a8-a959-6713438b2c9e">
+				<reportElement x="161" y="37" width="369" height="16" uuid="bfce3cf3-bca4-43a8-a959-6713438b2c9e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -128,7 +128,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<textFieldExpression><![CDATA["Tel. : " + $F{phone} + " / " + $F{phone2}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="161" y="53" width="207" height="16" uuid="85dc3aa8-0992-45b5-813a-ddb1e1de333a">
+				<reportElement x="161" y="53" width="369" height="16" uuid="85dc3aa8-0992-45b5-813a-ddb1e1de333a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -139,7 +139,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<textFieldExpression><![CDATA["Fax : " + $F{fax}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="161" y="69" width="306" height="16" uuid="84dab84c-51e0-4ff3-b89f-5e4b5d4a37dd">
+				<reportElement x="161" y="69" width="369" height="16" uuid="84dab84c-51e0-4ff3-b89f-5e4b5d4a37dd">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -150,7 +150,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<textFieldExpression><![CDATA["e-mail : " + $F{email} + "  Web : " + $F{addr2}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="161" y="85" width="306" height="16" uuid="00eaa508-c50c-43ba-a9c4-706e94e67d8e">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="161" y="85" width="369" height="16" uuid="00eaa508-c50c-43ba-a9c4-706e94e67d8e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -165,7 +165,7 @@ o.ad_client_id=$P{AD_CLIENT_ID}]]>
 				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/Logo-Numidia.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="161" y="101" width="306" height="16" uuid="b12da289-e619-4e95-a0b7-961fb30749c6">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="161" y="101" width="369" height="16" uuid="b12da289-e619-4e95-a0b7-961fb30749c6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
