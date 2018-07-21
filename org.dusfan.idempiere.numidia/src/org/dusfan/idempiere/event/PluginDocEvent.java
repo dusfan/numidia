@@ -115,6 +115,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
 					EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
 					EventOrder.setDateOrderedByFlight(po, ctx, trxName);
+					if (po.getAD_Org_ID() == 1000002 || po.getAD_Org_ID() == 1000004) {
+						if (!EventOrder.checkDuplicateVol(po, ctx, trxName))
+							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client");
+					}
 				} else if (po instanceof MPayment) {
 					if (!EventPayment.CheckPaymentRules(po, ctx, trxName)) {
 						throw new AdempiereUserError("Attention "

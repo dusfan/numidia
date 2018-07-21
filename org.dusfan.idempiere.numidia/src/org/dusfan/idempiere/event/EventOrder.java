@@ -432,4 +432,15 @@ public class EventOrder {
 		
 	}
 	
+	public static boolean checkDuplicateVol (PO po, Properties ctx, String trxName) {
+		MOrder order = (MOrder)po;
+		int co =  DB.getSQLValue(trxName, "Select count(1) from c_order "
+				+ " where docstatus in ('DR','IP','CO') and (du_vol_id ="+ order.get_ValueAsInt("DU_Vol_ID") 
+				+" or du_vol_id is null) and c_bpartner_id ="+ order.getC_BPartner_ID());
+		if (co > 0 )
+			return false;
+		
+		return true;
+	}
+	
 }
