@@ -33,7 +33,7 @@ public class X_I_InvoiceBooking extends PO implements I_I_InvoiceBooking, I_Pers
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180718L;
+	private static final long serialVersionUID = 20180720L;
 
     /** Standard Constructor */
     public X_I_InvoiceBooking (Properties ctx, int I_InvoiceBooking_ID, String trxName)
@@ -43,6 +43,7 @@ public class X_I_InvoiceBooking extends PO implements I_I_InvoiceBooking, I_Pers
         {
 			setI_InvoiceBooking_ID (0);
 			setI_IsImported (false);
+// N
         } */
     }
 
@@ -811,6 +812,20 @@ public class X_I_InvoiceBooking extends PO implements I_I_InvoiceBooking, I_Pers
 		return ii.intValue();
 	}
 
+	/** Set Currency.
+		@param Currency Currency	  */
+	public void setCurrency (String Currency)
+	{
+		set_Value (COLUMNNAME_Currency, Currency);
+	}
+
+	/** Get Currency.
+		@return Currency	  */
+	public String getCurrency () 
+	{
+		return (String)get_Value(COLUMNNAME_Currency);
+	}
+
 	/** Set Account Date.
 		@param DateAcct 
 		Accounting Date
@@ -1357,6 +1372,31 @@ public class X_I_InvoiceBooking extends PO implements I_I_InvoiceBooking, I_Pers
 	public String getReference () 
 	{
 		return (String)get_Value(COLUMNNAME_Reference);
+	}
+
+	public org.compiere.model.I_C_Invoice getRef_Invoice() throws RuntimeException
+    {
+		return (org.compiere.model.I_C_Invoice)MTable.get(getCtx(), org.compiere.model.I_C_Invoice.Table_Name)
+			.getPO(getRef_Invoice_ID(), get_TrxName());	}
+
+	/** Set Referenced Invoice.
+		@param Ref_Invoice_ID Referenced Invoice	  */
+	public void setRef_Invoice_ID (int Ref_Invoice_ID)
+	{
+		if (Ref_Invoice_ID < 1) 
+			set_ValueNoCheck (COLUMNNAME_Ref_Invoice_ID, null);
+		else 
+			set_ValueNoCheck (COLUMNNAME_Ref_Invoice_ID, Integer.valueOf(Ref_Invoice_ID));
+	}
+
+	/** Get Referenced Invoice.
+		@return Referenced Invoice	  */
+	public int getRef_Invoice_ID () 
+	{
+		Integer ii = (Integer)get_Value(COLUMNNAME_Ref_Invoice_ID);
+		if (ii == null)
+			 return 0;
+		return ii.intValue();
 	}
 
 	/** Set Region.

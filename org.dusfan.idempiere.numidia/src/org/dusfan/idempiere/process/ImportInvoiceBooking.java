@@ -13,6 +13,7 @@ import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MLocation;
 import org.compiere.model.MUser;
+import org.compiere.process.DocAction;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
@@ -112,6 +113,15 @@ public class ImportInvoiceBooking extends SvrProcess
 			log.warning ("Invalid Org=" + no);
 		
 //		Customization LoH
+		// ignore the already imported booking code
+		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+				.append("SET I_IsImported='E', I_ErrorMsg='ERR=Booking deja importer, '")
+				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('CO', 'CL')) ")
+				.append(" and Statut = 'Confirmed' AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (no != 0)
+			log.warning ("Booking Already imported=" + no);
+		
 		// delete record where there no amount neither booking refrence
 		sql = new StringBuilder ("delete from I_InvoiceBooking o ")
 				.append("WHERE total IS NULL or total = 'Total'")
@@ -142,7 +152,14 @@ public class ImportInvoiceBooking extends SvrProcess
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
-
+		
+		// get the already completed invoice for the canceled booking
+		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+				.append(" SET Ref_Invoice_ID=(SELECT C_Invoice_id FROM C_Invoice i WHERE i.documentno = o.documentno)")
+				.append(" WHERE IsSOTrx='Y' AND I_IsImported<>'Y'")
+				.append(" AND o.Statut = 'Canceled'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
 		//	Document Type - PO - SO
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 			  .append("SET C_DocType_ID=(SELECT C_DocType_ID FROM C_DocType d WHERE d.Name=o.DocTypeName")
@@ -656,10 +673,12 @@ public class ImportInvoiceBooking extends SvrProcess
 
 		int noInsert = 0;
 		int noInsertLine = 0;
-
+		
+		int noReverse = 0;
+		
 		//	Go through Invoice Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
-			  .append("WHERE I_IsImported='N'").append (clientCheck)
+			  .append("WHERE I_IsImported='N' and Statut = 'Confirmed'").append (clientCheck)
 			.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
 		try
 		{
@@ -805,6 +824,178 @@ public class ImportInvoiceBooking extends SvrProcess
 			rs = null;
 			pstmt = null;
 		}
+		
+		//		Go through Invoice Records w/o
+		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
+				.append("WHERE I_IsImported='N' and Statut = 'Canceled'").append (clientCheck)
+				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
+		try
+		{
+			pstmt = DB.prepareStatement (sql.toString(), get_TrxName());
+			rs = pstmt.executeQuery ();
+			//	Group Change
+			int oldC_BPartner_ID = 0;
+			int oldC_BPartner_Location_ID = 0;
+			String oldDocumentNo = "";
+			//
+			MInvoice invoice = null;
+			int lineNo = 0;
+			while (rs.next ())
+			{
+				X_I_InvoiceBooking imp = new X_I_InvoiceBooking (getCtx (), rs, null);
+				BigDecimal amount = new BigDecimal(imp.getTotal());
+				if (imp.getRef_Invoice_ID() == 0 && Env.ZERO.compareTo(amount) == 0){
+					imp.setI_IsImported(true);
+					imp.setProcessed(true);
+					if (imp.save())
+						continue;
+				}else if(imp.getRef_Invoice_ID() != 0 && Env.ZERO.compareTo(amount) == 0){
+					MInvoice reverseInvoice = new MInvoice(getCtx(), imp.getRef_Invoice_ID(), null);
+					if (reverseInvoice.processIt(DocAction.ACTION_Reverse_Correct))
+						if ( reverseInvoice.save()){
+							noReverse ++;
+						}
+					imp.setI_IsImported(true);
+					imp.setProcessed(true);
+					if (imp.save())
+						continue;
+				} else if(imp.getRef_Invoice_ID() != 0 && Env.ZERO.compareTo(amount) != 0){
+					MInvoice reverseInvoice = new MInvoice(getCtx(), imp.getRef_Invoice_ID(), null);
+					if (reverseInvoice.processIt(DocAction.ACTION_Reverse_Correct))
+						if ( reverseInvoice.save()){
+							noReverse ++;
+						}
+				}
+				String cmpDocumentNo = imp.getDocumentNo();
+				if (cmpDocumentNo == null)
+					cmpDocumentNo = "";
+				//	New Invoice
+				if (oldC_BPartner_ID != imp.getC_BPartner_ID() 
+						|| oldC_BPartner_Location_ID != imp.getC_BPartner_Location_ID()
+						|| !oldDocumentNo.equals(cmpDocumentNo)	)
+				{
+					if (invoice != null)
+					{
+						if (!invoice.processIt(m_docAction)) {
+							log.warning("Invoice Process Failed: " + invoice + " - " + invoice.getProcessMsg());
+							throw new IllegalStateException("Invoice Process Failed: " + invoice + " - " + invoice.getProcessMsg());
+
+						}
+						invoice.saveEx();
+					}
+					//	Group Change
+					oldC_BPartner_ID = imp.getC_BPartner_ID();
+					oldC_BPartner_Location_ID = imp.getC_BPartner_Location_ID();
+					oldDocumentNo = imp.getDocumentNo();
+					if (oldDocumentNo == null)
+						oldDocumentNo = "";
+					//
+					invoice = new MInvoice (getCtx(), 0, null);
+					invoice.setClientOrg (imp.getAD_Client_ID(), imp.getAD_Org_ID());
+					invoice.setC_DocTypeTarget_ID(imp.getC_DocType_ID());
+					invoice.setIsSOTrx(imp.isSOTrx());
+					if (imp.getDocumentNo() != null)
+						invoice.setDocumentNo(imp.getDocumentNo()+"-C");
+					//
+					invoice.setC_BPartner_ID(imp.getC_BPartner_ID());
+					invoice.setC_BPartner_Location_ID(imp.getC_BPartner_Location_ID());
+					if (imp.getAD_User_ID() != 0)
+						invoice.setAD_User_ID(imp.getAD_User_ID());
+					//
+					if (imp.getDescription() != null)
+						invoice.setDescription(imp.getDescription());
+					invoice.setC_PaymentTerm_ID(imp.getC_PaymentTerm_ID());
+					invoice.setM_PriceList_ID(imp.getM_PriceList_ID());
+					//	SalesRep from Import or the person running the import
+					if (imp.getSalesRep_ID() != 0)
+						invoice.setSalesRep_ID(imp.getSalesRep_ID());
+					if (invoice.getSalesRep_ID() == 0)
+						invoice.setSalesRep_ID(getAD_User_ID());
+					//
+					if (imp.getAD_OrgTrx_ID() != 0)
+						invoice.setAD_OrgTrx_ID(imp.getAD_OrgTrx_ID());
+					if (imp.getC_Activity_ID() != 0)
+						invoice.setC_Activity_ID(imp.getC_Activity_ID());
+					if (imp.getC_Campaign_ID() != 0)
+						invoice.setC_Campaign_ID(imp.getC_Campaign_ID());
+					if (imp.getC_Project_ID() != 0)
+						invoice.setC_Project_ID(imp.getC_Project_ID());
+					//
+					if (imp.getDateInvoiced() != null)
+						invoice.setDateInvoiced(imp.getDateInvoiced());
+					if (imp.getDateAcct() != null)
+						invoice.setDateAcct(imp.getDateAcct());
+					//
+					invoice.saveEx();
+					noInsert++;
+					lineNo = 10;
+				}
+				imp.setC_Invoice_ID (invoice.getC_Invoice_ID());
+				imp.setPriceActual(amount);
+				//	New InvoiceLine
+				MInvoiceLine line = new MInvoiceLine (invoice);
+				if (imp.getLineDescription() != null)
+					line.setDescription(imp.getLineDescription());
+				line.setLine(lineNo);
+				lineNo += 10;
+				if (imp.getM_Product_ID() != 0)
+					line.setM_Product_ID(imp.getM_Product_ID(), true);
+				// globalqss - import invoice with charges
+				if (imp.getC_Charge_ID() != 0)
+					line.setC_Charge_ID(imp.getC_Charge_ID());
+				// globalqss - [2855673] - assign dimensions to lines also in case they're different 
+				if (imp.getC_Activity_ID() != 0)
+					line.setC_Activity_ID(imp.getC_Activity_ID());
+				if (imp.getC_Campaign_ID() != 0)
+					line.setC_Campaign_ID(imp.getC_Campaign_ID());
+				if (imp.getC_Project_ID() != 0)
+					line.setC_Project_ID(imp.getC_Project_ID());
+				//
+				line.setQty(imp.getQtyOrdered());
+				line.setPrice();
+				BigDecimal price = imp.getPriceActual();
+				if (price != null && Env.ZERO.compareTo(price) != 0)
+					line.setPrice(price);
+				if (imp.getC_Tax_ID() != 0)
+					line.setC_Tax_ID(imp.getC_Tax_ID());
+				else
+				{
+					line.setTax();
+					imp.setC_Tax_ID(line.getC_Tax_ID());
+				}
+				BigDecimal taxAmt = imp.getTaxAmt();
+				if (taxAmt != null && Env.ZERO.compareTo(taxAmt) != 0)
+					line.setTaxAmt(taxAmt);
+				line.setC_1099Box_ID(imp.getC_1099Box_ID());
+				line.saveEx();
+				//
+				imp.setC_InvoiceLine_ID(line.getC_InvoiceLine_ID());
+				imp.setI_IsImported(true);
+				imp.setProcessed(true);
+				//
+				if (imp.save())
+					noInsertLine++;
+			}
+			if (invoice != null)
+			{
+				if(!invoice.processIt (m_docAction)) {
+					log.warning("Invoice Process Failed: " + invoice + " - " + invoice.getProcessMsg());
+					throw new IllegalStateException("Invoice Process Failed: " + invoice + " - " + invoice.getProcessMsg());
+
+				}
+				invoice.saveEx();
+			}
+		}
+		catch (Exception e)
+		{
+			log.log(Level.SEVERE, "CreateInvoice", e);
+		}
+		finally
+		{
+			DB.close(rs, pstmt);
+			rs = null;
+			pstmt = null;
+		}
 
 		//	Set Error to indicator to not imported
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
@@ -815,7 +1006,12 @@ public class ImportInvoiceBooking extends SvrProcess
 		//
 		addLog (0, null, new BigDecimal (noInsert), "@C_Invoice_ID@: @Inserted@");
 		addLog (0, null, new BigDecimal (noInsertLine), "@C_InvoiceLine_ID@: @Inserted@");
+		addLog (0, null, new BigDecimal (noReverse), "@C_Invoice_ID@: @Voided@");
 		return "";
-	}	//	doIt
+	}	
+	
+	// Customization LoH poure 
+	
+	//	doIt
 
 }	//	ImportInvoice

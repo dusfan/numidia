@@ -508,6 +508,15 @@ public interface I_I_InvoiceBooking
 
 	public org.compiere.model.I_C_Tax getC_Tax() throws RuntimeException;
 
+    /** Column name Currency */
+    public static final String COLUMNNAME_Currency = "Currency";
+
+	/** Set Currency	  */
+	public void setCurrency (String Currency);
+
+	/** Get Currency	  */
+	public String getCurrency();
+
     /** Column name DateAcct */
     public static final String COLUMNNAME_DateAcct = "DateAcct";
 
@@ -882,6 +891,17 @@ public interface I_I_InvoiceBooking
 	  * Reference for this record
 	  */
 	public String getReference();
+
+    /** Column name Ref_Invoice_ID */
+    public static final String COLUMNNAME_Ref_Invoice_ID = "Ref_Invoice_ID";
+
+	/** Set Referenced Invoice	  */
+	public void setRef_Invoice_ID (int Ref_Invoice_ID);
+
+	/** Get Referenced Invoice	  */
+	public int getRef_Invoice_ID();
+
+	public org.compiere.model.I_C_Invoice getRef_Invoice() throws RuntimeException;
 
     /** Column name RegionName */
     public static final String COLUMNNAME_RegionName = "RegionName";
