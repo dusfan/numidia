@@ -10,6 +10,7 @@ import org.adempiere.process.ImportProcess;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MOrder;
 import org.compiere.model.MOrderLine;
+import org.compiere.model.MProduct;
 import org.compiere.model.X_C_BP_Relation;
 import org.compiere.process.DocAction;
 import org.compiere.process.SvrProcess;
@@ -190,7 +191,12 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		
 		// Dans le cas d'un client rabatteur qui veut des factures individuels
 		MBPartner clientCode = new MBPartner(getCtx(), c_BPartnerRelation_ID, get_TrxName());
-	    // créer la relation tiers 
+	   
+		if (clientCode.get_ValueAsString("TypeCodeClient")==null || 
+				clientCode.get_ValueAsString("TypeCodeClient").length()==0 || 
+				clientCode.get_ValueAsString("TypeCodeClient").equals("2"))
+			return null;
+		
 		X_C_BP_Relation bprel = new X_C_BP_Relation(getCtx(), 0, get_TrxName());
 		bprel.setAD_Org_ID(bp.getAD_Org_ID());
 		bprel.set_ValueNoCheck("AD_Client_ID", bp.getAD_Client_ID());
@@ -244,6 +250,11 @@ public class ImportTourismeBP extends SvrProcess implements ImportProcess {
 		l1.setM_Product_ID(imp.getM_Product_ID());
 		l1.setQty(Env.ONE);
 		l1.setC_Activity_ID(1000003);
+		l1.saveEx();
+		
+		// Set Commission
+		l1.setPrice(l1.getPriceActual().subtract((BigDecimal)imp.get_Value("T_Marge")));
+		l1.setLineNetAmt();
 		l1.saveEx();
 		
 		// Add Prestation if exist 

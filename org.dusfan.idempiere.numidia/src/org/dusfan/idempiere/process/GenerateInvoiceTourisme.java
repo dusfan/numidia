@@ -32,6 +32,14 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 				pay.getC_Invoice_ID());
 		if (status!=null && !status.equals("RE"))
 			throw new AdempiereUserError("Une facture acheve existe deja");
+		
+		 if ( ((BigDecimal)pay.get_Value("T_PriceHotel")).compareTo(Env.ZERO)==0 )
+			 throw new AdempiereUserError("Le prix d'achat est obligatoire");
+		 if ( ((BigDecimal)pay.get_Value("T_PriceOtherD")).compareTo(Env.ZERO)==0 )
+			 throw new AdempiereUserError("La commession est obligatoire");
+		 if ( ((BigDecimal)pay.get_Value("Rate")).compareTo(Env.ZERO)==0 )
+			 throw new AdempiereUserError("Le taux est obligatoire");
+		 
 		else if (pay.getDocStatus().equals("CO")) {
 			// Create invoice
 			MInvoice inv = new MInvoice(getCtx(), 0, get_TrxName());
