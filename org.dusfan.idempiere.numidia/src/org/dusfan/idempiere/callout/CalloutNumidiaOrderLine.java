@@ -92,20 +92,36 @@ public class CalloutNumidiaOrderLine implements IColumnCallout {
 	
 	private void setRemiseComptoire (GridTab mTab, Properties ctx) {
 		int m_product_id = mTab.getValue("M_Product_ID")!=null ? (int) mTab.getValue("M_Product_ID"): 0;
-		if (m_product_id > 0) {
-			MProduct pr = new MProduct(ctx, m_product_id, null);
-			if (!pr.get_ValueAsString("TypeService").equals("5")) {
-				mTab.fireDataStatusEEvent ("Il faut que l article soit de type MARGE pour cette remise",
-						"Marge", false);
-				return;
+		int ad_org_id = (int)mTab.getValue("AD_Org_ID");
+		
+		if (ad_org_id == 1000002) {
+			if (m_product_id > 0) {
+				MProduct pr = new MProduct(ctx, m_product_id, null);
+				if (!pr.get_ValueAsString("TypeService").equals("5")) {
+					mTab.fireDataStatusEEvent ("Il faut que l article soit de type MARGE pour cette remise",
+							"Marge", false);
+					return;
+				}
+			}
+
+			BigDecimal remise = mTab.getValue("RemiseCompt")!=null ? (BigDecimal) mTab.getValue("RemiseCompt") : Env.ZERO;
+			BigDecimal PriceList = (BigDecimal) mTab.getValue("PriceList");
+			BigDecimal priceActual = PriceList.subtract(remise);
+			mTab.setValue("PriceEntered", priceActual);
+			mTab.setValue("PriceActual", priceActual);
+		}
+		else if (ad_org_id == 1000004) {
+			if (m_product_id > 0) { 
+				BigDecimal remise = mTab.getValue("RemiseCompt")!=null ? 
+						(BigDecimal) mTab.getValue("RemiseCompt") : Env.ZERO;
+				BigDecimal priceActual = mTab.getValue("PriceActual")!=null ? 
+						(BigDecimal) mTab.getValue("PriceActual") : Env.ZERO;
+				priceActual = priceActual.subtract(remise);
+				mTab.setValue("PriceEntered", priceActual);
+				mTab.setValue("PriceActual", priceActual);
 			}
 		}
-
-		BigDecimal remise = mTab.getValue("RemiseCompt")!=null ? (BigDecimal) mTab.getValue("RemiseCompt") : Env.ZERO;
-		BigDecimal PriceList = (BigDecimal) mTab.getValue("PriceList");
-		BigDecimal priceActual = PriceList.subtract(remise);
-		mTab.setValue("PriceEntered", priceActual);
-		mTab.setValue("PriceActual", priceActual);
+		
 	}
 	
 	private void setRemiseGP (GridTab mTab, Properties ctx) {
