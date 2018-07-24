@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerStatementNumidiaTourisme" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="fd74cd23-032f-4deb-ad4b-0aa5256735b8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerStatementNumidiaTourisme" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="fd74cd23-032f-4deb-ad4b-0aa5256735b8">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.8150000000000004"/>
@@ -12,14 +12,6 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="251"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="742"/>
 	<property name="com.jaspersoft.studio.report.description" value=""/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -77,7 +69,7 @@ AND bp.IsCustomer='Y']]>
 		<groupHeader>
 			<band height="19" splitType="Stretch">
 				<subreport isUsingCache="true">
-					<reportElement key="subreport-10" x="0" y="5" width="535" height="14" uuid="0d58093f-54c3-4c86-a31f-d80dcd2dfba5"/>
+					<reportElement key="subreport-10" x="0" y="5" width="780" height="14" uuid="0d58093f-54c3-4c86-a31f-d80dcd2dfba5"/>
 					<subreportParameter name="DateAcctFrom">
 						<subreportParameterExpression><![CDATA[$P{DateAcctFrom}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -101,7 +93,7 @@ AND bp.IsCustomer='Y']]>
 		<groupHeader>
 			<band height="19" splitType="Stretch">
 				<subreport isUsingCache="true">
-					<reportElement key="subreport-4" x="0" y="5" width="535" height="14" isPrintWhenDetailOverflows="true" uuid="b87bdd8d-96de-4d10-a10b-7ad440e65495"/>
+					<reportElement key="subreport-4" x="0" y="5" width="780" height="14" isPrintWhenDetailOverflows="true" uuid="b87bdd8d-96de-4d10-a10b-7ad440e65495"/>
 					<subreportParameter name="DateAcctTo">
 						<subreportParameterExpression><![CDATA[$P{DateAcctTo}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -125,7 +117,7 @@ AND bp.IsCustomer='Y']]>
 				</reportElement>
 			</line>
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-11" x="0" y="0" width="535" height="16" uuid="4f8aa41f-cf10-4cae-ad8f-2627821ec977">
+				<reportElement key="subreport-11" x="0" y="0" width="780" height="16" uuid="4f8aa41f-cf10-4cae-ad8f-2627821ec977">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="AD_ORG_ID">
