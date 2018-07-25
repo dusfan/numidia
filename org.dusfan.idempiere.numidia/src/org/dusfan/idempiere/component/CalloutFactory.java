@@ -6,6 +6,7 @@ import java.util.List;
 import org.adempiere.base.IColumnCallout;
 import org.adempiere.base.IColumnCalloutFactory;
 import org.compiere.model.MBPartner;
+import org.compiere.model.MBankStatement;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
@@ -13,6 +14,7 @@ import org.compiere.model.MOrderLine;
 import org.compiere.model.MPayment;
 import org.compiere.model.MPriceListVersion;
 import org.compiere.model.MProductPrice;
+import org.dusfan.idempiere.callout.CalloutNumidiaBankStatment;
 import org.dusfan.idempiere.callout.CalloutNumidiaIDUAgence;
 import org.dusfan.idempiere.callout.CalloutNumidiaImportOmra;
 import org.dusfan.idempiere.callout.CalloutNumidiaInvoice;
@@ -59,6 +61,8 @@ public class CalloutFactory implements IColumnCalloutFactory {
 		}
 		else if (tableName.equals(X_DU_IOrderAgence.Table_Name)) 
 			callout.add(new CalloutNumidiaIDUAgence ());
+		else if (tableName.equals(MBankStatement.Table_Name))
+			callout.add(new CalloutNumidiaBankStatment());
 
 		return callout != null ? callout.toArray(new IColumnCallout[0]) : new IColumnCallout[0];
 	}
