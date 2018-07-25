@@ -112,7 +112,7 @@ AND bp.IsCustomer='Y']]>
 	<title>
 		<band height="22" splitType="Stretch">
 			<line>
-				<reportElement key="line-2" positionType="Float" x="0" y="21" width="530" height="1" uuid="cc0dc0f8-58e8-4b6e-acf7-87d244ddb07a">
+				<reportElement key="line-2" positionType="Float" x="0" y="21" width="780" height="1" uuid="cc0dc0f8-58e8-4b6e-acf7-87d244ddb07a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
@@ -137,7 +137,7 @@ AND bp.IsCustomer='Y']]>
 	<pageHeader>
 		<band height="136" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" x="444" y="120" width="55" height="11" uuid="7be35d4f-b2ca-4e57-9cde-4296d976420c"/>
+				<reportElement key="textField" x="690" y="120" width="55" height="11" uuid="7be35d4f-b2ca-4e57-9cde-4296d976420c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -151,7 +151,7 @@ AND bp.IsCustomer='Y']]>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" x="499" y="120" width="31" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="ace4d277-ffd8-4f48-865a-07b938ccd026"/>
+				<reportElement key="textField" x="745" y="120" width="31" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="ace4d277-ffd8-4f48-865a-07b938ccd026"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -193,7 +193,7 @@ AND bp.IsCustomer='Y']]>
 				<textFieldExpression><![CDATA["Période du : " + new SimpleDateFormat("dd/MM/yyyy").format($P{DateAcctFrom})  + "  à  "  + new SimpleDateFormat("dd/MM/yyyy").format($P{DateAcctTo})]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line-1" x="0" y="135" width="530" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="a34935f9-87ce-49b0-8564-54cc73ed41d1">
+				<reportElement key="line-1" x="0" y="135" width="780" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="a34935f9-87ce-49b0-8564-54cc73ed41d1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<graphicElement>
