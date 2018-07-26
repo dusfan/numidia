@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost100.245"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Prod230"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -23,10 +23,10 @@
 	<parameter name="AD_Client_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Account_From" class="java.lang.Integer">
+	<parameter name="Account_From" class="java.math.BigDecimal">
 		<defaultValueExpression><![CDATA[1000238]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Account_To" class="java.lang.Integer">
+	<parameter name="Account_To" class="java.math.BigDecimal">
 		<defaultValueExpression><![CDATA[1000238]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ISDETAIL" class="java.lang.String">
@@ -132,8 +132,8 @@ where acct.issummary = 'N'
 
 	order by acct_value, dateacct, iso_code, adTableID, RecordID]]>
 	</queryString>
-	<field name="AMOUNT" class="java.lang.Double"/>
-	<field name="SOURCE_AMOUNT" class="java.lang.Double"/>
+	<field name="AMOUNT" class="java.math.BigDecimal"/>
+	<field name="SOURCE_AMOUNT" class="java.math.BigDecimal"/>
 	<field name="DATEACCT" class="java.util.Date"/>
 	<field name="DESCRIPTION" class="java.lang.String"/>
 	<field name="ACCT_VALUE" class="java.lang.String"/>
@@ -141,49 +141,45 @@ where acct.issummary = 'N'
 	<field name="IFROMACC" class="java.lang.String"/>
 	<field name="ITOACC" class="java.lang.String"/>
 	<field name="ISO_CODE" class="java.lang.String"/>
-	<field name="STARTING_BALANCE" class="java.lang.Double"/>
-	<field name="ENDING_BALANCE" class="java.lang.Double"/>
+	<field name="STARTING_BALANCE" class="java.math.BigDecimal"/>
+	<field name="ENDING_BALANCE" class="java.math.BigDecimal"/>
 	<field name="CLIENT_NAME" class="java.lang.String"/>
 	<field name="BASE_CURR" class="java.lang.String"/>
 	<field name="GL_CAT" class="java.lang.String"/>
-	<field name="AMOUNTCR" class="java.lang.Double"/>
-	<field name="AMOUNTDR" class="java.lang.Double"/>
+	<field name="AMOUNTCR" class="java.math.BigDecimal"/>
+	<field name="AMOUNTDR" class="java.math.BigDecimal"/>
 	<field name="ORG_NAME" class="java.lang.String"/>
 	<field name="BPNAME" class="java.lang.String"/>
-	<variable name="AMOUNT_ACCT" class="java.lang.Double" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
+	<variable name="AMOUNT_ACCT" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
 	</variable>
-	<variable name="STARTING_BALANCE_ACCT" class="java.lang.Double" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
+	<variable name="STARTING_BALANCE_ACCT" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
 		<variableExpression><![CDATA[$F{STARTING_BALANCE}]]></variableExpression>
-		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
 	</variable>
-	<variable name="ENDING_BALANCE_ACCT" class="java.lang.Double" resetType="Group" resetGroup="ACCT_VALUE">
+	<variable name="ENDING_BALANCE_ACCT" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCT_VALUE">
 		<variableExpression><![CDATA[$F{ENDING_BALANCE}]]></variableExpression>
 	</variable>
-	<variable name="COUNT_CURR" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[new Double(1)]]></variableExpression>
-	</variable>
+	<variable name="COUNT_CURR" class="java.math.BigDecimal" calculation="Sum"/>
 	<variable name="COUNT_ACCT" class="java.lang.String" resetType="Group" resetGroup="ACCT_VALUE" calculation="Count"/>
-	<variable name="AMOUNT_START_TOTAL" class="java.lang.Double" calculation="Sum">
+	<variable name="AMOUNT_START_TOTAL" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{STARTING_BALANCE}]]></variableExpression>
 	</variable>
-	<variable name="AMOUNT_END_TOTAL" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($V{AMOUNT_START_TOTAL}.doubleValue() + $V{AMOUNT_TOTAL}.doubleValue())]]></variableExpression>
-		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	<variable name="AMOUNT_END_TOTAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{AMOUNT_START_TOTAL}.add($V{AMOUNT_TOTAL})]]></variableExpression>
 	</variable>
-	<variable name="AMOUNT_TOTAL" class="java.lang.Double" calculation="Sum">
+	<variable name="AMOUNT_TOTAL" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
 	</variable>
-	<variable name="AMOUNTDR_ACCT" class="java.lang.Double" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
+	<variable name="AMOUNTDR_ACCT" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNTDR}]]></variableExpression>
 	</variable>
-	<variable name="AMOUNTCR_ACCT" class="java.lang.Double" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
+	<variable name="AMOUNTCR_ACCT" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCT_VALUE" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNTCR}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_AMOUNTCR_ACCT" class="java.lang.Double" calculation="Sum">
+	<variable name="TOTAL_AMOUNTCR_ACCT" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNTCR}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_AMOUNTDR_ACCT" class="java.lang.Double" calculation="Sum">
+	<variable name="TOTAL_AMOUNTDR_ACCT" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{AMOUNTDR}]]></variableExpression>
 	</variable>
 	<group name="ACCT_VALUE">
@@ -216,7 +212,7 @@ where acct.issummary = 'N'
 		<groupFooter>
 			<band height="60" splitType="Stretch">
 				<printWhenExpression><![CDATA[new Boolean($P{excel}.equalsIgnoreCase("N")  &&
-(true || $V{STARTING_BALANCE_ACCT}.doubleValue() !=0 || $V{AMOUNT_ACCT}.doubleValue() !=0))]]></printWhenExpression>
+($V{STARTING_BALANCE_ACCT}.compareTo(BigDecimal.ZERO) !=0 || $V{AMOUNT_ACCT}.compareTo(BigDecimal.ZERO) !=0))]]></printWhenExpression>
 				<rectangle radius="0">
 					<reportElement key="rectangle-2" mode="Transparent" x="2" y="2" width="532" height="58" forecolor="#000000" backcolor="#CCCCCC" uuid="f239f1c0-b9ac-453c-bc9c-91ec82b0466b"/>
 					<graphicElement fill="Solid">
@@ -263,7 +259,7 @@ where acct.issummary = 'N'
 						<font fontName="Arial" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new Double($V{STARTING_BALANCE_ACCT}.doubleValue() + $V{AMOUNT_ACCT}.doubleValue())]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{STARTING_BALANCE_ACCT}.add( $V{AMOUNT_ACCT})]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement key="textField-7" mode="Opaque" x="9" y="5" width="176" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="1a5a5ec9-3b9b-45a3-b0a2-483545988fcf"/>
@@ -521,8 +517,7 @@ where acct.issummary = 'N'
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ "à"
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA["à"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField-59" x="423" y="8" width="25" height="23" uuid="063fa483-230b-4bad-813b-13e1f6a1646e"/>
@@ -535,7 +530,7 @@ where acct.issummary = 'N'
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ "à"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["à"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -727,7 +722,7 @@ where acct.issummary = 'N'
 					<font fontName="Arial" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Double($V{AMOUNT_START_TOTAL}.doubleValue() + $V{AMOUNT_TOTAL}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{AMOUNT_START_TOTAL}.add($V{AMOUNT_TOTAL})]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField" mode="Opaque" x="446" y="31" width="85" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="d01379c5-2313-419b-a20c-5d8633a1d209"/>
