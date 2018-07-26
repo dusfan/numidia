@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ZZ_CustomerBalancesNumidiaTourisme" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="2f7efed5-a658-47a1-95c4-d92c9bdf0ea8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ZZ_CustomerBalancesNumidiaLoH" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="2f7efed5-a658-47a1-95c4-d92c9bdf0ea8">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="47"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192-168-0-242.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="numidia-192.168.0.96.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="147"/>
@@ -18,7 +18,7 @@
 	<parameter name="StartDate" class="java.util.Date"/>
 	<parameter name="EndDate" class="java.util.Date"/>
 	<parameter name="AD_Client_ID" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer("1000002")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer("1000003")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="RESOURCE_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -26,52 +26,38 @@
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select c.Name as ClientName, bp.value || '-' || bp.name as codeclient,
-((select COALESCE(sum(currencyConvert(i.GRANDTOTAL, i.C_Currency_ID, 102, i.DATEInvoiced, null, i.AD_Client_ID, i.AD_Org_ID)),0)
+((select COALESCE(sum(i.GRANDTOTAL),0)
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
 AND d.DocBaseType = 'ARI'
 WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_org_id=1000005 and i.ad_client_id = 1000003
-and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))+
-(select COALESCE(sum(currencyConvert(i.GRANDTOTAL, i.C_Currency_ID, 102, i.DATEInvoiced, null, i.AD_Client_ID, i.AD_Org_ID)),0)*-1
+and i.ISSOTRX = 'Y' and i.c_currency_id =102 and i.docstatus in ('CO', 'CL'))) as suminveur,
+((select COALESCE(sum(i.GRANDTOTAL),0)
 from C_INVOICE i
 INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
-AND d.DocBaseType = 'ARC'
+AND d.DocBaseType = 'ARI'
 WHERE trunc(i.dateinvoiced) >= $P{StartDate}
 and trunc(i.dateinvoiced) <= $P{EndDate}
 and i.C_BPartner_ID = bp.C_BPARTNER_ID and i.ad_org_id=1000005 and i.ad_client_id = 1000003
-and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL'))) as suminv,
-(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 102, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0)
+and i.ISSOTRX = 'Y' and i.c_currency_id =100 and i.docstatus in ('CO', 'CL'))) as suminvusd,
+(select COALESCE(sum(p.PAYAMT),0)
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
 and trunc(p.DATETRX) <= $P{EndDate} 
 and p.docstatus in ('CO', 'CL') and p.tendertype='X' and p.c_currency_id =102
 and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000005 
 and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000003
-) as sumdzdpaycash,
-(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 102, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
+) as sumeurpaycash,
+(select COALESCE(sum(p.PAYAMT),0)
 from C_PAYMENT p
 where trunc(p.DATETRX) >= $P{StartDate}
-and trunc(p.DATETRX) <= $P{EndDate}  
-and p.docstatus in ('CO', 'CL') and p.tendertype <> 'X' and p.c_currency_id =102
+and trunc(p.DATETRX) <= $P{EndDate} 
+and p.docstatus in ('CO', 'CL') and p.tendertype='X' and p.c_currency_id =100
 and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000005 
 and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000003
-) as sumdzdpayother,
-(select COALESCE((sum(p.PAYAMT)+sum(p.discountamt)+sum(p.writeoffAMT)),0) as sumdevisepay
-from C_PAYMENT p
-where trunc(p.DATETRX) >= $P{StartDate}
-and trunc(p.DATETRX) <= $P{EndDate}
-and p.docstatus in ('CO', 'CL')
-and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000005 
-and p.ISRECEIPT = 'Y' AND p.c_currency_id not in (102) and p.ad_client_id = 1000003) as sumdevisepay,
-(select COALESCE(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 102, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
-from C_PAYMENT p
-where trunc(p.DATETRX) >= $P{StartDate}
-and trunc(p.DATETRX) <= $P{EndDate}
-and p.docstatus in ('CO', 'CL')
-and p.C_BPartner_ID = bp.C_BPARTNER_ID and p.ad_org_id=1000005 
-and p.ISRECEIPT = 'Y' and p.ad_client_id = 1000003) as sumpaytotal
+) as sumusdpaycash
 from C_BPARTNER bp
 INNER JOIN AD_Client c ON bp.AD_Client_ID=c.AD_Client_ID
 where bp.isCustomer = 'Y'
@@ -84,37 +70,30 @@ order by bp.value]]>
 	<field name="codeclient" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
 	</field>
-	<field name="suminv" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="suminv"/>
+	<field name="suminveur" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="suminveur"/>
 	</field>
-	<field name="sumdzdpaycash" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="sumdzdpaycash"/>
+	<field name="suminvusd" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="suminvusd"/>
 	</field>
-	<field name="sumdzdpayother" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="sumdzdpayother"/>
+	<field name="sumeurpaycash" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumeurpaycash"/>
 	</field>
-	<field name="sumdevisepay" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="sumdevisepay"/>
+	<field name="sumusdpaycash" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sumusdpaycash"/>
 	</field>
-	<field name="sumpaytotal" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="sumpaytotal"/>
-	</field>
-	<variable name="TPAYMENT" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{sumpaytotal}]]></variableExpression>
+	<variable name="TEURINVOICE" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{suminveur}]]></variableExpression>
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
-	<variable name="TINVOICE" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{suminv}]]></variableExpression>
-		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	<variable name="TUSDINVOICE" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{suminvusd}]]></variableExpression>
 	</variable>
-	<variable name="TPAYCASH" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{sumdzdpaycash}]]></variableExpression>
+	<variable name="TPAYEUR" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumeurpaycash}]]></variableExpression>
 	</variable>
-	<variable name="TPAYDEVISE" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{sumdevisepay}]]></variableExpression>
-	</variable>
-	<variable name="TPAYOTHER" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{sumdzdpayother}]]></variableExpression>
+	<variable name="TPAYUSD" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{sumusdpaycash}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -192,7 +171,7 @@ order by bp.value]]>
 				<text><![CDATA[Agence]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="130" y="0" width="100" height="20" uuid="2e9d0dfe-8262-4a06-bc23-31acb2f5b928">
+				<reportElement x="130" y="0" width="90" height="20" uuid="2e9d0dfe-8262-4a06-bc23-31acb2f5b928">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -203,10 +182,10 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Facture]]></text>
+				<text><![CDATA[Facture EUR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="230" y="0" width="73" height="20" uuid="114ce6e3-f814-4009-8849-fcf622d726e2"/>
+				<reportElement x="220" y="0" width="83" height="20" uuid="114ce6e3-f814-4009-8849-fcf622d726e2"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -215,10 +194,10 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Espèces]]></text>
+				<text><![CDATA[Facture USD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="303" y="0" width="40" height="20" uuid="f98ead4e-962a-4063-8276-93169cd2a7b6"/>
+				<reportElement x="303" y="0" width="60" height="20" uuid="f98ead4e-962a-4063-8276-93169cd2a7b6"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -227,10 +206,10 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Devise]]></text>
+				<text><![CDATA[Payement EUR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="343" y="0" width="58" height="20" uuid="a284a399-237f-4c41-813d-3e7db6ec0298"/>
+				<reportElement x="363" y="0" width="58" height="20" uuid="a284a399-237f-4c41-813d-3e7db6ec0298"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -239,10 +218,10 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Chq/Virement]]></text>
+				<text><![CDATA[Paiement USD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="401" y="0" width="79" height="20" uuid="d3c8b3ca-44f7-475a-94c6-d5e31f80ad91"/>
+				<reportElement x="421" y="0" width="79" height="20" uuid="d3c8b3ca-44f7-475a-94c6-d5e31f80ad91"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -251,10 +230,10 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[Balance EUR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="480" y="0" width="88" height="20" uuid="9bd834e5-f072-4adc-884f-79ea5c8dbcbd"/>
+				<reportElement x="500" y="0" width="70" height="20" uuid="9bd834e5-f072-4adc-884f-79ea5c8dbcbd"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -264,16 +243,16 @@ order by bp.value]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Balance]]></text>
+				<text><![CDATA[Balance USD]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{suminv}.compareTo(BigDecimal.ZERO)!=0]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$F{suminveur}.compareTo(BigDecimal.ZERO)!=0 || $F{suminvusd}.compareTo(BigDecimal.ZERO)!=0]]></printWhenExpression>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="303" y="0" width="40" height="15" uuid="fe772033-b54a-4346-adf9-7ab3a50161fe">
+				<reportElement x="303" y="0" width="60" height="15" uuid="fe772033-b54a-4346-adf9-7ab3a50161fe">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -285,7 +264,7 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sumdevisepay}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sumeurpaycash}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="2" y="0" width="128" height="15" uuid="8f478334-01c5-4c33-bc6a-9d7d651041de">
@@ -303,7 +282,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="230" y="0" width="73" height="15" uuid="4d5ce1e8-dad7-4db8-b95c-04dc0710fd0f">
+				<reportElement x="220" y="0" width="83" height="15" uuid="4d5ce1e8-dad7-4db8-b95c-04dc0710fd0f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -315,10 +294,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sumdzdpaycash}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{suminvusd}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="130" y="0" width="100" height="15" uuid="3a2a277a-e452-4097-9c76-ace43c32202f">
+				<reportElement x="130" y="0" width="90" height="15" uuid="3a2a277a-e452-4097-9c76-ace43c32202f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -331,10 +310,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{suminv}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{suminveur}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="88" height="15" uuid="dcd2f005-90b1-4ec5-bbf0-07990d88d469">
+				<reportElement x="500" y="0" width="70" height="15" uuid="dcd2f005-90b1-4ec5-bbf0-07990d88d469">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -346,10 +325,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{suminv}.subtract($F{sumpaytotal})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{suminvusd}.subtract($F{sumusdpaycash})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="401" y="0" width="79" height="15" uuid="8e3cb30d-2d05-4e72-b612-9a9fac6e827e">
+				<reportElement x="421" y="0" width="79" height="15" uuid="8e3cb30d-2d05-4e72-b612-9a9fac6e827e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -361,10 +340,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sumpaytotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{suminveur}.subtract($F{sumeurpaycash})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="343" y="0" width="58" height="15" uuid="40eb45d1-9fc1-4a36-b212-6cb1abc88399">
+				<reportElement x="363" y="0" width="58" height="15" uuid="40eb45d1-9fc1-4a36-b212-6cb1abc88399">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -376,7 +355,7 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sumdzdpayother}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sumusdpaycash}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -430,7 +409,7 @@ order by bp.value]]>
 		<band height="24" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="303" y="7" width="40" height="17" uuid="35f5b819-a9ea-4c36-86f0-487c30e52629"/>
+				<reportElement x="303" y="7" width="60" height="17" uuid="35f5b819-a9ea-4c36-86f0-487c30e52629"/>
 				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -440,10 +419,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TPAYDEVISE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TPAYEUR}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="401" y="7" width="79" height="17" uuid="7a11c48e-36b3-48dc-a141-55b912c9d91e"/>
+				<reportElement x="421" y="7" width="79" height="17" uuid="7a11c48e-36b3-48dc-a141-55b912c9d91e"/>
 				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -453,7 +432,7 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TPAYMENT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TEURINVOICE}.subtract($V{TPAYEUR})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="3" y="7" width="127" height="17" uuid="a99ce635-8811-42e1-aa46-2a196f9fb128">
@@ -473,7 +452,7 @@ order by bp.value]]>
 				<textFieldExpression><![CDATA["TOTAL"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="480" y="7" width="88" height="17" uuid="91028df2-342a-4c99-88db-673709347752"/>
+				<reportElement x="500" y="7" width="70" height="17" uuid="91028df2-342a-4c99-88db-673709347752"/>
 				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -483,10 +462,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TINVOICE}.subtract($V{TPAYMENT})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TUSDINVOICE}.subtract($V{TPAYUSD})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="130" y="7" width="100" height="17" uuid="963d593b-f3d6-411a-95cf-8441aad5cdad">
+				<reportElement x="130" y="7" width="90" height="17" uuid="963d593b-f3d6-411a-95cf-8441aad5cdad">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -498,10 +477,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TINVOICE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TEURINVOICE}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="343" y="7" width="58" height="17" uuid="a0f1da36-ee6e-4188-8123-60eb108945c7"/>
+				<reportElement x="363" y="7" width="58" height="17" uuid="a0f1da36-ee6e-4188-8123-60eb108945c7"/>
 				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -511,10 +490,10 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TPAYOTHER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TPAYUSD}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
-				<reportElement x="230" y="7" width="73" height="17" uuid="08cd9816-95df-43f4-9126-ef6d47519dc8"/>
+				<reportElement x="220" y="7" width="83" height="17" uuid="08cd9816-95df-43f4-9126-ef6d47519dc8"/>
 				<box rightPadding="1">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -524,7 +503,7 @@ order by bp.value]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{TPAYCASH}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{TUSDINVOICE}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
