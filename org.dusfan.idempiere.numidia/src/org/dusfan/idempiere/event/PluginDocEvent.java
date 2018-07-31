@@ -55,7 +55,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MInvoice.Table_Name);
-		
+		registerTableEvent(IEventTopics.DOC_BEFORE_REVERSECORRECT, MInvoice.Table_Name);
+
 		// MInvoiceLine
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoiceLine.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoiceLine.Table_Name);
@@ -106,7 +107,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
 					EventOrder.setremiseBillet(po,ctx,trxName);
 				} else if (po instanceof MInvoiceLine) {
-					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
+					if (po.getAD_Org_ID()!=1000005)
+						EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
+					else
+						;
 				} else if (po instanceof MOrder) {
 					if (!EventOrder.checkHadjClient(po, ctx, trxName))
 						throw new AdempiereUserError("Le type de document et "
@@ -171,7 +175,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventOrder.setremiseBillet(po,ctx,trxName);
 					EventOrder.setPackage(po,ctx,trxName);
 				} else if (po instanceof MInvoiceLine) {
-					EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
+					if (po.getAD_Org_ID()!=1000005)
+						EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
+					else
+						;
 				} else if (po instanceof MOrder) {
 					if (po.getAD_Org_ID()==1000002){
 						EventOrder.setCodeClient(po,MOrder.Table_Name,ctx,trxName);
@@ -250,6 +257,13 @@ public class PluginDocEvent extends AbstractEventHandler {
 			}
 			// End After Void
 			
+			// Before REVERSECORRECT
+			if (type.equals(IEventTopics.DOC_BEFORE_REVERSECORRECT)) {
+				if (po instanceof MInvoice) {
+						EventInvoice.checkAllocation(po, ctx, trxName);
+				}
+			}
+
 		}
 
 	}
