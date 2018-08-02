@@ -41,6 +41,9 @@
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="C_Activity_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[Select coalesce(sum(coalesce(f.amtacctdr,0) - coalesce(f.amtacctcr,0)),0) as amount,
 coalesce(sum(f.amtacctdr),0) as amountdr,
@@ -61,6 +64,7 @@ left outer join fact_acct f on acct.c_elementvalue_id = f.account_id and f.posti
 	and f.dateacct <= $P{DateTo}
   	and (f.ad_Org_id = $P{AD_Org_ID} or $P{AD_Org_ID} = 0 or f.ad_Org_ID = 0)
   	and (f.ad_Client_id = $P{AD_Client_ID} or $P{AD_Client_ID} = 0 or f.ad_Client_ID = 0)
+  	and (f.C_Activity_ID = $P{C_Activity_ID} or $P{C_Activity_ID} is null or $P{C_Activity_ID} = 0)
 left outer join c_currency c on c.c_currency_id = f.c_currency_id
 inner join ad_client ac on ac.ad_client_id = $P{AD_Client_ID}
 inner join ad_Org org on org.ad_org_id = $P{AD_Org_ID}
@@ -76,6 +80,7 @@ acct.issummary = 'N'
   and ( Z_Id_Cpt_To_Val(acct.c_elementvalue_ID) >= Z_Id_Cpt_To_Val($P{Account_From}) or $P{Account_From} = 0)
   and ( Z_Id_Cpt_To_Val(acct.c_elementvalue_ID) <= Z_Id_Cpt_To_Val($P{Account_To}) or $P{Account_To} = 0)
   and ( per.PERIODTYPE is null or per.PERIODTYPE='S' or 'Y'='Y')
+  and (f.C_Activity_ID = $P{C_Activity_ID} or $P{C_Activity_ID} is null or $P{C_Activity_ID} = 0)
 group by acct.ad_client_id, acct.ad_org_id, ci.c_acctschema1_id, acct.c_elementvalue_id,acct.value ,acct.name,ac.name, bse.iso_code, org.name
 order by acct_value]]>
 	</queryString>
