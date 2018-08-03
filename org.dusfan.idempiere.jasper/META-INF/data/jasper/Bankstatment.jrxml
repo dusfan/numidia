@@ -491,7 +491,7 @@ order by p.documentno]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{encais}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.##">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="420" y="34" width="135" height="23" uuid="2560fb7f-a31c-49a1-8262-e4ebe055a1ed"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="3">
 					<pen lineWidth="0.5"/>
