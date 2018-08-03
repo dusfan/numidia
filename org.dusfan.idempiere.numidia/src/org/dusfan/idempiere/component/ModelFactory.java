@@ -6,6 +6,7 @@ import org.adempiere.base.IModelFactory;
 //import org.compiere.model.MInOutLine;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
+import org.dusfan.idempiere.model.MBooking;
 import org.dusfan.idempiere.model.MCreatePackage;
 import org.dusfan.idempiere.model.MHotel;
 import org.dusfan.idempiere.model.MPOSAR;
@@ -67,6 +68,8 @@ public class ModelFactory implements IModelFactory {
 			return X_DU_IOrderAgence.class;
 		else if (tableName.equals(X_I_InvoiceBooking.Table_Name))
 			return X_I_InvoiceBooking.class;
+		else if (tableName.equals(MBooking.Table_Name))
+			return MBooking.class;
 		
 		return null;
 	}
@@ -109,6 +112,8 @@ public class ModelFactory implements IModelFactory {
 			return new X_DU_IOrderAgence(Env.getCtx(), Record_ID, trxName);
 		else if (tableName.equals(X_I_InvoiceBooking.Table_Name))
 			return new X_I_InvoiceBooking(Env.getCtx(), Record_ID, trxName);
+		else if (tableName.equals(MBooking.Table_Name))
+			return new MBooking(Env.getCtx(), Record_ID, trxName);
 		return null;
 	}
 
@@ -150,6 +155,8 @@ public class ModelFactory implements IModelFactory {
 			return new X_DU_IOrderAgence(Env.getCtx(), rs, trxName);
 		else if (tableName.equals(X_I_InvoiceBooking.Table_Name))
 			return new X_I_InvoiceBooking(Env.getCtx(), rs, trxName);
+		else if (tableName.equals(MBooking.Table_Name))
+			return new MBooking(Env.getCtx(), rs, trxName);
 		return null;
 	}
 

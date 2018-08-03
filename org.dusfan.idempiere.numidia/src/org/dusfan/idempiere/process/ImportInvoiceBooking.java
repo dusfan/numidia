@@ -18,6 +18,7 @@ import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
+import org.dusfan.idempiere.model.MBooking;
 import org.dusfan.idempiere.model.X_I_InvoiceBooking;
 
 /**
@@ -176,9 +177,9 @@ public class ImportInvoiceBooking extends SvrProcess
 				.append(" WHERE IsSOTrx='Y' AND I_IsImported<>'Y'")
 				.append(" AND exists (select 1 from C_AllocationLine al ")
 				.append(" where al.c_invoice_id = I_InvoiceBooking.Ref_invoice_id and exists (select 1 from C_AllocationHdr where C_AllocationHdr.C_AllocationHdr_ID = al.C_AllocationHdr_ID and docstatus in('CO','CL')))")
-				.append(" AND o.Statut = 'Canceled'").append (clientCheck);
+				.append(" AND o.Statut = 'Canceled' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
+		if (log.isLoggable(Level.FINE)) log.fine("disallow reverse the already paid invoices=" + no);
 
 		//		End Customization LoH
 		
@@ -698,7 +699,7 @@ public class ImportInvoiceBooking extends SvrProcess
 
 		int noReverse = 0;
 
-		//	Go through Invoice Records w/o
+		//	Go through impBooking Invoice Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
 				.append("WHERE I_IsImported='N' and Statut = 'Confirmed'").append (clientCheck)
 				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
@@ -823,8 +824,12 @@ public class ImportInvoiceBooking extends SvrProcess
 				imp.setI_IsImported(true);
 				imp.setProcessed(true);
 				//
-				if (imp.save())
+				if (imp.save()){
 					noInsertLine++;
+					MBooking booking = new MBooking(imp);
+					booking.saveEx();
+				}
+					
 			}
 			if (invoice != null)
 			{
@@ -847,7 +852,7 @@ public class ImportInvoiceBooking extends SvrProcess
 			pstmt = null;
 		}
 
-		//		Go through Invoice Records w/o
+		//		Go through Canceled Booking Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
 				.append("WHERE I_IsImported='N' and Statut = 'Canceled'").append (clientCheck)
 				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
