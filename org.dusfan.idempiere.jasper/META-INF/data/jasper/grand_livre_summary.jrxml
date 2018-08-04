@@ -26,10 +26,10 @@
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
 	<parameter name="Account_From" class="java.math.BigDecimal">
-		<defaultValueExpression><![CDATA[1000247]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new BigDecimal("1000247")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="Account_To" class="java.math.BigDecimal">
-		<defaultValueExpression><![CDATA[1000247]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new BigDecimal("1000247")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="excel" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
