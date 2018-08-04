@@ -115,6 +115,14 @@ public class ImportInvoiceBooking extends SvrProcess
 			log.warning ("Invalid Org=" + no);
 
 		//		Customization LoH
+		
+		// delete record where there no amount neither booking refrence
+		sql = new StringBuilder ("delete from I_InvoiceBooking o ")
+				.append("WHERE total IS NULL or total = 'Total'")
+				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
+
 		// ignore the already imported booking code
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Booking deja importer, '")
@@ -123,13 +131,6 @@ public class ImportInvoiceBooking extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
 			log.warning ("Booking Already imported=" + no);
-
-		// delete record where there no amount neither booking refrence
-		sql = new StringBuilder ("delete from I_InvoiceBooking o ")
-				.append("WHERE total IS NULL or total = 'Total'")
-				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
 
 		// get the currency_id
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
