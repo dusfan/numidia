@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost100.245"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Prod230"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="351"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="642"/>
@@ -26,10 +26,10 @@
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
 	<parameter name="Account_From" class="java.math.BigDecimal">
-		<defaultValueExpression><![CDATA[1000247]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new BigDecimal("1000247")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="Account_To" class="java.math.BigDecimal">
-		<defaultValueExpression><![CDATA[1000247]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new BigDecimal("1000247")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ISDETAIL" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
