@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OpenInvoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eba959d1-5971-4314-8415-6d97b1d07352">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="181"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="808"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="numidia-192.168.0.96.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="AD_CLIENT_ID" class="java.lang.Integer"/>
@@ -16,7 +16,7 @@
 		<![CDATA[select  rv.ad_client_id, rv.ad_org_id, rv.documentno, rv.docstatus, bp.name, bp.value, rv.grandtotal,cr.iso_code as currency,rv.paidamt,
 rv.openamt, rv.description, dt.name as docty, rv.dateinvoiced,
 u.name as agentname , u.description as agentdesc , 
-bp.totalopenbalance, cr.c_currency_id from RV_OpenItem rv
+bp.totalopenbalance, cr.c_currency_id, bp.name2 from RV_OpenItem rv
 inner join c_invoice inv on inv.c_invoice_id = rv.c_invoice_id
 inner join ad_user u on u.ad_user_id = inv.createdby
 inner join c_bpartner bp on bp.c_bpartner_id = rv.c_bpartner_id
@@ -70,6 +70,7 @@ order by bp.value, rv.dateinvoiced]]>
 		<property name="com.jaspersoft.studio.field.label" value="totalopenbalance"/>
 	</field>
 	<field name="c_currency_id" class="java.lang.Integer"/>
+	<field name="name2" class="java.lang.String"/>
 	<variable name="SUM_EUR" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{c_currency_id} == 100 ?  0 :$F{grandtotal}.subtract($F{paidamt} )]]></variableExpression>
 	</variable>
@@ -207,7 +208,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<text><![CDATA[Tiers]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="6" width="95" height="25" uuid="0e71f829-73bb-452f-bfb0-2d218e4e9f56">
+				<reportElement x="300" y="6" width="60" height="25" uuid="0e71f829-73bb-452f-bfb0-2d218e4e9f56">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -220,7 +221,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Montant facture]]></text>
+				<text><![CDATA[Facturé]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="517" y="6" width="37" height="25" uuid="cea3e574-09dd-45b5-9715-9e0aed36f507">
@@ -239,7 +240,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<text><![CDATA[€/$]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="395" y="6" width="87" height="25" uuid="f828f694-20d7-49de-b461-23b6a3f46a10">
+				<reportElement x="360" y="6" width="62" height="25" uuid="f828f694-20d7-49de-b461-23b6a3f46a10">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -252,7 +253,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Montant payé]]></text>
+				<text><![CDATA[Payé]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="482" y="6" width="35" height="25" uuid="57adbcf0-fc57-4af0-bea5-cf3401395ecd">
@@ -269,6 +270,22 @@ order by bp.value, rv.dateinvoiced]]>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Soldé]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="422" y="6" width="60" height="25" uuid="cfee7ce1-2fea-447c-96e0-43c96fb769c6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reste]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -297,12 +314,12 @@ order by bp.value, rv.dateinvoiced]]>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{value}+"-"+$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name2} != null ? $F{value}+"-"+$F{name2} : $F{value}+"-"+$F{name} ]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="300" y="0" width="95" height="24" uuid="7a31482c-2d70-4ab7-aaa1-a09950f761f8">
+				<reportElement x="300" y="0" width="60" height="24" uuid="7a31482c-2d70-4ab7-aaa1-a09950f761f8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -331,7 +348,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="395" y="0" width="87" height="24" uuid="f3887199-caac-4413-82b9-a31dc080aed5">
+				<reportElement x="360" y="0" width="62" height="24" uuid="f3887199-caac-4413-82b9-a31dc080aed5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -372,6 +389,21 @@ order by bp.value, rv.dateinvoiced]]>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalopenbalance}.compareTo( new BigDecimal(0) ) <=  0  ? "Y" : "N"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###" isBlankWhenNull="true">
+				<reportElement x="422" y="0" width="60" height="24" uuid="2493dd92-03cd-4889-b7c8-0f71f7ce3503">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="2">
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grandtotal}.subtract( $F{paidamt})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
