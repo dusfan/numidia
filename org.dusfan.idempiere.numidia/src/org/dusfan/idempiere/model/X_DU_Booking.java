@@ -33,7 +33,7 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180803L;
+	private static final long serialVersionUID = 20180804L;
 
     /** Standard Constructor */
     public X_DU_Booking (Properties ctx, int DU_Booking_ID, String trxName)
@@ -253,6 +253,26 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		return (String)get_Value(COLUMNNAME_LeadPassenger);
 	}
 
+	/** Set Pending Payment.
+		@param PendingPayment 
+		Pending Payment
+	  */
+	public void setPendingPayment (BigDecimal PendingPayment)
+	{
+		set_ValueNoCheck (COLUMNNAME_PendingPayment, PendingPayment);
+	}
+
+	/** Get Pending Payment.
+		@return Pending Payment
+	  */
+	public BigDecimal getPendingPayment () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PendingPayment);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
 	/** Set Unit Price.
 		@param PriceActual 
 		Actual Price 
@@ -268,6 +288,26 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 	public BigDecimal getPriceActual () 
 	{
 		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_PriceActual);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
+	}
+
+	/** Set Receipt Amount.
+		@param ReceiptAmount 
+		Receipt Amount
+	  */
+	public void setReceiptAmount (BigDecimal ReceiptAmount)
+	{
+		set_ValueNoCheck (COLUMNNAME_ReceiptAmount, ReceiptAmount);
+	}
+
+	/** Get Receipt Amount.
+		@return Receipt Amount
+	  */
+	public BigDecimal getReceiptAmount () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_ReceiptAmount);
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;

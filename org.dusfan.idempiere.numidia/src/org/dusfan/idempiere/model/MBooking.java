@@ -2,6 +2,9 @@ package org.dusfan.idempiere.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
+import java.util.logging.Level;
+
+import org.compiere.util.DB;
 
 public class MBooking extends X_DU_Booking {
 
@@ -37,6 +40,11 @@ public class MBooking extends X_DU_Booking {
 		setDateInvoiced(impBooking.getDateInvoiced());
 		setC_BPartner_ID(impBooking.getC_BPartner_ID());
 		setC_SalesInvoice_ID(impBooking.getC_Invoice_ID());
+	}
+	public static void updateBooking (X_I_InvoicePurchase i_invoice){
+		int no = DB.executeUpdate("update du_booking set C_PurchaseInvoice_ID = ? , PendingPayment = ?, ReceiptAmount = ? where documentno = ?",
+					new Object[]{new Integer(i_invoice.getC_Invoice_ID()), i_invoice.getPriceActual(), i_invoice.getReceiptAmount(), i_invoice.getDocumentNo()}, false,null);
+		System.out.println(no);
 	}
 
 }

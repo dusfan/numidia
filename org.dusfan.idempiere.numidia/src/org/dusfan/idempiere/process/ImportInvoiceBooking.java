@@ -126,7 +126,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		// ignore the already imported booking code
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Booking deja importer, '")
-				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('CO', 'CL')) ")
+				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('CO', 'CL')  and oo.isSoTrx = 'Y')")
 				.append(" and Statut = 'Confirmed' AND I_IsImported<>'Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
@@ -181,6 +181,24 @@ public class ImportInvoiceBooking extends SvrProcess
 				.append(" AND o.Statut = 'Canceled' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("disallow reverse the already paid invoices=" + no);
+		
+//		BP GSA from Reference loH
+		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+				.append(" SET C_BPartner_ID=(SELECT max(C_BPartner_ID) FROM C_BPartner bp")
+				.append(" WHERE upper(o.Reference) = bp.name2 AND o.AD_Client_ID=bp.AD_Client_ID) ")
+				.append(" WHERE C_BPartner_ID IS NULL AND agency IS NOT NULL and upper(o.agency) = 'GSA ALGERIA NUMIDIA TRAVEL SERVICES'")
+				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("Set BP from Value=" + no);
+		
+		//		BP from agency loH
+		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+				.append(" SET C_BPartner_ID=(SELECT max(C_BPartner_ID) FROM C_BPartner bp")
+				.append(" WHERE upper(o.agency) = bp.name AND o.AD_Client_ID=bp.AD_Client_ID) ")
+				.append(" WHERE C_BPartner_ID IS NULL AND agency IS NOT NULL and upper(o.agency) != 'GSA ALGERIA NUMIDIA TRAVEL SERVICES'")
+				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("Set BP from Value=" + no);
 
 		//		End Customization LoH
 		
@@ -360,39 +378,32 @@ public class ImportInvoiceBooking extends SvrProcess
 			log.warning ("Invalid Charge=" + no);
 		//
 
-		//	BP from EMail
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET (C_BPartner_ID,AD_User_ID)=(SELECT C_BPartner_ID,AD_User_ID FROM AD_User u")
-				.append(" WHERE o.EMail=u.EMail AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL) ")
-				.append("WHERE C_BPartner_ID IS NULL AND EMail IS NOT NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set BP from EMail=" + no);
-		//	BP from ContactName
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET (C_BPartner_ID,AD_User_ID)=(SELECT C_BPartner_ID,AD_User_ID FROM AD_User u")
-				.append(" WHERE o.ContactName=u.Name AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL) ")
-				.append("WHERE C_BPartner_ID IS NULL AND ContactName IS NOT NULL")
-				.append(" AND EXISTS (SELECT Name FROM AD_User u WHERE o.ContactName=u.Name AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL GROUP BY Name HAVING COUNT(*)=1)")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set BP from ContactName=" + no);
-		//	BP from Value loH
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET C_BPartner_ID=(SELECT MAX(C_BPartner_ID) FROM C_BPartner bp")
-				.append(" WHERE upper(o.agency)=upper(bp.name) AND o.AD_Client_ID=bp.AD_Client_ID) ")
-				.append("WHERE C_BPartner_ID IS NULL AND agency IS NOT NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set BP from Value=" + no);
+//		//	BP from EMail
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("SET (C_BPartner_ID,AD_User_ID)=(SELECT C_BPartner_ID,AD_User_ID FROM AD_User u")
+//				.append(" WHERE o.EMail=u.EMail AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND EMail IS NOT NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set BP from EMail=" + no);
+//		//	BP from ContactName
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("SET (C_BPartner_ID,AD_User_ID)=(SELECT C_BPartner_ID,AD_User_ID FROM AD_User u")
+//				.append(" WHERE o.ContactName=u.Name AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND ContactName IS NOT NULL")
+//				.append(" AND EXISTS (SELECT Name FROM AD_User u WHERE o.ContactName=u.Name AND o.AD_Client_ID=u.AD_Client_ID AND u.C_BPartner_ID IS NOT NULL GROUP BY Name HAVING COUNT(*)=1)")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set BP from ContactName=" + no);
+		
 		//	Default BP
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET C_BPartner_ID=(SELECT C_BPartnerCashTrx_ID FROM AD_ClientInfo c")
-				.append(" WHERE o.AD_Client_ID=c.AD_Client_ID) ")
-				.append("WHERE C_BPartner_ID IS NULL AND BPartnerValue IS NULL AND Name IS NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Default BP=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("SET C_BPartner_ID=(SELECT C_BPartnerCashTrx_ID FROM AD_ClientInfo c")
+//				.append(" WHERE o.AD_Client_ID=c.AD_Client_ID) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND BPartnerValue IS NULL AND Name IS NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Default BP=" + no);
 
 		//	Existing Location ? Exact Match
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
@@ -435,50 +446,50 @@ public class ImportInvoiceBooking extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		log.fine("Set Country Default=" + no);
 		 **/
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET C_Country_ID=(SELECT C_Country_ID FROM C_Country c")
-				.append(" WHERE o.CountryCode=c.CountryCode AND c.AD_Client_ID IN (0, o.AD_Client_ID)) ")
-				.append("WHERE C_BPartner_ID IS NULL AND C_Country_ID IS NULL AND CountryCode IS NOT NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Country=" + no);
-		//
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
-				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Country, ' ")
-				.append("WHERE C_BPartner_ID IS NULL AND C_Country_ID IS NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (no != 0)
-			log.warning ("Invalid Country=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("SET C_Country_ID=(SELECT C_Country_ID FROM C_Country c")
+//				.append(" WHERE o.CountryCode=c.CountryCode AND c.AD_Client_ID IN (0, o.AD_Client_ID)) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND C_Country_ID IS NULL AND CountryCode IS NOT NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Country=" + no);
+//		//
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
+//				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Country, ' ")
+//				.append("WHERE C_BPartner_ID IS NULL AND C_Country_ID IS NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (no != 0)
+//			log.warning ("Invalid Country=" + no);
 
 		//	Set Region
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("Set RegionName=(SELECT MAX(Name) FROM C_Region r")
-				.append(" WHERE r.IsDefault='Y' AND r.C_Country_ID=o.C_Country_ID")
-				.append(" AND r.AD_Client_ID IN (0, o.AD_Client_ID)) ")
-				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL AND RegionName IS NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Region Default=" + no);
-		//
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("Set C_Region_ID=(SELECT C_Region_ID FROM C_Region r")
-				.append(" WHERE r.Name=o.RegionName AND r.C_Country_ID=o.C_Country_ID")
-				.append(" AND r.AD_Client_ID IN (0, o.AD_Client_ID)) ")
-				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL AND RegionName IS NOT NULL")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Region=" + no);
-		//
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Region, ' ")
-				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL ")
-				.append(" AND EXISTS (SELECT * FROM C_Country c")
-				.append(" WHERE c.C_Country_ID=o.C_Country_ID AND c.HasRegion='Y')")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (no != 0)
-			log.warning ("Invalid Region=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("Set RegionName=(SELECT MAX(Name) FROM C_Region r")
+//				.append(" WHERE r.IsDefault='Y' AND r.C_Country_ID=o.C_Country_ID")
+//				.append(" AND r.AD_Client_ID IN (0, o.AD_Client_ID)) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL AND RegionName IS NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Region Default=" + no);
+//		//
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("Set C_Region_ID=(SELECT C_Region_ID FROM C_Region r")
+//				.append(" WHERE r.Name=o.RegionName AND r.C_Country_ID=o.C_Country_ID")
+//				.append(" AND r.AD_Client_ID IN (0, o.AD_Client_ID)) ")
+//				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL AND RegionName IS NOT NULL")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Region=" + no);
+//		//
+//		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
+//				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Region, ' ")
+//				.append("WHERE C_BPartner_ID IS NULL AND C_Region_ID IS NULL ")
+//				.append(" AND EXISTS (SELECT * FROM C_Country c")
+//				.append(" WHERE c.C_Country_ID=o.C_Country_ID AND c.HasRegion='Y')")
+//				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (no != 0)
+//			log.warning ("Invalid Region=" + no);
 
 		//	Product
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
@@ -550,6 +561,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
 			log.warning ("Invalid C_1099Box_Value=" + no);
+
 
 		commitEx();
 
@@ -684,12 +696,12 @@ public class ImportInvoiceBooking extends SvrProcess
 			pstmt = null;
 		}
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
-				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=No BPartner, ' ")
+				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Agence existe pas, ' ")
 				.append("WHERE C_BPartner_ID IS NULL")
 				.append(" AND I_IsImported<>'Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
-			log.warning ("No BPartner=" + no);
+			log.warning ("Agence existe pas=" + no);
 
 		commitEx();
 
@@ -855,7 +867,7 @@ public class ImportInvoiceBooking extends SvrProcess
 
 		//		Go through Canceled Booking Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
-				.append("WHERE I_IsImported='N' and Statut = 'Canceled'").append (clientCheck)
+				.append("WHERE I_IsImported='N' and Statut like 'Cancel%'").append (clientCheck)
 				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
 		try
 		{

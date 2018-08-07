@@ -183,6 +183,19 @@ public interface I_DU_Booking
 	/** Get LeadPassenger	  */
 	public String getLeadPassenger();
 
+    /** Column name PendingPayment */
+    public static final String COLUMNNAME_PendingPayment = "PendingPayment";
+
+	/** Set Pending Payment.
+	  * Pending Payment
+	  */
+	public void setPendingPayment (BigDecimal PendingPayment);
+
+	/** Get Pending Payment.
+	  * Pending Payment
+	  */
+	public BigDecimal getPendingPayment();
+
     /** Column name PriceActual */
     public static final String COLUMNNAME_PriceActual = "PriceActual";
 
@@ -195,6 +208,19 @@ public interface I_DU_Booking
 	  * Actual Price 
 	  */
 	public BigDecimal getPriceActual();
+
+    /** Column name ReceiptAmount */
+    public static final String COLUMNNAME_ReceiptAmount = "ReceiptAmount";
+
+	/** Set Receipt Amount.
+	  * Receipt Amount
+	  */
+	public void setReceiptAmount (BigDecimal ReceiptAmount);
+
+	/** Get Receipt Amount.
+	  * Receipt Amount
+	  */
+	public BigDecimal getReceiptAmount();
 
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";

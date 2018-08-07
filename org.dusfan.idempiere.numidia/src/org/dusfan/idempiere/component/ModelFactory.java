@@ -24,6 +24,7 @@ import org.dusfan.idempiere.model.MVolLine;
 import org.dusfan.idempiere.model.X_DU_IOrderAgence;
 import org.dusfan.idempiere.model.X_I_ImportOmraBP;
 import org.dusfan.idempiere.model.X_I_InvoiceBooking;
+import org.dusfan.idempiere.model.X_I_InvoicePurchase;
 
 public class ModelFactory implements IModelFactory {
 
@@ -70,6 +71,8 @@ public class ModelFactory implements IModelFactory {
 			return X_I_InvoiceBooking.class;
 		else if (tableName.equals(MBooking.Table_Name))
 			return MBooking.class;
+		else if (tableName.equals(X_I_InvoicePurchase.Table_Name))
+			return X_I_InvoicePurchase.class;
 		
 		return null;
 	}
@@ -114,6 +117,8 @@ public class ModelFactory implements IModelFactory {
 			return new X_I_InvoiceBooking(Env.getCtx(), Record_ID, trxName);
 		else if (tableName.equals(MBooking.Table_Name))
 			return new MBooking(Env.getCtx(), Record_ID, trxName);
+		else if (tableName.equals(X_I_InvoicePurchase.Table_Name))
+			return new X_I_InvoicePurchase(Env.getCtx(), Record_ID, trxName);
 		return null;
 	}
 
@@ -157,6 +162,8 @@ public class ModelFactory implements IModelFactory {
 			return new X_I_InvoiceBooking(Env.getCtx(), rs, trxName);
 		else if (tableName.equals(MBooking.Table_Name))
 			return new MBooking(Env.getCtx(), rs, trxName);
+		else if (tableName.equals(X_I_InvoicePurchase.Table_Name))
+			return new X_I_InvoicePurchase(Env.getCtx(), rs, trxName);
 		return null;
 	}
 
