@@ -25,6 +25,11 @@ public class EventInvoice {
 		int no = DB.getSQLValue(trxName, sql, new Object[]{po.getAD_Org_ID(),po.get_ID()});
 		if (no > 0)
 			throw new  AdempiereException("@ValidationError@ @C_Invoice_ID@ @IsPaid@");
+	}
 
+	public static void DeleteBooking(PO po, Properties ctx, String trxName) {
+		MInvoice invoice = (MInvoice) po;
+		if (invoice.isSOTrx())
+			DB.executeUpdate("DELETE FROM DU_Booking where C_SalesInvoice_ID = " + invoice.getC_Invoice_ID(), null);
 	}
 }

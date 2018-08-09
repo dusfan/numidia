@@ -260,7 +260,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// Before REVERSECORRECT
 			if (type.equals(IEventTopics.DOC_BEFORE_REVERSECORRECT)) {
 				if (po instanceof MInvoice) {
-						EventInvoice.checkAllocation(po, ctx, trxName);
+						if (po.getAD_Org_ID() == 1000005){
+							EventInvoice.checkAllocation(po, ctx, trxName);
+							EventInvoice.DeleteBooking(po, ctx, trxName);
+						}
 				}
 			}
 
