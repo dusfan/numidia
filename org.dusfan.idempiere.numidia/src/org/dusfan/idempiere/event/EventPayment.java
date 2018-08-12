@@ -40,11 +40,9 @@ public class EventPayment {
 	
 	public static boolean checkCaisseCurrency (PO po, Properties ctx, String trxName) {
 		MPayment pay = (MPayment)po;
-		if (pay.getAD_Client_ID() == 1000002) {
-			MBankAccount bk = new MBankAccount(ctx, pay.getC_BankAccount_ID(), trxName);
-			if (pay.getC_Currency_ID()!=bk.getC_Currency_ID()) {
+		MBankAccount bk = new MBankAccount(ctx, pay.getC_BankAccount_ID(), trxName);
+		if (pay.getC_Currency_ID()!=bk.getC_Currency_ID()) {
 				return false;
-			}
 		}
 		return true;
 		
