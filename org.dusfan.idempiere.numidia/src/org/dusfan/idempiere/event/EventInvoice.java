@@ -12,9 +12,10 @@ public class EventInvoice {
 
 	public static void SetDU_Vol_ID (PO po, Properties ctx, String trxName) {
 		MInvoice inv = (MInvoice)po;
-		if (inv.isSOTrx() && inv.getC_DocTypeTarget_ID() == 1000051 && inv.getC_Order_ID() > 0) {
+		if (inv.isSOTrx() && inv.getAD_Client_ID()==1000002 && inv.getC_Order_ID() > 0) {
 			MOrder ord = new MOrder(ctx, inv.getC_Order_ID(), trxName);
-			inv.set_ValueNoCheck("DU_Vol_ID", ord.get_ValueAsInt("DU_Vol_ID"));
+			if (ord.get_ValueAsInt("DU_Vol_ID") > 0)
+				inv.set_ValueNoCheck("DU_Vol_ID", ord.get_ValueAsInt("DU_Vol_ID"));
 		}
 	}
 
