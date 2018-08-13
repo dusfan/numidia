@@ -24,14 +24,18 @@ public class EventPayment {
 				return false;
 			}
 			if ((pay.getC_DocType_ID() == 1000049 || pay.getC_DocType_ID()==1000009) && 
-					(pay.getC_BankAccount_ID()==1000001 || pay.getC_BankAccount_ID()==1000013)) {
+					(pay.getC_BankAccount_ID()==1000001 || pay.getC_BankAccount_ID()==1000013)
+					&& (Env.getAD_Role_ID(Env.getCtx())==1000007 || Env.getAD_Role_ID(Env.getCtx())==1000016
+					|| Env.getAD_Role_ID(Env.getCtx())==1000020 || Env.getAD_Role_ID(Env.getCtx())==1000022)) {
 				return false;
 			}
 			if ((pay.getC_DocType_ID() == 1000053 || pay.getC_DocType_ID()==1000050) && 
 					(pay.getC_BankAccount_ID()==1000008 || pay.getC_BankAccount_ID()==1000005
 					|| pay.getC_BankAccount_ID()==1000000 || pay.getC_BankAccount_ID()==1000004 || pay.getC_BankAccount_ID()==1000007
 					|| pay.getC_BankAccount_ID()==1000006 || pay.getC_BankAccount_ID()==1000009 || pay.getC_BankAccount_ID()==1000010
-					|| pay.getC_BankAccount_ID()==1000012 || pay.getC_BankAccount_ID()==1000011)) {
+					|| pay.getC_BankAccount_ID()==1000012 || pay.getC_BankAccount_ID()==1000011)
+					&& (Env.getAD_Role_ID(Env.getCtx())==1000007 || Env.getAD_Role_ID(Env.getCtx())==1000016
+					|| Env.getAD_Role_ID(Env.getCtx())==1000020 || Env.getAD_Role_ID(Env.getCtx())==1000022)) {
 				return false;
 			}
 		}
