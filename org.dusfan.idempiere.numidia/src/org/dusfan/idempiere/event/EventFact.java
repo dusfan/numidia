@@ -17,7 +17,8 @@ public class EventFact {
 			MBankStatementLine line = new MBankStatementLine(ctx, fact.getLine_ID(), trxName);
 			if (line.getC_Payment_ID() > 0 ) {
 				MPayment pay = new MPayment(ctx, line.getC_Payment_ID(), trxName);
-				DB.executeUpdate("Update Fact_Acct set "
+				if (pay.getC_Activity_ID() > 0)
+					DB.executeUpdate("Update Fact_Acct set "
 						+ "c_activity_id ="+ pay.getC_Activity_ID() 
 						+ " where Fact_Acct_ID = "+fact.getFact_Acct_ID(), trxName);
 			}
