@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Bankstatment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7eb28c32-9d0e-45e2-8cca-61a93ae7fc98">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Prod230"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="160"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -11,7 +11,10 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[Select b.ad_client_id, b.ad_org_id, bp.value, bp.name,
+		<![CDATA[Select b.ad_client_id, 
+ CASE WHEN b.ad_org_id>0 THEN b.ad_org_id
+            ELSE 1000002
+ END as ad_org_id, bp.value, bp.name,
 p.documentno, 
 case when p.isreceipt = 'Y' and p.payamt > 0 then 'Encaissement'
 when p.isreceipt = 'Y' and p.payamt < 0 then 'Rembourssement'
