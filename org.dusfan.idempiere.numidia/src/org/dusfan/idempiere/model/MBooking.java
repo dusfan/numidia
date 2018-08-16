@@ -2,7 +2,6 @@ package org.dusfan.idempiere.model;
 
 import java.sql.ResultSet;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.compiere.util.DB;
 

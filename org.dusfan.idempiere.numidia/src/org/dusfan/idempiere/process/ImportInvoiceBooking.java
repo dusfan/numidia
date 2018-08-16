@@ -122,6 +122,14 @@ public class ImportInvoiceBooking extends SvrProcess
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
+		
+		// update DocumentNo
+		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
+				.append(" SET DocumentNo = DocumentNo || '-C' ")
+				.append(" WHERE DocumentNo not like '%-C' and Statut like 'Cancel%'")
+				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("DocumentNo updated=" + no);
 
 		// ignore the already imported booking code
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
@@ -715,7 +723,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		//	Go through impBooking Invoice Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
 				.append("WHERE I_IsImported='N' and Statut = 'Confirmed'").append (clientCheck)
-				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
+				.append(" ORDER BY C_BPartner_ID, DocumentNo, I_InvoiceBooking_ID");
 		try
 		{
 			pstmt = DB.prepareStatement (sql.toString(), get_TrxName());
@@ -733,6 +741,14 @@ public class ImportInvoiceBooking extends SvrProcess
 				String cmpDocumentNo = imp.getDocumentNo();
 				if (cmpDocumentNo == null)
 					cmpDocumentNo = "";
+				// ignorer the booking already imported
+				if (oldDocumentNo.equals(cmpDocumentNo)){
+					imp.setI_IsImported(false);
+					imp.setProcessed(false);
+					imp.setI_ErrorMsg(imp.getI_ErrorMsg() + "ERR=Booking deja importer, ");
+					if(imp.save())
+						continue;
+				}
 				//	New Invoice
 				if (oldC_BPartner_ID != imp.getC_BPartner_ID() 
 						|| oldC_BPartner_Location_ID != imp.getC_BPartner_Location_ID()
@@ -868,7 +884,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		//		Go through Canceled Booking Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_InvoiceBooking ")
 				.append("WHERE I_IsImported='N' and Statut like 'Cancel%'").append (clientCheck)
-				.append(" ORDER BY C_BPartner_ID, C_BPartner_Location_ID, I_InvoiceBooking_ID");
+				.append(" ORDER BY C_BPartner_ID, DocumentNo, I_InvoiceBooking_ID");
 		try
 		{
 			pstmt = DB.prepareStatement (sql.toString(), get_TrxName());
@@ -921,6 +937,14 @@ public class ImportInvoiceBooking extends SvrProcess
 				String cmpDocumentNo = imp.getDocumentNo();
 				if (cmpDocumentNo == null)
 					cmpDocumentNo = "";
+				// ignorer the booking already imported
+				if (oldDocumentNo.equals(cmpDocumentNo)){
+					imp.setI_IsImported(false);
+					imp.setProcessed(false);
+					imp.setI_ErrorMsg(imp.getI_ErrorMsg() + "ERR=Booking deja importer, ");
+					if(imp.save())
+						continue;
+				}
 				//	New Invoice
 				if (oldC_BPartner_ID != imp.getC_BPartner_ID() 
 						|| oldC_BPartner_Location_ID != imp.getC_BPartner_Location_ID()

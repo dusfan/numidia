@@ -16,6 +16,7 @@ import org.dusfan.idempiere.process.ImportBPartnerOmra;
 import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
 import org.dusfan.idempiere.process.ImportInvoiceBooking;
 import org.dusfan.idempiere.process.ImportInvoicePurchase;
+import org.dusfan.idempiere.process.ImportMarginSharing;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.ImportTourismeBP;
 import org.dusfan.idempiere.process.ProcessOrder;
@@ -96,6 +97,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ImportInvoiceBooking();
 		else if (className.equals(ImportInvoicePurchase.class.getName()))
 			return new ImportInvoicePurchase();
+		else if (className.equals(ImportMarginSharing.class.getName()))
+			return new ImportMarginSharing();
 		
 		return null;
 	}

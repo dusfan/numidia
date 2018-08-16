@@ -46,17 +46,36 @@ public interface I_DU_Booking
     /** Column name AD_Client_ID */
     public static final String COLUMNNAME_AD_Client_ID = "AD_Client_ID";
 
-	/** Get Client	  */
+	/** Get Client.
+	  * Client/Tenant for this installation.
+	  */
 	public int getAD_Client_ID();
 
     /** Column name AD_Org_ID */
     public static final String COLUMNNAME_AD_Org_ID = "AD_Org_ID";
 
-	/** Set Organization	  */
+	/** Set Organization.
+	  * Organizational entity within client
+	  */
 	public void setAD_Org_ID (int AD_Org_ID);
 
-	/** Get Organization	  */
+	/** Get Organization.
+	  * Organizational entity within client
+	  */
 	public int getAD_Org_ID();
+
+    /** Column name AgencyProfit */
+    public static final String COLUMNNAME_AgencyProfit = "AgencyProfit";
+
+	/** Set Agency Profit.
+	  * Agency Profit
+	  */
+	public void setAgencyProfit (BigDecimal AgencyProfit);
+
+	/** Get Agency Profit.
+	  * Agency Profit
+	  */
+	public BigDecimal getAgencyProfit();
 
     /** Column name C_BPartner_ID */
     public static final String COLUMNNAME_C_BPartner_ID = "C_BPartner_ID";
@@ -88,6 +107,34 @@ public interface I_DU_Booking
 
 	public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException;
 
+    /** Column name CostPrice */
+    public static final String COLUMNNAME_CostPrice = "CostPrice";
+
+	/** Set Cost Price.
+	  * Cost Price
+	  */
+	public void setCostPrice (BigDecimal CostPrice);
+
+	/** Get Cost Price.
+	  * Cost Price
+	  */
+	public BigDecimal getCostPrice();
+
+    /** Column name C_PurchaseCurrency_ID */
+    public static final String COLUMNNAME_C_PurchaseCurrency_ID = "C_PurchaseCurrency_ID";
+
+	/** Set Purchase Currency.
+	  * The Currency for this record
+	  */
+	public void setC_PurchaseCurrency_ID (int C_PurchaseCurrency_ID);
+
+	/** Get Purchase Currency.
+	  * The Currency for this record
+	  */
+	public int getC_PurchaseCurrency_ID();
+
+	public org.compiere.model.I_C_Currency getC_PurchaseCurrency() throws RuntimeException;
+
     /** Column name C_PurchaseInvoice_ID */
     public static final String COLUMNNAME_C_PurchaseInvoice_ID = "C_PurchaseInvoice_ID";
 
@@ -106,13 +153,17 @@ public interface I_DU_Booking
     /** Column name Created */
     public static final String COLUMNNAME_Created = "Created";
 
-	/** Get Created	  */
+	/** Get Created.
+	  * Date this record was created
+	  */
 	public Timestamp getCreated();
 
     /** Column name CreatedBy */
     public static final String COLUMNNAME_CreatedBy = "CreatedBy";
 
-	/** Get Created By	  */
+	/** Get Created By.
+	  * User who created this records
+	  */
 	public int getCreatedBy();
 
     /** Column name C_SalesInvoice_ID */
@@ -165,13 +216,30 @@ public interface I_DU_Booking
 	/** Get Booking	  */
 	public int getDU_Booking_ID();
 
+    /** Column name GeneralProfit */
+    public static final String COLUMNNAME_GeneralProfit = "GeneralProfit";
+
+	/** Set General Profit.
+	  * General Profit
+	  */
+	public void setGeneralProfit (BigDecimal GeneralProfit);
+
+	/** Get General Profit.
+	  * General Profit
+	  */
+	public BigDecimal getGeneralProfit();
+
     /** Column name IsActive */
     public static final String COLUMNNAME_IsActive = "IsActive";
 
-	/** Set Active	  */
+	/** Set Active.
+	  * The record is active in the system
+	  */
 	public void setIsActive (boolean IsActive);
 
-	/** Get Active	  */
+	/** Get Active.
+	  * The record is active in the system
+	  */
 	public boolean isActive();
 
     /** Column name LeadPassenger */
@@ -182,6 +250,32 @@ public interface I_DU_Booking
 
 	/** Get LeadPassenger	  */
 	public String getLeadPassenger();
+
+    /** Column name NetSalesPriceUsd */
+    public static final String COLUMNNAME_NetSalesPriceUsd = "NetSalesPriceUsd";
+
+	/** Set Net Sales Price USD.
+	  * Actual Price 
+	  */
+	public void setNetSalesPriceUsd (BigDecimal NetSalesPriceUsd);
+
+	/** Get Net Sales Price USD.
+	  * Actual Price 
+	  */
+	public BigDecimal getNetSalesPriceUsd();
+
+    /** Column name PaidAmount */
+    public static final String COLUMNNAME_PaidAmount = "PaidAmount";
+
+	/** Set Paid Amount.
+	  * Paid Amount
+	  */
+	public void setPaidAmount (BigDecimal PaidAmount);
+
+	/** Get Paid Amount.
+	  * Paid Amount
+	  */
+	public BigDecimal getPaidAmount();
 
     /** Column name PendingPayment */
     public static final String COLUMNNAME_PendingPayment = "PendingPayment";
@@ -209,6 +303,19 @@ public interface I_DU_Booking
 	  */
 	public BigDecimal getPriceActual();
 
+    /** Column name PriceActualNet */
+    public static final String COLUMNNAME_PriceActualNet = "PriceActualNet";
+
+	/** Set Unit Price.
+	  * Actual Price 
+	  */
+	public void setPriceActualNet (BigDecimal PriceActualNet);
+
+	/** Get Unit Price.
+	  * Actual Price 
+	  */
+	public BigDecimal getPriceActualNet();
+
     /** Column name ReceiptAmount */
     public static final String COLUMNNAME_ReceiptAmount = "ReceiptAmount";
 
@@ -225,12 +332,16 @@ public interface I_DU_Booking
     /** Column name Updated */
     public static final String COLUMNNAME_Updated = "Updated";
 
-	/** Get Updated	  */
+	/** Get Updated.
+	  * Date this record was updated
+	  */
 	public Timestamp getUpdated();
 
     /** Column name UpdatedBy */
     public static final String COLUMNNAME_UpdatedBy = "UpdatedBy";
 
-	/** Get Updated By	  */
+	/** Get Updated By.
+	  * User who updated this records
+	  */
 	public int getUpdatedBy();
 }
