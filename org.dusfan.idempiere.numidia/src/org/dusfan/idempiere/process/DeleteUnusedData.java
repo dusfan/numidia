@@ -31,6 +31,12 @@ public class DeleteUnusedData extends SvrProcess {
 		sql = "Delete from fact_acct where ad_org_id = " + p_AD_Org_ID;
 		int no = DB.executeUpdate(sql.toString(), get_TrxName());
 		StringBuilder msgreturn = new StringBuilder("@Deleted@ = ").append(no);
+		
+		// Delete all posted documents related to bankstatment and organization omra
+		// to avoid problmen accounting with tourisme.
+		sql = "Delete from fact_acct where (ad_table_id =392 and line_id in (select C_BankStatementLine_ID from C_BankStatementLine where"
+				+ " c_payment_id in (select c_payment_id from c_payment where ad_org_id=1000002))) OR (c_activity_id is null and ad_org_id in (1000002,1000004))";
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		return msgreturn.toString();
 	}
 
