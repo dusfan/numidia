@@ -7,7 +7,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="35"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.100.245.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.100.242.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="251"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="742"/>
@@ -44,6 +44,7 @@
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="C_Currency_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select bp.value || '-' || bp.name as "BPARTNER",
 bpl.phone,
@@ -90,6 +91,9 @@ AND bp.IsCustomer='Y']]>
 					<subreportParameter name="RESOURCE_DIR">
 						<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="C_Currency_ID">
+						<subreportParameterExpression><![CDATA[$P{C_Currency_ID}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"InvoicesAndPaymentsAndOpeningBal_LoH.jasper"]]></subreportExpression>
 				</subreport>
@@ -107,6 +111,9 @@ AND bp.IsCustomer='Y']]>
 					</subreportParameter>
 					<subreportParameter name="C_BPartner_ID">
 						<subreportParameterExpression><![CDATA[$P{C_BPartner_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="C_Currency_ID">
+						<subreportParameterExpression><![CDATA[$P{C_Currency_ID}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"ClosingBalance_CustNumidiaLoH.jasper"]]></subreportExpression>

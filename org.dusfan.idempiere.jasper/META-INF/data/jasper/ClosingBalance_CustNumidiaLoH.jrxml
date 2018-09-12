@@ -29,6 +29,7 @@
 	<parameter name="CURRENT_LANG" class="java.lang.String">
 		<defaultValueExpression><![CDATA["fr_FR"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="C_Currency_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select (
 
@@ -38,19 +39,20 @@
                 AND iar.DOCSTATUS IN ('CO','CL')
                 AND iar.C_BPARTNER_ID = $P{C_BPartner_ID}
                 AND iar.C_DOCTYPE_ID=doc.C_DOCTYPE_ID
-                AND iar.DATEINVOICED <= $P{DateAcctTo})
+                AND iar.DATEINVOICED <= $P{DateAcctTo}
+                AND iar.C_Currency_id = $P{C_Currency_ID})
                  -
 
-
-              (select COALESCE((SUM(currencyConvert(par.PAYAMT, par.C_Currency_ID, 102, par.DateTrx, null, par.AD_Client_ID, par.AD_Org_ID))
-               + (SUM(currencyConvert(par.discountamt, par.C_Currency_ID, 235, par.DateTrx, null, par.AD_Client_ID, par.AD_Org_ID))+
-               SUM(currencyConvert(par.writeoffAMT, par.C_Currency_ID, 235, par.DateTrx, null, par.AD_Client_ID, par.AD_Org_ID)))),0) as ARPayments
+              (select COALESCE((SUM(par.PAYAMT)
+               + (SUM(par.discountamt)+
+               SUM(par.writeoffAMT))),0) as ARPayments
               from C_PAYMENT par,C_DOCTYPE doc
               where doc.docbasetype IN ('ARR')
               AND par.DOCSTATUS IN ('CO','CL')
               AND  par.C_BPARTNER_ID =$P{C_BPartner_ID}
               AND par.C_DOCTYPE_ID=doc.C_DOCTYPE_ID
-              AND par.DATETRX <= $P{DateAcctTo})
+              AND par.DATETRX <= $P{DateAcctTo}
+			  AND par.C_Currency_id = $P{C_Currency_ID})
               )
       as ClosingBal from dual]]>
 	</queryString>
