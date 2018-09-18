@@ -37,7 +37,7 @@ from c_payment p
 inner join ad_user u on u.ad_user_id = p.createdby
 inner join c_currency cr on cr.c_currency_id = p.c_currency_id
 inner join c_bpartner bp on bp.c_bpartner_id = p.c_bpartner_id
-inner join c_bpartner cd on cd.c_bpartner_id = p.c_bpartnerrelation_id
+left join c_bpartner cd on cd.c_bpartner_id = p.c_bpartnerrelation_id
 inner join C_BankAccount bk on bk.C_BankAccount_id = p.C_BankAccount_id
 left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
  where p.DocStatus IN ('CO','CL') AND p.IsAllocated='N' and p.ad_client_id = $P{AD_CLIENT_ID}

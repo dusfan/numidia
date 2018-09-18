@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="47"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.100.242.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="147"/>
@@ -268,7 +268,7 @@ order by bp.value]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{suminveur}.compareTo(BigDecimal.ZERO)!=0 || $F{suminvusd}.compareTo(BigDecimal.ZERO)!=0]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$V{EURDEBT}.compareTo( BigDecimal.ZERO ) != 0 || $V{USDDEBT}.compareTo( BigDecimal.ZERO ) != 0]]></printWhenExpression>
 			<textField pattern="#,##0.##" isBlankWhenNull="true">
 				<reportElement x="312" y="0" width="60" height="15" uuid="fe772033-b54a-4346-adf9-7ab3a50161fe">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
