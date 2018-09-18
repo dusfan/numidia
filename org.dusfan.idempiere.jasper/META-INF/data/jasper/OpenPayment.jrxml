@@ -325,7 +325,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				<text><![CDATA[Montant piement]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="700" y="0" width="60" height="28" uuid="1b6932b4-ae59-456a-99e4-b1563161e7cd">
+				<reportElement x="700" y="0" width="64" height="28" uuid="1b6932b4-ae59-456a-99e4-b1563161e7cd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -339,7 +339,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				<text><![CDATA[Montant Ouvert]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="760" y="0" width="39" height="28" uuid="4d1a148d-cfea-4a8a-9765-ec01115de8a3">
+				<reportElement x="764" y="0" width="35" height="28" uuid="4d1a148d-cfea-4a8a-9765-ec01115de8a3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -410,7 +410,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{activite}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.###">
 				<reportElement x="632" y="0" width="68" height="28" uuid="870a8b77-b90c-46b5-b0d0-2524eece704a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -476,8 +476,8 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{modepaiment}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="700" y="0" width="60" height="28" uuid="be3a158e-5b45-46f6-864e-5962ce49deb5">
+			<textField pattern="#,##0.###">
+				<reportElement x="700" y="0" width="64" height="28" uuid="be3a158e-5b45-46f6-864e-5962ce49deb5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box rightPadding="1">
@@ -490,7 +490,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				<textFieldExpression><![CDATA[$F{openpayamount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="760" y="0" width="39" height="28" uuid="ec495810-a66b-4136-9597-226e6695283d">
+				<reportElement x="764" y="0" width="35" height="28" uuid="ec495810-a66b-4136-9597-226e6695283d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
