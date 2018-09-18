@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OpenPayment" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="74cc61c3-a667-4e8c-aceb-7b20b7b9fc17">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -23,7 +23,7 @@
 	<parameter name="C_Activity_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select p.ad_client_id, p.ad_org_id, p.documentno, bk.name as compte , p.datetrx, cr.iso_code,bp.value || '-' || bp.name as bpname,
+		<![CDATA[select p.ad_client_id, p.ad_org_id, p.documentno, bk.name as compte , p.datetrx, cr.iso_code,bp.value, bp.name, bp.name2,
 ac.name as activite, p.payamt,p.payamt -
 ((Select coalesce(sum(al.amount+al.writeoffamt+al.discountamt),0)
 from C_AllocationLine al 
@@ -32,11 +32,13 @@ where a.docstatus in ('CO','CL') and al.c_payment_id = p.c_payment_id)) as openp
 case when tendertype = 'X' then 'Espece'
 else 'Cheq/Virement' end as modepaiment,
 u.description as agent,
-cd.value || '-'|| cd.name as codeclient
+cd.value || '-'|| cd.name as codeclient,
+dtr.name as DocType
 from c_payment p
 inner join ad_user u on u.ad_user_id = p.createdby
 inner join c_currency cr on cr.c_currency_id = p.c_currency_id
 inner join c_bpartner bp on bp.c_bpartner_id = p.c_bpartner_id
+inner join C_DocType_Trl dtr on dtr.c_doctype_id = p.c_doctype_id
 left join c_bpartner cd on cd.c_bpartner_id = p.c_bpartnerrelation_id
 inner join C_BankAccount bk on bk.C_BankAccount_id = p.C_BankAccount_id
 left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
@@ -65,7 +67,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
 	</field>
-	<field name="bpname" class="java.lang.String">
+	<field name="name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="bpname"/>
 	</field>
 	<field name="activite" class="java.lang.String">
@@ -86,13 +88,18 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 	<field name="codeclient" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
 	</field>
+	<field name="DocType" class="java.lang.String"/>
+	<field name="name2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bpname"/>
+	</field>
+	<field name="value" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="45" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-11" x="0" y="0" width="550" height="40" uuid="48ae4342-a347-47c7-8491-19f42271a0c8">
+				<reportElement key="subreport-11" x="0" y="0" width="799" height="40" uuid="48ae4342-a347-47c7-8491-19f42271a0c8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="AD_ORG_ID">
@@ -183,7 +190,7 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Tiers : " + ($P{C_BPartner_ID}!=null  ? $F{bpname}: "-")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Tiers : " + ($P{C_BPartner_ID}!=null  ? $F{name}: "-")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="215" y="3" width="125" height="19" uuid="179da070-8eab-42ec-87a4-4b653989ce69">
@@ -220,21 +227,21 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="29">
-			<textField>
-				<reportElement x="0" y="0" width="70" height="28" uuid="0a064c06-8154-45eb-a134-16f534881d1d">
+		<band height="28">
+			<staticText>
+				<reportElement x="0" y="0" width="70" height="28" uuid="037dec7d-4173-4cbf-be41-6d700c094027">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["N° DOC"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="70" y="0" width="110" height="28" uuid="f369da84-5d8f-434f-9c5f-9e2f248a3fab">
+				<text><![CDATA[N° DOC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="0" width="70" height="28" uuid="b34e22aa-ba10-46a9-b20d-ff3ae4da6d54">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -243,12 +250,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Compte"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="180" y="0" width="60" height="28" uuid="466142d6-f3a3-44d4-b50e-2155620c0aae">
+				<text><![CDATA[Compte]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="0" width="60" height="28" uuid="3bd65e93-f278-4450-a6a5-803c9b20ca16">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -257,12 +264,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Date"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="240" y="0" width="80" height="28" uuid="6e7d0501-a6cd-4317-bc18-b2b5bcacd854">
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="140" height="28" uuid="9a57998e-e788-476a-a12b-2c024b25809a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -271,12 +278,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Tiers"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="320" y="0" width="50" height="28" uuid="f951a82c-d300-4ab6-a7b3-3fd479c832b2">
+				<text><![CDATA[Tiers]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="47" height="28" uuid="48b517f5-06ab-4a34-900a-48ab32b2e435">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -285,12 +292,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Activité"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="500" y="0" width="90" height="28" uuid="1e003d60-5a7f-4a83-b4f6-ea9d518d50d0">
+				<text><![CDATA[Activité]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="0" width="70" height="28" uuid="8e03da2a-dd6c-401c-81c3-e438afb1559c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -299,12 +306,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Mode Paiement"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="590" y="0" width="77" height="28" uuid="d3870481-9784-4864-a9da-2aecbe9c265f">
+				<text><![CDATA[Mode Paiement]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="632" y="0" width="68" height="28" uuid="16a79a17-b9c6-42fd-b3b9-550e18c2ab4d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -313,12 +320,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Montant piement"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="668" y="0" width="70" height="28" uuid="44f55112-dcb3-4a98-ba54-ca74e04e0268">
+				<text><![CDATA[Montant piement]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="700" y="0" width="60" height="28" uuid="1b6932b4-ae59-456a-99e4-b1563161e7cd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -327,12 +334,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Montant Ouvert"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="738" y="0" width="61" height="28" uuid="f0ac0397-9179-4d39-ad37-4930950b49a8">
+				<text><![CDATA[Montant Ouvert]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="760" y="0" width="39" height="28" uuid="4d1a148d-cfea-4a8a-9765-ec01115de8a3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -341,12 +348,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Devise"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="370" y="0" width="130" height="28" uuid="5f95dd89-e638-4477-9096-6ee6b7fe769b">
+				<text><![CDATA[Devise]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="0" width="90" height="28" uuid="eadb888b-6294-42ab-b107-1815e5e407d7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -355,16 +362,30 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Créer Par"]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[Créer Par]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="546" y="0" width="86" height="28" uuid="0cb39458-a7a5-4741-8d23-3431b95ade11">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type Paiement]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="28" splitType="Stretch">
 			<textField>
-				<reportElement x="240" y="0" width="80" height="28" uuid="c6ecd119-5bdb-419f-8278-fc3195b42f48">
+				<reportElement x="200" y="0" width="140" height="28" uuid="c6ecd119-5bdb-419f-8278-fc3195b42f48">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -372,12 +393,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bpname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name2} != null ? $F{value}+"-"+$F{name2} : $F{value}+"-"+$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="320" y="0" width="50" height="28" uuid="baa7668f-84ea-4047-a13b-6ce3ff904b92">
+				<reportElement x="340" y="0" width="47" height="28" uuid="baa7668f-84ea-4047-a13b-6ce3ff904b92">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -385,20 +406,20 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{activite}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="590" y="0" width="77" height="28" uuid="870a8b77-b90c-46b5-b0d0-2524eece704a">
+				<reportElement x="632" y="0" width="68" height="28" uuid="870a8b77-b90c-46b5-b0d0-2524eece704a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box>
+				<box rightPadding="1">
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payamt}]]></textFieldExpression>
 			</textField>
@@ -412,12 +433,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="0" width="60" height="28" uuid="65cb72c2-58d5-4cc7-a236-27b7ca6e6922">
+				<reportElement x="140" y="0" width="60" height="28" uuid="65cb72c2-58d5-4cc7-a236-27b7ca6e6922">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -425,12 +446,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{datetrx})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="70" y="0" width="110" height="28" uuid="7d7885ad-db1c-4d99-b1a7-fd0bf53a1eaa">
+				<reportElement x="70" y="0" width="70" height="28" uuid="7d7885ad-db1c-4d99-b1a7-fd0bf53a1eaa">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -438,12 +459,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{compte}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="500" y="0" width="90" height="28" uuid="bd6ed5c3-ad5d-4ded-a10c-e9599b872343">
+				<reportElement x="476" y="0" width="70" height="28" uuid="bd6ed5c3-ad5d-4ded-a10c-e9599b872343">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -451,25 +472,25 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{modepaiment}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="668" y="0" width="70" height="28" uuid="be3a158e-5b45-46f6-864e-5962ce49deb5">
+				<reportElement x="700" y="0" width="60" height="28" uuid="be3a158e-5b45-46f6-864e-5962ce49deb5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box>
+				<box rightPadding="1">
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{openpayamount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="738" y="0" width="61" height="28" uuid="ec495810-a66b-4136-9597-226e6695283d">
+				<reportElement x="760" y="0" width="39" height="28" uuid="ec495810-a66b-4136-9597-226e6695283d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -477,12 +498,12 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="130" height="28" uuid="b3f9d149-106d-42d3-87d6-a26afcbc97ce">
+				<reportElement x="387" y="0" width="90" height="28" uuid="b3f9d149-106d-42d3-87d6-a26afcbc97ce">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -491,9 +512,20 @@ left outer join c_activity ac on ac.c_activity_id = p.c_activity_id
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{agent}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="546" y="0" width="86" height="28" uuid="4d474d77-50e5-4952-b3f8-f2556d63ee42">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6667e87a-a982-474f-90db-b643d0ad8ae1"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DocType}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
