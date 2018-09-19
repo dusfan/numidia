@@ -1040,8 +1040,11 @@ public class ImportInvoiceBooking extends SvrProcess
 				imp.setI_IsImported(true);
 				imp.setProcessed(true);
 				//
-				if (imp.save())
+				if (imp.save()){
 					noInsertLine++;
+					MBooking booking = new MBooking(imp);
+					booking.saveEx();
+				}
 			}
 			if (invoice != null)
 			{
