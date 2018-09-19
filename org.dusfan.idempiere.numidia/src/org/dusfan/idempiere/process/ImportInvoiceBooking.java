@@ -123,14 +123,6 @@ public class ImportInvoiceBooking extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
 		
-		// update DocumentNo
-		sql = new StringBuilder ("UPDATE I_InvoiceBooking ")
-				.append(" SET DocumentNo = DocumentNo || '-C' ")
-				.append(" WHERE DocumentNo not like '%-C' and Statut like 'Cancel%'")
-				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("DocumentNo updated=" + no);
-
 		// ignore the already imported booking code
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Booking deja importer, '")
@@ -176,7 +168,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 				.append(" SET Ref_Invoice_ID=(SELECT C_Invoice_id FROM C_Invoice i WHERE i.documentno = o.documentno and i.DocStatus = 'CO')")
 				.append(" WHERE IsSOTrx='Y' AND I_IsImported<>'Y'")
-				.append(" AND o.Statut = 'Canceled'").append (clientCheck);
+				.append(" AND o.Statut like 'Cancel%'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
 
@@ -186,7 +178,7 @@ public class ImportInvoiceBooking extends SvrProcess
 				.append(" WHERE IsSOTrx='Y' AND I_IsImported<>'Y'")
 				.append(" AND exists (select 1 from C_AllocationLine al ")
 				.append(" where al.c_invoice_id = I_InvoiceBooking.Ref_invoice_id and exists (select 1 from C_AllocationHdr where C_AllocationHdr.C_AllocationHdr_ID = al.C_AllocationHdr_ID and docstatus in('CO','CL')))")
-				.append(" AND o.Statut = 'Canceled' AND IsSOTrx='Y'").append (clientCheck);
+				.append(" AND o.Statut like 'Cancel%' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("disallow reverse the already paid invoices=" + no);
 		
@@ -967,11 +959,10 @@ public class ImportInvoiceBooking extends SvrProcess
 						oldDocumentNo = "";
 					//
 					invoice = new MInvoice (getCtx(), 0, null);
+					invoice.setDocumentNo(cmpDocumentNo);
 					invoice.setClientOrg (imp.getAD_Client_ID(), imp.getAD_Org_ID());
 					invoice.setC_DocTypeTarget_ID(imp.getC_DocType_ID());
 					invoice.setIsSOTrx(imp.isSOTrx());
-					if (imp.getDocumentNo() != null)
-						invoice.setDocumentNo(imp.getDocumentNo()+"-C");
 					//
 					invoice.setC_BPartner_ID(imp.getC_BPartner_ID());
 					invoice.setC_BPartner_Location_ID(imp.getC_BPartner_Location_ID());
