@@ -139,7 +139,7 @@ WHERE C_BPartner_ID = $P{C_BPartner_ID}]]>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Agence Centrale : 43, Rue Si Abdallah (Casbah) Constantine
+				<text><![CDATA[Agence centrale : 43, Rue Si Abdallah (Casbah) Constantine
 Tel: 031 87 29 - 031 87 29 72 / FAX: 031 87 36 87
 www.numidiatravelservices.com/numidiatourisme@yahoo.fr]]></text>
 			</staticText>
