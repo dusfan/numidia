@@ -23,6 +23,8 @@ public class ImportMarginSharing extends SvrProcess {
 
 	/** Effective						*/
 	private Timestamp		m_DateValue = null;
+	
+	private int noUpdated = 0;
 
 	/**
 	 *  Prepare - e.g., get Parameters.
@@ -63,6 +65,14 @@ public class ImportMarginSharing extends SvrProcess {
 			no = DB.executeUpdate(sql.toString(), get_TrxName());
 			if (log.isLoggable(Level.FINE)) log.fine("Delete Old Impored =" + no);
 		}
+		
+		
+		// delete record where there no amount neither booking refrence
+		sql = new StringBuilder ("delete from I_MarginSharing o ")
+				.append("WHERE DocumentNo is NULL OR DocumentNo ='Booking ref.'")
+				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
 
 		//	Set Client, Org, IsActive, Created/Updated
 		sql = new StringBuilder ("UPDATE I_MarginSharing ")
@@ -88,13 +98,6 @@ public class ImportMarginSharing extends SvrProcess {
 		if (no != 0)
 			log.warning ("Invalid Org=" + no);
 
-		// delete record where there no amount neither booking refrence
-		sql = new StringBuilder ("delete from I_MarginSharing o ")
-				.append("WHERE DocumentNo is NULL OR DocumentNo ='Booking ref.'")
-				.append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
-
 		// Set Error for not imported booking
 		sql = new StringBuilder ("UPDATE I_MarginSharing o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=La facture du vente existe pas, '")
@@ -115,8 +118,6 @@ public class ImportMarginSharing extends SvrProcess {
 		commitEx();
 		//		-- Update the existing imported booking -----------------------------------------------------
 
-		int noUpdated = 0;
-
 		//		Go through Invoice Records w/o
 		sql = new StringBuilder ("SELECT * FROM I_MarginSharing ")
 				.append("WHERE I_IsImported='N'").append (clientCheck);
@@ -131,10 +132,6 @@ public class ImportMarginSharing extends SvrProcess {
 			{
 				X_I_MarginSharing imp = new X_I_MarginSharing(getCtx(), rs, null);
 				updateBooking(imp);
-				imp.setI_IsImported(true);
-				imp.setProcessed(true);
-				if (imp.save())
-					noUpdated++;
 			}
 		}
 
@@ -163,6 +160,7 @@ public class ImportMarginSharing extends SvrProcess {
 	}
 
 	public  void updateBooking (X_I_MarginSharing imp){
+		
 		String sql = " update du_booking set C_PurchaseCurrency_ID = ?, ReceiptAmount = ?, "
 				+ " PriceActualNet=?, NetSalesPriceUsd = ?, "
 				+ " CostPrice=?, GeneralProfit=?, AgencyProfit = ?"
@@ -170,9 +168,16 @@ public class ImportMarginSharing extends SvrProcess {
 
 		Object[] obj = new Object[]{new Integer(imp.getC_Currency_ID()), imp.getReceiptAmount(), 
 				imp.getPriceActualNet(), imp.getNetSalesPriceUsd(), imp.getCostPrice(), 
-				imp.getGeneralProfit(), imp.getGeneralProfit().divide(new BigDecimal(2)), imp.getDocumentNo()};
+				imp.getCostPrice(), imp.getGeneralProfit().divide(new BigDecimal(2)), imp.getDocumentNo()};
 		int no = DB.executeUpdate(sql, obj, false,null);
 		if (no<0) log.warning("Booking didn't updated =" + imp.getDocumentNo());
+		else {
+			imp.setI_IsImported(true);
+			imp.setProcessed(true);
+			if (imp.save())
+				noUpdated++;
+		}
+		
 	}
 
 }
