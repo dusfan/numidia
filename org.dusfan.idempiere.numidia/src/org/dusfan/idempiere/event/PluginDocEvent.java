@@ -291,6 +291,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 			if (type.equals(IEventTopics.DOC_BEFORE_REVERSECORRECT)) {
 				if (po instanceof MInvoice) {
 						if (po.getAD_Org_ID() == 1000005){
+							EventInvoice.changeDocumentNo(po, ctx, trxName);
 							EventInvoice.checkAllocation(po, ctx, trxName);
 							EventInvoice.DeleteBooking(po, ctx, trxName);
 						}

@@ -682,6 +682,14 @@ public class ImportInvoicePurchase extends SvrProcess
 				String cmpDocumentNo = imp.getDocumentNo();
 				if (cmpDocumentNo == null)
 					cmpDocumentNo = "";
+				// ignorer the already imported booking
+				if (oldDocumentNo.equals(cmpDocumentNo)){
+					imp.setI_IsImported(false);
+					imp.setProcessed(false);
+					imp.setI_ErrorMsg(imp.getI_ErrorMsg() + "ERR=Booking deja importer, ");
+					if(imp.save())
+						continue;
+				}
 				//	New Invoice
 				if (oldC_BPartner_ID != imp.getC_BPartner_ID() 
 					|| oldC_BPartner_Location_ID != imp.getC_BPartner_Location_ID()
