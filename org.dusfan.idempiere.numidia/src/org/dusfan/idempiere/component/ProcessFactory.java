@@ -25,6 +25,7 @@ import org.dusfan.idempiere.process.SetGratuiteSV;
 import org.dusfan.idempiere.process.SetPrinted;
 import org.dusfan.idempiere.process.SetTagPasseport;
 import org.dusfan.idempiere.process.UpdateAffectationLineVol;
+import org.dusfan.idempiere.process.ExtourneOmraInvoiceByflight;
 import org.dusfan.idempiere.process.VoidOrderByGroup;
 
 /**
@@ -99,6 +100,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ImportInvoicePurchase();
 		else if (className.equals(ImportMarginSharing.class.getName()))
 			return new ImportMarginSharing();
+		else if (className.equals(ExtourneOmraInvoiceByflight.class.getName()))
+			return new ExtourneOmraInvoiceByflight ();
 		
 		return null;
 	}

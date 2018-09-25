@@ -2,7 +2,7 @@ package org.dusfan.idempiere.event;
 
 import java.math.BigDecimal;
 import java.util.Properties;
-
+import org.compiere.model.MBPartner;
 import org.compiere.model.MBankAccount;
 import org.compiere.model.MPayment;
 import org.compiere.model.PO;
@@ -71,6 +71,20 @@ public class EventPayment {
 			if (pay.get_Value("TypeTransaction")!=null && pay.get_Value("TypeTransaction").equals("1") && 
 					((BigDecimal)pay.get_Value("T_PriceVente")).compareTo(Env.ZERO)==0)
 					return false;
+		}
+		return true;
+	}
+	
+	// check payment individual for global client (omra)
+	public static boolean checkindividualPayment (PO po, Properties ctx, String trxName) {
+		MPayment pay = (MPayment)po;
+		MBPartner bp = new MBPartner(ctx, pay.getC_BPartner_ID(), trxName);
+		if (bp.getAD_Org_ID() == 1000002 && bp.get_Value("TypeClient")!=null
+				&& bp.get_ValueAsString("TypeClient").equals("1")
+				&& bp.get_Value("C_BPartnerRelation_ID")!=null) {
+			MBPartner code = new MBPartner(ctx, bp.get_ValueAsInt("C_BPartnerRelation_ID"), trxName);
+			if (code.get_ValueAsString("TypeCodeClient").equals("1"))
+				return false;
 		}
 		return true;
 	}

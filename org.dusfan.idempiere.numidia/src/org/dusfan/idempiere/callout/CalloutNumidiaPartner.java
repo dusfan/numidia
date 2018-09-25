@@ -60,6 +60,15 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 				cal.add(Calendar.DATE, -1);
 				startDate = new Timestamp(cal.getTime().getTime());
 				mTab.setValue("EndDate", startDate);
+				
+				// Check passeport validity
+				Timestamp current_date = new Timestamp(System.currentTimeMillis());
+				long diffDays = (startDate.getTime() - current_date.getTime()) / (24 * 60 * 60 * 1000);
+				int mounth = (int) diffDays;
+				mounth = mounth/30;
+				if (mounth <= 7)
+					mTab.fireDataStatusEEvent("ATTENTION le passeport expirera dans environ "+ mounth +" mois,"
+							+ " a compter depuis la date d'aujourd'hui", null, false);
 			} else
 				mTab.setValue("EndDate", null);
 
@@ -84,6 +93,15 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 					mTab.setValue("M_DiscountSchema_ID", null);
 				}
 			}
+		} else if (mField.getColumnName().equals("EndDate")) {
+			Timestamp current_date = new Timestamp(System.currentTimeMillis());
+			Timestamp end_date = (Timestamp) value;
+			long diffDays = (end_date.getTime() - current_date.getTime()) / (24 * 60 * 60 * 1000);
+			int mounth = (int) diffDays;
+			mounth = mounth/30;
+			if (mounth <= 7)
+				mTab.fireDataStatusEEvent("ATTENTION le passeport expirera dans environ "+ mounth +" mois,"
+						+ " a compter depuis la date d'aujourd'hui", null, false);
 		}
 
 		return null;

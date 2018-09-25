@@ -11,6 +11,7 @@ import org.compiere.model.MOrderLine;
 import org.compiere.model.MProduct;
 import org.compiere.model.PO;
 import org.compiere.model.X_C_BP_Relation;
+import org.compiere.process.DocAction;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
@@ -22,6 +23,7 @@ import org.dusfan.idempiere.model.MVolLine;
 
 public class EventOrder {
 
+	// Set activity from head document but exclude OOMRA AND LOTS
 	public static void setC_Activity_ID(String type, PO po, Properties ctx, String trxName) {
 		if (type.equals(MOrderLine.Table_Name)) {
 			MOrderLine line = (MOrderLine) po;
@@ -34,64 +36,119 @@ public class EventOrder {
 		}
 	}
 
-	// Set Package and Taxe
+	// Set INFO Package
 	public static void setPackage(PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
-		if (line.getM_Product_ID() > 0) {
+		if (line.getM_Product_ID() > 0 ) {
 			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
 			if (pr.get_ValueAsString("TypeService").equals("0")) {
 				line.set_ValueNoCheck("M_Sejour_ID", pr.getM_Product_ID());
-				if (pr.get_ValueAsString("TypeRoom") != null && pr.get_ValueAsString("TypeRoom").length() > 0) {
-					line.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
-				}
-			} else {
-				line.set_ValueNoCheck("M_Sejour_ID", null);
-				line.set_ValueNoCheck("TypeRoom", null);
+				line.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
+				MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
+				ord.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
+				ord.set_ValueNoCheck("DU_Hotel_ID", pr.get_Value("DU_Hotel_ID"));
+				ord.set_ValueNoCheck("ClassHotel", pr.get_ValueAsString("ClassHotel"));
+				ord.set_ValueNoCheck("Saison_Omra", pr.get_ValueAsString("Saison_Omra"));
+				ord.saveEx();
 			}
 		}
 	}
+	
+	// Add line ticket for each package
+	public static void addLineTicket (MOrder po, Properties ctx, String trxName) {
+		int countpk = DB.getSQLValue(trxName, "Select coalesce(count(1),0) from c_orderline where c_order_id = ? "
+				+ "and m_product_id in (Select m_product_id from m_product where typeservice='0')", po.getC_Order_ID());
+		if (countpk > 0) {
+			int count_tk = DB.getSQLValue(trxName, "Select coalesce(count(1),0) from c_orderline where c_order_id = ? "
+					+ "and m_product_id in (Select m_product_id from m_product where typeservice='2')", po.getC_Order_ID());
+			if (count_tk == 0)
+			{
+				MOrderLine l = new MOrderLine(po);
+				l.setM_Product_ID(1000240); // set ticket line
+				l.setQty(Env.ONE);
+				l.saveEx();
+			}
+		}
+		
+		
+	}
+	
+	// Check Duplicate Package
+	public static boolean checkDuplicatePackage (PO po, Properties ctx, String trxName) {
+		MOrderLine line = (MOrderLine) po;
+		int count = DB.getSQLValue(trxName,"Select count(1) "
+				+ " from c_orderline where c_order_id = ? "
+				+ " and m_product_id in (select m_product_id from m_product where TypeService='0'"
+				+ " and M_Product_Category_ID=1000001)",line.getC_Order_ID());
+		if (count > 1)
+			return false;
+		return true;
+	}
 
-	// Set remise for code clients
+	// Set remise for code clients by type of commission
 	public static void setRemiseMargeCodeClient(PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
-		if (line.getM_Product_ID() > 0 && line.getAD_Org_ID() == 1000002) { // add org filter
-			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
-			if (pr.get_ValueAsString("TypeService").equals("5")) {
-				int c_bpartnerRelation_id = DB.getSQLValue(trxName,
-						"select c_bpartnerrelation_id from c_order where c_order_id =" + line.getC_Order_ID());
-				MBPartner bp = new MBPartner(ctx, c_bpartnerRelation_id, trxName);
-				BigDecimal remiseMarge = bp.get_Value("RemiseMarge") != null ? (BigDecimal) bp.get_Value("RemiseMarge")
+		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
+		MBPartner bp = new MBPartner(ctx, ord.get_ValueAsInt("C_BPartnerRelation_ID"), trxName);
+		MProduct pr = null;
+		if (line.getM_Product_ID() > 0)
+		 pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
+		
+		if (ord.getC_DocTypeTarget_ID() == 1000048 && pr!=null
+				&& pr.get_ValueAsString("TypeService").equals("0") && bp.get_ValueAsString("TypeCodeClient").equals("1"))
+		{
+			String typemarge = pr.get_ValueAsString("TypeMarge");
+			BigDecimal remiseMarge;
+			BigDecimal price ;
+			if (typemarge.equals("1")) {
+				remiseMarge = bp.get_Value("RemiseMarge") != null ? (BigDecimal) bp.get_Value("RemiseMarge")
 						: Env.ZERO;
-				BigDecimal remiseMargeSP = bp.get_Value("RemiseMargeSP") != null
-						? (BigDecimal) bp.get_Value("RemiseMargeSP") : Env.ZERO;
-				BigDecimal margeVIP = bp.get_Value("margevip") != null
-								? (BigDecimal) bp.get_Value("margevip") : Env.ZERO;
-				
-				if (pr.get_ValueAsString("VIP")!=null && pr.get_ValueAsString("VIP").equals("Y") ) {
-					BigDecimal price = line.getPriceActual().subtract(margeVIP);
-					line.setPriceActual(price);
-					line.setPriceEntered(price);
-					line.setLineNetAmt();
-				} else {
-					BigDecimal price = line.getPriceActual().subtract(remiseMarge);
-					line.setPriceActual(price);
-					line.setPriceEntered(price);
-					line.setLineNetAmt();
-				}
-
-				if (remiseMargeSP.compareTo(Env.ZERO) > 0) {
-					line.setPriceActual(remiseMargeSP);
-					line.setPriceEntered(remiseMargeSP);
-					line.setLineNetAmt();
-				}
+				price = line.getPriceList().subtract(remiseMarge);
+				line.setPriceActual(price);
+				line.setPriceEntered(price);
+				line.setLineNetAmt();
 			}
+			else if (typemarge.equals("2")) {
+				remiseMarge = bp.get_Value("margevip") != null ? (BigDecimal) bp.get_Value("margevip")
+						: Env.ZERO;
+				price = line.getPriceList().subtract(remiseMarge);
+				line.setPriceActual(price);
+				line.setPriceEntered(price);
+				line.setLineNetAmt();
+			}
+			else if (typemarge.equals("3")) {
+				remiseMarge = bp.get_Value("margeeco") != null ? (BigDecimal) bp.get_Value("margeeco")
+						: Env.ZERO;
+				price = line.getPriceList().subtract(remiseMarge);
+				line.setPriceActual(price);
+				line.setPriceEntered(price);
+				line.setLineNetAmt();
+			}
+			else if (typemarge.equals("4")) {
+				remiseMarge = bp.get_Value("RemiseMargeSP") != null ? (BigDecimal) bp.get_Value("RemiseMargeSP")
+						: Env.ZERO;
+				price = line.getPriceList().subtract(remiseMarge);
+				line.setPriceActual(price);
+				line.setPriceEntered(price);
+				line.setLineNetAmt();
+			}
+			else if (typemarge.equals("5")) {
+				remiseMarge = bp.get_Value("margeother") != null ? (BigDecimal) bp.get_Value("margeother")
+						: Env.ZERO;
+				price = line.getPriceList().subtract(remiseMarge);
+				line.setPriceActual(price);
+				line.setPriceEntered(price);
+				line.setLineNetAmt();
+			}
+				
 		}
+
 	}
 
+	// if product is not ticket reset ticket line
 	public static void setremiseBillet(PO po, Properties ctx, String trxName) {
 		
 		MOrderLine line = (MOrderLine) po;
-		if (line.getAD_Org_ID() == 1000002){
 		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
 		int c_doctype_id = ord.getC_DocTypeTarget_ID();
 		if (c_doctype_id == 1000047 || c_doctype_id == 1000048) {
@@ -113,11 +170,7 @@ public class EventOrder {
 				if (!pr.get_ValueAsString("TypeService").equals("2")) {
 					line.set_ValueNoCheck("DU_RemiseChd_ID", null);
 				}
-				if (!pr.get_ValueAsString("TypeService").equals("5")) {
-					line.set_ValueNoCheck("RemiseCompt", Env.ZERO);
-				}
 			}
-		}
 		}
 		
 	}
@@ -153,7 +206,6 @@ public class EventOrder {
 					}
 				}
 			}
-		
 
     	}
 	}
@@ -161,6 +213,11 @@ public class EventOrder {
 	// Mettre la date de l ordre de vente paraport a la date de depart de vol
 	public static void setDateOrderedByFlight(PO po, Properties ctx, String trxName) {
 		MOrder ord = (MOrder) po;
+		// SET cause annulation
+		if (ord.isSOTrx()) {
+			ord.set_ValueNoCheck("CancelCause", null);
+			ord.set_ValueNoCheck("MountOther", null);
+		}
 		if (ord.getC_DocTypeTarget_ID() == 1000048) {
 			MVol vol = new MVol(ctx, ord.get_ValueAsInt("DU_Vol_ID"), trxName);
 			ord.setDateOrdered(vol.getDepartDateTime_Direct());
@@ -170,6 +227,10 @@ public class EventOrder {
 	// when the order is prepare add entry to vol line
 	public static void addFlightLine(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder) po;
+		
+		// add ticket line
+		addLineTicket(order, ctx, trxName);
+		
 		if (order.isSOTrx() && order.get_ValueAsInt("DU_Vol_ID") > 0
 				&& (order.getAD_Org_ID() == 1000002 || order.getAD_Org_ID() == 1000004)) {
 			String sql = "Select du_volLine_id from du_volLine where c_order_id =" + order.getC_Order_ID();
@@ -197,7 +258,6 @@ public class EventOrder {
 				line.setIsInclude(setIsInclude(trxName, order.getC_Order_ID()));
 				line.saveEx();
 			}
-
 		}
 	}
 
@@ -369,56 +429,7 @@ public class EventOrder {
 		}
 	}
 	
-	
-	// Gestion des chambre du hadj temporaire
-	public static void setTypeRoom (PO po, Properties ctx, String trxName) {
-		MOrderLine line = (MOrderLine)po;
-		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
-		String typeRoom = "";
-		String vip = "N";
-		if (ord.getAD_Org_ID()==1000002 && ord.getC_DocTypeTarget_ID()==1000057) {
-			int[] ol = PO.getAllIDs(MOrderLine.Table_Name, 
-					"C_Order_ID ="+ord.getC_Order_ID(), trxName);
-			for (int id : ol)
-			{
-				int m_Product_id = DB.getSQLValue(trxName, "Select m_product_id from c_orderline where "
-						+ " c_orderline_id =?", id);
-				MProduct pr = new MProduct(ctx, m_Product_id, trxName);
-				
-				if (pr.get_ValueAsString("TypeRoom").equals("20"))
-					typeRoom = "20";
-				if (pr.get_ValueAsString("TypeRoom").equals("30"))
-					typeRoom = "30";
-				if (pr.get_ValueAsString("TypeRoom").equals("40"))
-					typeRoom = "40";
-				
-				if (pr.get_ValueAsString("TypeRoom").equals("20") && pr.get_ValueAsString("VIP").equals("Y")) {
-					typeRoom = "20";
-					vip = "Y";
-				}
-				if (pr.get_ValueAsString("TypeRoom").equals("30") && pr.get_ValueAsString("VIP").equals("Y")) {
-					typeRoom = "30";
-					vip = "Y";
-				}
-				if (pr.get_ValueAsString("TypeRoom").equals("40") && pr.get_ValueAsString("VIP").equals("Y")) {
-					typeRoom = "40";
-					vip = "Y";
-				}
-				
-			}
-			if (ol.length == 1 || typeRoom.equals("")) {
-				int count = DB.getSQLValue(trxName, "Select count(1) from c_orderline l inner join m_product p "
-						+ " on p.m_product_id=l.m_product_id where p.value='HD-ECO'"
-						+ " and l.c_order_id ="+line.getC_Order_ID());
-				
-				if (count > 1) 
-					typeRoom="40";
-			}
-			ord.set_ValueNoCheck("TypeRoom", typeRoom.equals("")? null : typeRoom);
-			ord.set_ValueNoCheck("VIP", vip);
-			ord.saveEx();
-		}
-	}
+
 
 	public static boolean checkClosedFlight(PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder)po;
@@ -432,15 +443,84 @@ public class EventOrder {
 		
 	}
 	
+	// Check duplicate order from same vol
 	public static boolean checkDuplicateVol (PO po, Properties ctx, String trxName) {
 		MOrder order = (MOrder)po;
-		int co =  DB.getSQLValue(trxName, "Select count(1) from c_order "
-				+ " where docstatus in ('DR','IP','CO') and (du_vol_id ="+ order.get_ValueAsInt("DU_Vol_ID") 
-				+" or du_vol_id is null) and c_bpartner_id ="+ order.getC_BPartner_ID());
-		if (co > 0 )
-			return false;
+		if (order.isSOTrx()) {
+			int co =  DB.getSQLValue(trxName, "Select count(1) from c_order "
+					+ " where docstatus in ('DR','IP','CO') and (du_vol_id ="+ order.get_ValueAsInt("DU_Vol_ID") 
+					+" or du_vol_id is null) and c_bpartner_id ="+ order.getC_BPartner_ID());
+			if (co > 0 )
+				return false;
+		}
 		
 		return true;
 	}
 	
+	public static boolean checkinvoiceexist (PO po, Properties ctx, String trxName) {
+		MOrder order = (MOrder)po;
+		MBPartner code = new MBPartner(ctx, order.get_ValueAsInt("C_BPartnerRelation_ID"), trxName);
+		if (order.getC_DocTypeTarget_ID() == 1000048 && 
+				code.get_ValueAsString("TypeClient").equals("2")) {
+			int exist = DB.getSQLValue(trxName, "Select count(1) from c_orderline where "
+					+ " c_order_id = ? and c_orderline_id in (Select c_orderline_id from c_invoiceline"
+					+ " where c_invoice_id in (Select c_invoice_id from c_invoice where "
+					+ " docstatus in ('CO','CL')))", order.getC_Order_ID());
+			if (exist > 0)
+				return false;
+		}
+		return true;
+	}
+	
+	// Add Cancel cause for omra
+	public static  boolean CheckCancelCause (PO po, Properties ctx, String trxName) {
+		MOrder order = (MOrder)po;
+		if(order.isSOTrx() && (order.getC_DocTypeTarget_ID() == 1000047
+				|| order.getC_DocTypeTarget_ID() == 1000048)) {
+			String cancelcause = order.get_ValueAsString("CancelCause");
+			BigDecimal mount = (BigDecimal) order.get_Value("MountOther");
+			if ((cancelcause == null || cancelcause.length() == 0) ||
+					((cancelcause!=null || cancelcause.length()>0) 
+					&& (cancelcause.equals("3") && mount.compareTo(Env.ZERO)==0)))
+				return false;
+			else {
+				if (mount != null) {
+					MInvoice inv =  new MInvoice(ctx, 0, trxName);
+					inv.setAD_Org_ID(order.getAD_Org_ID());
+					inv.setC_BPartner_ID(order.getBill_BPartner_ID());
+					if (order.get_Value("DU_Vol_ID")!=null) {
+						inv.setC_DocTypeTarget_ID(1000051);
+						inv.set_ValueNoCheck("DU_Vol_ID", order.get_Value("DU_Vol_ID"));
+					} else
+						inv.setC_DocTypeTarget_ID(1000056);
+					MBPartner bp = new MBPartner(ctx, order.getC_BPartner_ID(), trxName);
+					inv.setDescription(bp.getName() + " " + bp.getName2());
+					inv.saveEx();
+					MInvoiceLine line = new MInvoiceLine(inv);
+					line.setC_Charge_ID(1000005);
+					line.setQty(Env.ONE);
+					line.setPrice(mount);
+					line.saveEx();
+					inv.processIt(DocAction.ACTION_Complete);
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static boolean checkExitRelation (PO po, Properties ctx, String trxName) {
+		MOrder ord = (MOrder) po;
+		if (ord.getC_DocTypeTarget_ID() == 1000048) {
+			MBPartner bp = new MBPartner(ctx, ord.get_ValueAsInt("C_BPartnerRelation_ID"), trxName);
+			if (bp.get_Value("TypeCodeClient").equals("1")) {
+				String whereC = "C_BPartnerRelation_ID = "+ord.get_ValueAsInt("C_BPartnerRelation_ID")+
+						" AND C_BPartner_ID = "+ord.getC_BPartner_ID();
+				int [] rel_id = X_C_BP_Relation.
+						getAllIDs(X_C_BP_Relation.Table_Name, whereC, trxName);
+				if (rel_id.length == 0)
+					return false;
+			}
+		}
+		return true;
+	}
 }

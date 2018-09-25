@@ -25,6 +25,15 @@ public class CalloutNumidiaProductPrice implements IColumnCallout {
 				setPriceTourisme(mTab);
 			}
 		}
+		else if (ad_Org_id == 1000002) {
+			if ( mField.getColumnName().equals("M_PriceHmedina") || mField.getColumnName().equals("M_PriceHmekha")
+					|| mField.getColumnName().equals("M_Pax") || mField.getColumnName().equals("M_Rate")
+					|| mField.getColumnName().equals("M_PriceTicket") || mField.getColumnName().equals("M_PriceSale")
+					|| mField.getColumnName().equals("M_PriceVisa")) {
+				
+				setPriceOmra(mTab);
+				}
+		}
 		
 		return null;
 	}
@@ -65,6 +74,55 @@ public class CalloutNumidiaProductPrice implements IColumnCallout {
 		mTab.setValue("PriceStd", T_PriceVente);
 		mTab.setValue("PriceLimit", T_PriceVente);
 		
+	}
+	
+	private void setPriceOmra (GridTab mTab) {
+		// Price Hotel medina
+		BigDecimal M_PriceHmedina = mTab.getValue("M_PriceHmedina") != null ? (BigDecimal) mTab.getValue("M_PriceHmedina")
+				: Env.ZERO;
+		// Price Hotel mekha
+		BigDecimal M_PriceHmekha = mTab.getValue("M_PriceHmekha") != null ? (BigDecimal) mTab.getValue("M_PriceHmekha")
+				: Env.ZERO;
+		// Pax
+		BigDecimal M_Pax = mTab.getValue("M_Pax") != null ? (BigDecimal) mTab.getValue("M_Pax") : Env.ZERO;
+		// VISA
+		BigDecimal M_PriceVisa = mTab.getValue("M_PriceVisa") != null ? (BigDecimal) mTab.getValue("M_PriceVisa") : Env.ZERO;
+		// Taux
+		BigDecimal M_Rate = mTab.getValue("M_Rate") != null ? (BigDecimal) mTab.getValue("M_Rate") : Env.ZERO;
+		// Billet + Douane
+		BigDecimal M_PriceTicket = mTab.getValue("M_PriceTicket") != null ? (BigDecimal) mTab.getValue("M_PriceTicket")
+						: Env.ZERO;
+		// Prix de vente
+		BigDecimal T_PriceVente = mTab.getValue("M_PriceSale") != null ? (BigDecimal) mTab.getValue("M_PriceSale")
+				: Env.ZERO;
+		
+		// Total Hotel
+		BigDecimal totalHotel;
+		if (M_Pax.compareTo(Env.ZERO) == 0)
+			totalHotel = Env.ZERO;
+		else
+			totalHotel= (M_PriceHmedina.add(M_PriceHmekha)).divide(M_Pax);
+		mTab.setValue("M_TotalHotel", totalHotel);
+		
+		// Total SAR
+		BigDecimal M_TotalSar = totalHotel.add(M_PriceVisa);
+		mTab.setValue("M_TotalSar", M_TotalSar);
+		
+		// M_TotalSarToDZD
+		BigDecimal M_TotalSarToDZD = M_TotalSar.multiply(M_Rate);
+		mTab.setValue("M_TotalSarToDZD", M_TotalSarToDZD);
+		
+		
+		// Prix de revient
+		BigDecimal M_PriceCost = M_PriceTicket.add(M_TotalSarToDZD);
+		mTab.setValue("M_PriceCost", M_PriceCost);
+		
+		// Marge
+		mTab.setValue("M_Marge", T_PriceVente.subtract(M_PriceCost));
+		// Set price 
+		mTab.setValue("PriceList", T_PriceVente);
+		mTab.setValue("PriceStd", T_PriceVente);
+		mTab.setValue("PriceLimit", T_PriceVente);
 	}
 	
 

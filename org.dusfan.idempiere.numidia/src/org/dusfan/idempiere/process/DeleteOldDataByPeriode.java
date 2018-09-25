@@ -23,6 +23,8 @@ public class DeleteOldDataByPeriode extends SvrProcess {
 	private int nbr_deleteinvoice = 0;
 	private int nbr_deleteMinout = 0;
 	private int nbr_order = 0;
+	private int nbr_transaction = 0;
+	private int nbr_imported = 0;
 	
 	@Override
 	protected void prepare() {
@@ -122,31 +124,34 @@ public class DeleteOldDataByPeriode extends SvrProcess {
 			if (nbr_deleteinvoice>=0)
 				commitEx();
 			
+			sql = " Delete from m_transaction where ad_org_id = 1000002 and created <= ?";
+			nbr_transaction = DB.executeUpdate(sql, para, false, get_TrxName());
+			if (nbr_transaction>=0)
+				commitEx();
+			
 			// Update C_invoiceLine set m_inoutline_id to null where organization omra
-			sql = "update c_invoiceline set m_inoutline_id = null where ad_org_id = 1000002 and created <= ?";
-			nbr_deleteMinout = DB.executeUpdate(sql, para, false, get_TrxName());
+			sql = "update c_invoiceline set m_inoutline_id = null where ad_org_id = 1000002";
+			nbr_deleteMinout = DB.executeUpdate(sql, false, get_TrxName());
 			if (nbr_deleteMinout>=0)
 				commitEx();
 
 			// Delete expedition line where organization omra
-			sql = "update m_inoutline set reversalline_id=null where ad_org_id = 1000002 and created <= ?";
+			sql = "update m_inoutline set reversalline_id=null where ad_org_id = 1000002";
+			nbr_deleteMinout = DB.executeUpdate(sql, false, get_TrxName());
+			if (nbr_deleteMinout>=0)
+				commitEx();
+			
+			sql = "delete from m_inoutline where ad_org_id = 1000002";
+			nbr_deleteMinout = DB.executeUpdate(sql, false, get_TrxName());
+			if (nbr_deleteMinout>=0)
+				commitEx();
+			
+			sql ="Update m_inout set reversal_id=null where ad_org_id = 1000002";
 			nbr_deleteMinout = DB.executeUpdate(sql, para, false, get_TrxName());
 			if (nbr_deleteMinout>=0)
 				commitEx();
 			
-			sql = "delete from m_inoutline where ad_org_id = 1000002 and m_inoutline_id "
-					+ " not in (select reversalline_id from m_inoutline) and created <= ?";
-			nbr_deleteMinout = DB.executeUpdate(sql, para, false, get_TrxName());
-			if (nbr_deleteMinout>=0)
-				commitEx();
-			
-			sql ="Update m_inout set reversal_id=null where ad_org_id = 1000002 and created <= ?";
-			nbr_deleteMinout = DB.executeUpdate(sql, para, false, get_TrxName());
-			if (nbr_deleteMinout>=0)
-				commitEx();
-			
-			sql ="Delete from m_inout where ad_org_id = 1000002 "
-					+ " and m_inout_id not in (select reversal_id from m_inout) and created <= ?";
+			sql ="Delete from m_inout where ad_org_id = 1000002";
 			nbr_deleteMinout = DB.executeUpdate(sql, para, false, get_TrxName());
 			if (nbr_deleteMinout>=0)
 				commitEx();
@@ -193,6 +198,9 @@ public class DeleteOldDataByPeriode extends SvrProcess {
 			if (nbr_order>=0)
 				commitEx();
 			
+			sql = "Delete from i_importomrabp where ad_org_id = 1000002";
+			nbr_imported = DB.executeUpdate(sql, false, get_TrxName());
+			
 			sql = "Delete from c_order where ad_org_id=1000002 and docstatus = 'VO' and issotrx='Y' and created <= ? "
 					+ "AND c_order_id not in (select c_order_id from c_invoice)";
 			nbr_order = DB.executeUpdate(sql, para, false, get_TrxName());
@@ -215,6 +223,7 @@ public class DeleteOldDataByPeriode extends SvrProcess {
 			addLog (0, null, new BigDecimal (nbr_deleteinvoice), "Nombre de facture supprimer");
 			addLog (0, null, new BigDecimal (nbr_deleteMinout), "Nombre d'expedition supprimer");
 			addLog (0, null, new BigDecimal (nbr_order), "Nombre d'ordre de vente supprimer");
+			addLog (0, null, new BigDecimal (nbr_imported), "Nombre de donnees importer supprimer");
 		}
 		
 		return "OK";

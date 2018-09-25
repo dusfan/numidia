@@ -38,11 +38,13 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MOrder.Table_Name);
+		registerTableEvent(IEventTopics.DOC_BEFORE_PREPARE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_VOID, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_COMPLETE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_PREPARE, MOrder.Table_Name);
 		registerTableEvent(IEventTopics.DOC_AFTER_VOID, MOrder.Table_Name);
+		registerTableEvent(IEventTopics.DOC_BEFORE_REACTIVATE, MOrder.Table_Name);
 		
 		// MOrderLine
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MOrderLine.Table_Name);
@@ -102,23 +104,31 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// BEFORE NEW
 			if (type.equals(IEventTopics.PO_BEFORE_NEW)) {
 				if (po instanceof MOrderLine) {
-					EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
-					EventOrder.setPackage(po,ctx,trxName);
-					EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
-					EventOrder.setremiseBillet(po,ctx,trxName);
+					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
+						EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
+					if (po.getAD_Org_ID()==1000002) {
+						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
+						EventOrder.setremiseBillet(po,ctx,trxName);
+						EventOrder.setPackage(po, ctx, trxName);
+					}
 				} else if (po instanceof MInvoiceLine) {
-					if (po.getAD_Org_ID()!=1000005)
+					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
 						EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
-					else
-						;
+					
 				} else if (po instanceof MOrder) {
-					if (!EventOrder.checkHadjClient(po, ctx, trxName))
-						throw new AdempiereUserError("Le type de document et "
-								+ "le code client ne sont pas compatible");
-					if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
-						throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
-					EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
-					EventOrder.setDateOrderedByFlight(po, ctx, trxName);
+					
+					if (po.getAD_Org_ID() == 1000002) {
+						if (!EventOrder.checkHadjClient(po, ctx, trxName))
+							throw new AdempiereUserError("Le type de document et "
+									+ "le code client ne sont pas compatible");
+						
+						if (!EventOrder.checkHadjDuplicate(po, ctx, trxName))
+							throw new AdempiereUserError("Il exite un Ordre de vente HADJ pour ce client");
+						EventOrder.setCodeClient(po, MOrder.Table_Name,ctx,trxName);
+						
+						EventOrder.setDateOrderedByFlight(po, ctx, trxName);
+					}
+					
 					if (po.getAD_Org_ID() == 1000002 || po.getAD_Org_ID() == 1000004) {
 						if (!EventOrder.checkDuplicateVol(po, ctx, trxName))
 							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client");
@@ -137,6 +147,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
 					if (!EventPayment.checkSalesAmount(po, ctx, trxName))
 						throw new AdempiereUserError("Vous n'avez pas terminer la vente");
+					if (po.getAD_Org_ID() == 1000002)
+						if (!EventPayment.checkindividualPayment(po, ctx, trxName))
+						throw new AdempiereUserError("le code client du tiers n est pas individuel, "
+								+ "vous ne pouvez pas effectuer ce paiement");
 				}		
 				
 			} // End BEFORE NEW
@@ -156,13 +170,16 @@ public class PluginDocEvent extends AbstractEventHandler {
 					}
 				}
 				else if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
+					if (po.getAD_Org_ID() == 1000002) {
+						if (!EventOrder.checkDuplicatePackage(po, ctx, trxName))
+							throw new AdempiereUserError("Il y a deux package pour le meme client");
+					}
 				}
 				else if (po instanceof MProduct) {
 					EventProduct.setProductVendor(po, ctx, trxName);
 				}
 				else if (po instanceof FactLine) {
-					if (po.getAD_Org_ID() == 1000004)
+					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
 						EventFact.SetActivity(po, ctx, trxName);
 				}
 			}
@@ -171,11 +188,15 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// before change
 			if (type.equals(IEventTopics.PO_BEFORE_CHANGE)) {
 				if (po instanceof MOrderLine) {
-					EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
-					EventOrder.setremiseBillet(po,ctx,trxName);
-					EventOrder.setPackage(po,ctx,trxName);
+					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
+						EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
+					if (po.getAD_Org_ID() == 1000002) {
+						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
+						EventOrder.setremiseBillet(po,ctx,trxName);
+						EventOrder.setPackage(po, ctx, trxName);
+					}
 				} else if (po instanceof MInvoiceLine) {
-					if (po.getAD_Org_ID()!=1000005)
+					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
 						EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
 					else
 						;
@@ -197,9 +218,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 					EventPartner.deleteSpace(po, trxName, ctx);
 					EventPartner.setImage(po, trxName, ctx);
 				}
-				else if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoom(po, ctx, trxName);
-				}
 				else if (po instanceof MProduct) {
 					EventProduct.setProductVendor(po, ctx, trxName);
 				}
@@ -207,9 +225,12 @@ public class PluginDocEvent extends AbstractEventHandler {
 			// End After change 
 			
 			// After Delete
-			if (type.equals(IEventTopics.PO_AFTER_DELETE)) {
-				if (po instanceof MOrderLine) {
-					EventOrder.setTypeRoom(po, ctx, trxName); // a voir avec le tourisme et OMRA
+			if (type.equals(IEventTopics.DOC_BEFORE_PREPARE)) {
+				if (po instanceof MOrder) {
+					if (po.getAD_Org_ID() == 1000002) {
+						if (!EventOrder.checkExitRelation(po, ctx, trxName))
+							throw new AdempiereUserError("Attention la relation tiers n'existe pas, il faut la créer");
+					}
 				}
 			}
 			// End After delete
@@ -238,15 +259,24 @@ public class PluginDocEvent extends AbstractEventHandler {
 			
 			// After Prepare
 			if (type.equals(IEventTopics.DOC_AFTER_PREPARE)) {
-				if(po instanceof MOrder)
+				if(po instanceof MOrder) {
 					EventOrder.addFlightLine(po,ctx, trxName);
+				}
 			}
 			// End After Prepare
 			
 			// Before Void
 			if (type.equals(IEventTopics.DOC_BEFORE_VOID)) {
-				if (po instanceof MOrder)
+				if (po instanceof MOrder) {
 					EventOrder.subSarPrice(po, ctx, trxName);
+					if (po.getAD_Org_ID() == 1000002) {
+						if (!EventOrder.checkinvoiceexist(po, ctx, trxName))
+							throw new AdempiereUserError("cette ordre de vente est facturé deja,"
+									+ " il faut annuler d'abord ça facture");
+						if (!EventOrder.CheckCancelCause(po, ctx, trxName))
+							throw new AdempiereUserError("Il faut mettre la cause d'annulation ou le montant de frais d'annulation");
+					}
+				}
 			}
 			// End Before Void
 			
@@ -267,6 +297,16 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 			}
 
+			// BEFOR REACTIVATE
+			if (type.equals(IEventTopics.DOC_BEFORE_REACTIVATE)) {
+				if (po instanceof MOrder) {
+					if (po.getAD_Org_ID() == 1000002) {
+						if (!EventOrder.checkinvoiceexist(po, ctx, trxName))
+							throw new AdempiereUserError("cette ordre de vente est facturé deja,"
+									+ " il faut annuler d'abord ça facture");
+					}
+				}
+			}
 		}
 
 	}

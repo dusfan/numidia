@@ -97,9 +97,9 @@ public class CalloutNumidiaOrderLine implements IColumnCallout {
 		if (ad_org_id == 1000002) {
 			if (m_product_id > 0) {
 				MProduct pr = new MProduct(ctx, m_product_id, null);
-				if (!pr.get_ValueAsString("TypeService").equals("5")) {
-					mTab.fireDataStatusEEvent ("Il faut que l article soit de type MARGE pour cette remise",
-							"Marge", false);
+				if (!pr.get_ValueAsString("TypeService").equals("0")) {
+					mTab.fireDataStatusEEvent ("Il faut que l article soit de type Package pour cette remise",
+							"Marge/commission", false);
 					return;
 				}
 			}
