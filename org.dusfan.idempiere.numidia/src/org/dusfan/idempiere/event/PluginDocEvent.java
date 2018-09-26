@@ -207,6 +207,11 @@ public class PluginDocEvent extends AbstractEventHandler {
 							throw new AdempiereException("Le vol est Clôturé par l'administrateur, veuillez le contacter!");;
 					}
 					
+					if (po.getAD_Org_ID() == 1000002 || po.getAD_Org_ID() == 1000004) {
+						if (!EventOrder.checkDuplicateVol(po, ctx, trxName))
+							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client pour le même vol");
+					}
+					
 				}
 
 			} // before change
