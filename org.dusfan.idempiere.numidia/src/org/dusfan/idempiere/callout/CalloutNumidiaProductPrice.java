@@ -1,6 +1,7 @@
 package org.dusfan.idempiere.callout;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Properties;
 
 import org.adempiere.base.IColumnCallout;
@@ -101,7 +102,7 @@ public class CalloutNumidiaProductPrice implements IColumnCallout {
 		if (M_Pax.compareTo(Env.ZERO) == 0)
 			totalHotel = Env.ZERO;
 		else
-			totalHotel= (M_PriceHmedina.add(M_PriceHmekha)).divide(M_Pax);
+			totalHotel= (M_PriceHmedina.add(M_PriceHmekha)).divide(M_Pax,2, RoundingMode.HALF_UP);
 		mTab.setValue("M_TotalHotel", totalHotel);
 		
 		// Total SAR
