@@ -41,7 +41,6 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 	private int m_M_Product_ID = 0;
 	// vol
 	private int m_DU_Vol_ID = 0;
-	private int du_Season_Period_ID =0;
 	/** Effective						*/
 	private Timestamp		m_DateValue = null;
 	private boolean			p_IsValidateOnly = false;
@@ -67,9 +66,7 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 				m_DU_Visa_Group_ID = para[i].getParameterAsInt();
 			else if (name.equals("DateOrdered")) {
 				m_DateValue = para[i].getParameterAsTimestamp();
-			} else if (name.equals("DU_Season_Period_ID")) {
-				du_Season_Period_ID = para[i].getParameterAsInt();
-			}else if (name.equals("DU_Vol_ID")) {
+			} else if (name.equals("DU_Vol_ID")) {
 				m_DU_Vol_ID = para[i].getParameterAsInt();
 			}
 			else
@@ -569,7 +566,6 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		MVol vl = new MVol(getCtx(), imp.getDU_Vol_ID(), get_TrxName());
 		order.setDateOrdered(vl.getDepartDateTime_Direct());
 		order.setDateAcct(m_DateValue);
-		order.set_ValueNoCheck("DU_Season_Period_ID", du_Season_Period_ID);
 		order.setC_BPartner_ID(bpl.getC_BPartner_ID());
 		order.setC_BPartner_Location_ID(bpl.getC_BPartner_Location_ID());
 		if (imp.getDU_PartnerCode_ID() > 0)

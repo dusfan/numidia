@@ -19,6 +19,7 @@ import org.compiere.model.PO;
 import org.compiere.util.AdempiereUserError;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
+import org.dusfan.idempiere.model.X_I_ImportOmraBP;
 import org.osgi.service.event.Event;
 
 public class PluginDocEvent extends AbstractEventHandler {
@@ -81,6 +82,10 @@ public class PluginDocEvent extends AbstractEventHandler {
 		// MFactacct
 		registerTableEvent(IEventTopics.PO_AFTER_NEW, MFactAcct.Table_Name);
 		
+		// X_I_ImportOmraBP
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, X_I_ImportOmraBP.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, X_I_ImportOmraBP.Table_Name);
+		
 		log.info("PluginDocEvent .. IS NOW INITIALIZED");
 	}
 
@@ -130,7 +135,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 					}
 					
 					if (po.getAD_Org_ID() == 1000002 || po.getAD_Org_ID() == 1000004) {
-						if (!EventOrder.checkDuplicateVol(po, ctx, trxName))
+						if (!EventOrder.checkDuplicateVol(po, ctx, null,0))
 							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client");
 					}
 				} else if (po instanceof MPayment) {
@@ -151,7 +156,11 @@ public class PluginDocEvent extends AbstractEventHandler {
 						if (!EventPayment.checkindividualPayment(po, ctx, trxName))
 						throw new AdempiereUserError("le code client du tiers n est pas individuel, "
 								+ "vous ne pouvez pas effectuer ce paiement");
-				}		
+				}
+				else if (po instanceof X_I_ImportOmraBP) {
+					EventImportOmra.setPackageFromImport(po, ctx, trxName);
+					
+				}
 				
 			} // End BEFORE NEW
 			
@@ -208,10 +217,13 @@ public class PluginDocEvent extends AbstractEventHandler {
 					}
 					
 					if (po.getAD_Org_ID() == 1000002 || po.getAD_Org_ID() == 1000004) {
-						if (!EventOrder.checkDuplicateVol(po, ctx, trxName))
+						if (!EventOrder.checkDuplicateVol(po, ctx, null,1))
 							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client pour le même vol");
 					}
 					
+				}
+				else if (po instanceof X_I_ImportOmraBP) {
+					EventImportOmra.setPackageFromImport(po, ctx, trxName);
 				}
 
 			} // before change
