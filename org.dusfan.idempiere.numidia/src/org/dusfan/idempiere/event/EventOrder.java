@@ -444,14 +444,14 @@ public class EventOrder {
 	}
 	
 	// Check duplicate order from same vol
-	public static boolean checkDuplicateVol (PO po, Properties ctx, String trxName) {
+	public static boolean checkDuplicateVol (PO po, Properties ctx, String trxName, int test) {
 		MOrder order = (MOrder)po;
 		if (order.isSOTrx() && !order.getDocStatus().equals("CO") && !order.getDocStatus().equals("VO")) {
 			String sql = "Select count(1) from c_order where" + 
 					" docstatus <> 'VO' and du_vol_id =" + order.get_Value("DU_Vol_ID") + 
 					" and c_bpartner_id ="+order.getC_BPartner_ID();
 			int co =  DB.getSQLValue(trxName, sql);
-			if (co > 0 )
+			if (co > test )
 				return false;
 		}
 		
