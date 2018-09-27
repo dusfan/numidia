@@ -66,8 +66,11 @@ public class VoidOrderByGroup extends SvrProcess {
 				ord.set_ValueNoCheck("MountOther", mountOther);
 				ord.saveEx();
 				// Void Order
-				ord.processIt(DocAction.ACTION_Void);
-				ord.saveEx();
+				if (ord.processIt(DocAction.ACTION_Void))
+					ord.saveEx();
+				else
+					throw new AdempiereUserError("Attention il y a une erreur, "
+							+ "vérifivier qui'il n y a pas de factures pour ces commandes");
 				nb_Voided++;
 				// Delete from groupe line if exist
 				int co = DB.executeUpdate("Delete from DU_Visa_GroupLine "
