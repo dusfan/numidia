@@ -48,7 +48,11 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			inv.setC_BPartner_ID(pay.getC_BPartner_ID());
 			inv.setSalesRep_ID(pay.getCreatedBy());
 			inv.setC_Activity_ID(pay.getC_Activity_ID());
-			inv.setC_Currency_ID(pay.getC_Currency_ID());
+			if (pay.get_ValueAsInt("C_T_Curr_ID") == 235)
+				inv.setC_Currency_ID(235); // les plateformes de dinars
+			else
+				inv.setC_Currency_ID(pay.getC_Currency_ID());
+			inv.setC_ConversionType_ID(114);
 			inv.set_ValueNoCheck("C_BPartnerRelation_ID", pay.get_Value("C_BPartnerRelation_ID"));
 			inv.set_ValueNoCheck("C_BPartner_PR_ID", pay.get_Value("C_BPartner_PR_ID"));
 			inv.set_ValueNoCheck("C_T_Curr_ID", pay.get_Value("C_T_Curr_ID"));
@@ -68,8 +72,6 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			line.setLineNetAmt();
 			line.saveEx();
 			// Complete Invoice
-			inv.setC_Currency_ID(pay.getC_Currency_ID());
-			inv.setC_ConversionType_ID(114);
 			inv.processIt(DocAction.ACTION_Complete);
 			inv.saveEx();
 			pay.setC_Invoice_ID(inv.getC_Invoice_ID());
