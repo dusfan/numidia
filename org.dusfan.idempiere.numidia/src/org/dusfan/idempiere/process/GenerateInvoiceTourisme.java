@@ -57,6 +57,7 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			inv.set_ValueNoCheck("C_BPartner_PR_ID", pay.get_Value("C_BPartner_PR_ID"));
 			inv.set_ValueNoCheck("C_T_Curr_ID", pay.get_Value("C_T_Curr_ID"));
 			inv.setDescription(pay.getDescription());
+			inv.setDateInvoiced(pay.getDateTrx());
 			BigDecimal prixachat = ((BigDecimal)pay.get_Value("T_PriceHotel"));
 			inv.set_ValueNoCheck("T_SumDevise", prixachat);
 			inv.set_ValueNoCheck("T_PriceCost", pay.get_Value("T_PriceCost"));
