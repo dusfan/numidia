@@ -106,7 +106,7 @@ public class ImportInvoicePurchase extends SvrProcess
 //		Customization LoH
 		// delete record where there no amount neither booking refrence
 		sql = new StringBuilder ("delete from I_InvoicePurchase o ")
-				.append("WHERE DocumentNo is NULL or PriceActual is null or DocumentNo ='Booking ref.'")
+				.append("WHERE DocumentNo is NULL or PendingPayment is null or DocumentNo ='Booking ref.'")
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='N'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
@@ -129,13 +129,14 @@ public class ImportInvoicePurchase extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
 		
-		// update the accounting and invoiced date
+		// update the accounting and invoiced date and PriceActual
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
 				.append(" SET DateInvoiced = (SELECT DateInvoiced FROM DU_BOOKING B WHERE B.DOCUMENTNO = o.DOCUMENTNO) , dateacct = (SELECT DateInvoiced FROM DU_BOOKING B WHERE B.DOCUMENTNO = o.DOCUMENTNO) ")
-				.append(" WHERE DateInvoiced IS NULL ")
+				.append(" , PriceActual = PendingPayment ")
+				.append(" WHERE DateInvoiced IS NULL OR PriceActual IS NULL")
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='N'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Date Set=" + no);
+		if (log.isLoggable(Level.FINE)) log.fine("PriceActual, Date Set=" + no);
 		
 //		End Customization LoH
 
