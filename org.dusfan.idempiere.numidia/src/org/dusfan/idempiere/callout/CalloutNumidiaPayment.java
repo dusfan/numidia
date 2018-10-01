@@ -37,12 +37,11 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 		int ad_Org_id = (int) mTab.getValue("AD_Org_ID");
 		if (ad_Org_id == 1000004) {
 			if ( mField.getColumnName().equals("Rate") || mField.getColumnName().equals("T_OtherDZD")
-				|| mField.getColumnName().equals("T_PriceAssur") || mField.getColumnName().equals("T_PriceBillet")
-				|| mField.getColumnName().equals("T_PriceHotel") || mField.getColumnName().equals("T_PriceVente")
-				|| mField.getColumnName().equals("T_PriceOtherD") ) {
+				|| mField.getColumnName().equals("T_PriceHotel") || mField.getColumnName().equals("T_PriceOtherD") ) {
 			
 				setPriceTourisme(mTab);
 			}
+			
 			if (mField.getColumnName().equals("C_Currency_ID") || mField.getColumnName().equals("C_T_Curr_ID")) {
 				int c_currency_id_so = (int) mTab.getValue("C_Currency_ID");
 				int c_currency_id_po = (int) mTab.getValue("C_T_Curr_ID");
@@ -60,42 +59,28 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 	
 	
 	private void setPriceTourisme(GridTab mTab) {
-		// Price Hotel devise
+		// Price achat plateforme
 		BigDecimal T_PriceHotel = mTab.getValue("T_PriceHotel") != null ? (BigDecimal) mTab.getValue("T_PriceHotel")
 				: Env.ZERO;
-		// Autre prix en devise
+		// Prix de vente plateforme
 		BigDecimal T_PriceOtherD = mTab.getValue("T_PriceOtherD") != null ? (BigDecimal) mTab.getValue("T_PriceOtherD")
 				: Env.ZERO;
 		// Taux
 		BigDecimal rate = mTab.getValue("Rate") != null ? (BigDecimal) mTab.getValue("Rate") : Env.ZERO;
-		// Total devise
-		BigDecimal totalDevise = (T_PriceHotel.add(T_PriceOtherD)).multiply(rate);
-		mTab.setValue("T_SumDevise", totalDevise);
 		
-		// Billet
-		BigDecimal T_PriceBillet = mTab.getValue("T_PriceBillet") != null ? (BigDecimal) mTab.getValue("T_PriceBillet")
-				: Env.ZERO;
-		// Assurance
-		BigDecimal T_PriceAssur = mTab.getValue("T_PriceAssur") != null ? (BigDecimal) mTab.getValue("T_PriceAssur")
-				: Env.ZERO;
-		// Autre prix de dinars
+		// Prix de vente client
+		BigDecimal pricevente = T_PriceOtherD.multiply(rate);
+		mTab.setValue("T_PriceVente", pricevente);
+		// Remise
 		BigDecimal T_OtherDZD = mTab.getValue("T_OtherDZD") != null ? (BigDecimal) mTab.getValue("T_OtherDZD")
 				: Env.ZERO;
-		// Prix de revien
-		BigDecimal T_PriceCost = T_PriceBillet.add(T_PriceAssur).add(T_OtherDZD).add(totalDevise);
-		mTab.setValue("T_PriceCost", T_PriceCost);
 		
-		// Prix de vente
-		BigDecimal T_PriceVente = mTab.getValue("T_PriceVente") != null ? (BigDecimal) mTab.getValue("T_PriceVente")
-				: Env.ZERO;
+		// Final Price
+		BigDecimal finalPrice = pricevente.subtract(T_OtherDZD);
+		mTab.setValue("T_SumDevise", finalPrice);
 		
-		// Marge
-		BigDecimal marge = (T_PriceVente.subtract(T_PriceCost)).add(T_PriceOtherD.multiply(rate));
-		mTab.setValue("T_Marge", marge);
-		// Set price 
-		mTab.setValue("PriceList", T_PriceVente);
-		mTab.setValue("PriceStd", T_PriceVente);
-		mTab.setValue("PriceLimit", T_PriceVente);
+		// Comission
+		mTab.setValue("T_Marge", (finalPrice.subtract(T_PriceHotel.multiply(rate))));
 		
 	}
 

@@ -42,7 +42,10 @@ public class ExtourneOmraInvoiceByflight extends SvrProcess {
 	protected String doIt() throws Exception {
 		
 		String whereClause = "DU_Vol_ID ="+m_DU_Vol_ID + " AND C_BPartner_ID = "
-				+ m_C_BPartner_ID + " AND AD_Org_ID="+m_AD_Org_ID + " AND DocStatus = 'CO'";
+				+ m_C_BPartner_ID + " AND AD_Org_ID="+m_AD_Org_ID + " AND DocStatus = 'CO'"+
+				" AND Exists (select 1 from C_InvoiceLine l where l.C_Invoice_ID ="
+				+ " C_Invoice.C_Invoice_ID AND l.C_OrderLine_ID in (Select C_OrderLine_ID from C_OrderLine where C_Order_ID"
+				+ " in (Select C_Order_ID from C_Order where DU_Vol_ID ="+ m_DU_Vol_ID + ")))";
 		
 		int [] IDinvoice = MInvoice.getAllIDs(MInvoice.Table_Name, whereClause, get_TrxName());
 		if (IDinvoice.length == 0)
