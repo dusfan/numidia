@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="flightsumury" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="76aa8c83-6d53-4cae-bbd5-29bbf3247b81">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="jasper/192.168.100.222.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="269"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="720"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[select v.Value, v.description, bp.name as bpname, bp.c_bpartner_id, count(1)
-from du_volline vl 
-inner join du_vol v on v.du_vol_id = vl.du_vol_id
-inner join du_compa cp on cp.du_compa_id = v.du_compa_id
-inner join c_bpartner bp on bp.c_bpartner_id = vl.c_bpartnerrelation_id
-where bp.c_bpartner_id = $P{C_BPartner_ID} 
-group by bp.c_bpartner_id,v.Value, v.description 
-order by v.value]]>
+		<![CDATA[select * from DU_RecapeOmra_V v
+where v.c_bpartner_id  = $P{C_BPartner_ID} ]]>
 	</queryString>
 	<field name="value" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="value"/>
