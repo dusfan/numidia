@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="statindividuel" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6c72bfa-4d80-4b45-951a-19cc6c74ae57">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -17,8 +17,16 @@
 	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
+	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, od.grandtotal, 
+		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, (coalesce(od.grandtotal,0) + (select coalesce(sum(i.GRANDTOTAL),0)
+from C_INVOICE i
+INNER JOIN C_DocType d ON d.C_DocType_ID=i.C_DocType_ID
+AND d.DocBaseType in ('ARI', 'ARC')
+WHERE i.C_BPartner_ID = bp.C_BPARTNER_ID and i.GRANDTOTAL > 0 and i.ISSOTRX = 'Y' and i.docstatus in ('CO', 'CL')
+and not exists (select 1 from c_invoiceline l where l.c_invoice_id = i.c_invoice_id and c_orderline_id in
+(Select c_orderline_id from c_orderline)))
+) as grandtotal, 
 ((select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
 from C_PAYMENT p
 where p.docstatus in ('CO', 'CL')
@@ -46,9 +54,10 @@ inner join c_bpartner bp on bp.c_bpartner_id = od.c_bpartner_id
 inner join c_bpartner cod on cod.c_bpartner_id = od.c_bpartnerrelation_id
 where docstatus in ('IP','CO','CL') and od.c_bpartnerrelation_id not in (1002081)
 and od.c_bpartnerrelation_id in 
-(select c_bpartner_id from c_bpartner where typecodeclient='2' and value like '470%')
+(select c_bpartner_id from c_bpartner where typecodeclient='2')
 and ($P{DU_Vol_ID} is null or od.du_vol_id = $P{DU_Vol_ID}) 
- and ($P{C_BPartner_ID} is null or od.c_bpartnerrelation_id = $P{C_BPartner_ID})
+ and ($P{C_BPartnerRelation_ID} is null or od.c_bpartnerrelation_id = $P{C_BPartnerRelation_ID})
+ and ($P{C_BPartner_ID} is null or od.C_BPartner_ID = $P{C_BPartner_ID})
  and od.AD_Org_ID =  $P{AD_Org_ID}
 order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	</queryString>
