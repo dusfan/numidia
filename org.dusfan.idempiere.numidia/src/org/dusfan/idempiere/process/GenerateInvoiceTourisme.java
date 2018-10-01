@@ -58,17 +58,20 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			inv.set_ValueNoCheck("C_T_Curr_ID", pay.get_Value("C_T_Curr_ID"));
 			inv.setDescription(pay.getDescription());
 			inv.setDateInvoiced(pay.getDateTrx());
-			BigDecimal prixachat = ((BigDecimal)pay.get_Value("T_PriceHotel"));
-			inv.set_ValueNoCheck("T_SumDevise", prixachat);
-			inv.set_ValueNoCheck("T_PriceCost", pay.get_Value("T_PriceCost"));
-			inv.set_ValueNoCheck("T_PriceVente", pay.get_Value("T_PriceVente"));
+			// Prix achat
+			inv.set_ValueNoCheck("T_SumDevise", pay.get_Value("T_PriceHotel"));
+			// Remise
+			inv.set_ValueNoCheck("T_PriceCost", pay.get_Value("T_OtherDZD"));
+			// Prix de vente 
+			inv.set_ValueNoCheck("T_PriceVente", pay.get_Value("T_SumDevise"));
+			// Comission
 			inv.set_ValueNoCheck("T_Marge", pay.get_Value("T_Marge"));
 			inv.saveEx();
 			// Create line
 			MInvoiceLine line = new MInvoiceLine(inv);
 			line.setC_Charge_ID(1000009);
 			line.setQty(Env.ONE);
-			line.setPrice((BigDecimal)pay.get_Value("T_PriceVente"));
+			line.setPrice((BigDecimal)pay.get_Value("T_SumDevise"));
 			line.setDescription(pay.getDescription());
 			line.setLineNetAmt();
 			line.saveEx();
