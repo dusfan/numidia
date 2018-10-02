@@ -79,12 +79,15 @@ public class EventOrder {
 	// Check Duplicate Package
 	public static boolean checkDuplicatePackage (PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
-		int count = DB.getSQLValue(trxName,"Select count(1) "
-				+ " from c_orderline where c_order_id = ? "
-				+ " and m_product_id in (select m_product_id from m_product where TypeService='0'"
-				+ " and M_Product_Category_ID=1000001)",line.getC_Order_ID());
-		if (count > 1)
-			return false;
+		MBPartner bp = new MBPartner(ctx,line.getC_BPartner_ID(),trxName);
+		if (!bp.getValue().toUpperCase().equals("STANDARD")) {
+			int count = DB.getSQLValue(trxName,"Select count(1) "
+					+ " from c_orderline where c_order_id = ? "
+					+ " and m_product_id in (select m_product_id from m_product where TypeService='0'"
+					+ " and M_Product_Category_ID=1000001)",line.getC_Order_ID());
+			if (count > 1)
+				return false;
+		}
 		return true;
 	}
 
