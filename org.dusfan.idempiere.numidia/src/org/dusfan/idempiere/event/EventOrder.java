@@ -64,7 +64,10 @@ public class EventOrder {
 			if (count_tk == 0)
 			{
 				MOrderLine l = new MOrderLine(po);
-				l.setM_Product_ID(1000240); // set ticket line
+				if (po.getAD_Org_ID() == 1000002)
+					l.setM_Product_ID(1000240); // set ticket line
+				if (po.getAD_Org_ID() == 1000004)
+					l.setM_Product_ID(1000800);
 				l.setQty(Env.ONE);
 				l.saveEx();
 			}
