@@ -166,8 +166,8 @@ public class ImportInvoiceBooking extends SvrProcess
 
 		// get the already completed invoice for the canceled booking
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
-				.append(" SET Ref_Invoice_ID=(SELECT C_Invoice_id FROM C_Invoice i WHERE i.documentno = o.documentno and i.DocStatus = 'CO')")
-				.append(" WHERE IsSOTrx='Y' AND I_IsImported<>'Y'")
+				.append(" SET Ref_Invoice_ID=(SELECT C_Invoice_id FROM C_Invoice i WHERE i.documentno = o.documentno and i.DocStatus = 'CO' and i.IsSOTrx='Y' )")
+				.append(" WHERE I_IsImported<>'Y'")
 				.append(" AND o.Statut like 'Cancel%'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
@@ -847,6 +847,9 @@ public class ImportInvoiceBooking extends SvrProcess
 				//
 				if (imp.save()){
 					noInsertLine++;
+					no = DB.executeUpdate("update DU_Booking set priceActual ="+ imp.getPriceActual()+", C_SalesInvoice_ID = " +imp.getC_Invoice_ID() +" where C_PurchaseInvoice_ID is not null and DocumentNo = '" + imp.getDocumentNo()+"'", null);
+					if (no>0)
+						continue;
 					MBooking booking = new MBooking(imp);
 					booking.saveEx();
 				}
@@ -1033,7 +1036,6 @@ public class ImportInvoiceBooking extends SvrProcess
 				BigDecimal taxAmt = imp.getTaxAmt();
 				if (taxAmt != null && Env.ZERO.compareTo(taxAmt) != 0)
 					line.setTaxAmt(taxAmt);
-				line.setC_1099Box_ID(imp.getC_1099Box_ID());
 				line.saveEx();
 				//
 				imp.setC_InvoiceLine_ID(line.getC_InvoiceLine_ID());
@@ -1042,6 +1044,9 @@ public class ImportInvoiceBooking extends SvrProcess
 				//
 				if (imp.save()){
 					noInsertLine++;
+					no = DB.executeUpdate("update DU_Booking set priceActual ="+ imp.getPriceActual()+", C_SalesInvoice_ID = " +imp.getC_Invoice_ID() +" where C_PurchaseInvoice_ID is not null and DocumentNo = '" + imp.getDocumentNo()+"'", null);
+					if (no>0)
+						continue;
 					MBooking booking = new MBooking(imp);
 					booking.saveEx();
 				}

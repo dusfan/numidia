@@ -30,8 +30,9 @@ public class EventInvoice {
 
 	public static void DeleteBooking(PO po, Properties ctx, String trxName) {
 		MInvoice invoice = (MInvoice) po;
-		if (invoice.isSOTrx())
-			DB.executeUpdate("DELETE FROM DU_Booking where C_SalesInvoice_ID = " + invoice.getC_Invoice_ID(), null);
+		if (invoice.isSOTrx()){
+			DB.executeUpdate("DELETE FROM DU_Booking where C_PurchaseInvoice_ID is null and C_SalesInvoice_ID = " + invoice.getC_Invoice_ID(), null);
+		}
 	}
 
 	public static void changeDocumentNo(PO po, Properties ctx, String trxName) {
