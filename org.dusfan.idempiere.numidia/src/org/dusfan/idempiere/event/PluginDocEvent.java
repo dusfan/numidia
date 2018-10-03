@@ -150,8 +150,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
 						throw new AdempiereUserError("Attention "
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
-					if (!EventPayment.checkSalesAmount(po, ctx, trxName))
-						throw new AdempiereUserError("Vous n'avez pas terminer la vente");
 					if (po.getAD_Org_ID() == 1000002)
 						if (!EventPayment.checkindividualPayment(po, ctx, trxName))
 						throw new AdempiereUserError("le code client du tiers n est pas individuel, "
