@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="codepakages" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9d29276e-0e97-4548-8d9b-2180e204c01c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Test4.1"/>
@@ -105,7 +105,7 @@ order by ol.line]]>
 				<textFieldExpression><![CDATA["Nom Package"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="522" y="35" width="204" height="30" uuid="dcbb7320-4f92-45db-9324-a3bdd093e652"/>
+				<reportElement x="480" y="35" width="246" height="30" uuid="dcbb7320-4f92-45db-9324-a3bdd093e652"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -123,16 +123,6 @@ order by ol.line]]>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA["Prix"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="481" y="35" width="41" height="30" uuid="af2e36c6-b706-469c-aee5-d252ad4c96ea"/>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Contôler"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -162,7 +152,7 @@ order by ol.line]]>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="522" y="0" width="204" height="38" uuid="886591b3-96d2-41c0-9c1e-ec5b491e8e9f"/>
+				<reportElement x="480" y="0" width="246" height="38" uuid="886591b3-96d2-41c0-9c1e-ec5b491e8e9f"/>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
@@ -183,19 +173,6 @@ order by ol.line]]>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bompricestd}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="481" y="0" width="41" height="38" uuid="e8e7a5a0-7d28-4534-8bec-d436996de5e9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Arial" isBold="true" pdfFontName="arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{isverified}.equals("Y") ? "OK" : "Non"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
