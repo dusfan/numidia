@@ -111,6 +111,15 @@ public class ImportInvoicePurchase extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
 		
+		// ignore the already imported booking code
+		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Booking deja importer, '")
+				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('CO', 'CL')  and oo.isSoTrx = 'N')")
+				.append(" and I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (no != 0)
+			log.warning ("Booking Already imported=" + no);
+		
 		// Set Error for not imported booking
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=La facture du vente existe pas, '")
@@ -119,6 +128,15 @@ public class ImportInvoicePurchase extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
 			log.warning ("Booking Not Exists =" + no);
+		
+		// Set Error for changed booking price
+		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+				.append(" SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Verifier prix de vente, '")
+				.append(" WHERE EXISTS (SELECT documentno FROM DU_Booking oo WHERE oo.documentno = o.documentno and o.PendingPayment != oo.priceactual)")
+				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (no != 0)
+			log.warning ("Price Changed between sales and purchase =" + no);
 		
 		// set the currency_id, QtyOrdered, C_PaymentTerm_ID
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
@@ -258,56 +276,56 @@ public class ImportInvoicePurchase extends SvrProcess
 			log.warning("No PriceList=" + no);
 
 		//	Payment Term
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
-			  .append("SET C_PaymentTerm_ID=(SELECT C_PaymentTerm_ID FROM C_PaymentTerm p")
-			  .append(" WHERE o.PaymentTermValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
-			  .append("WHERE C_PaymentTerm_ID IS NULL AND PaymentTermValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set PaymentTerm=" + no);
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
-			  .append("SET C_PaymentTerm_ID=(SELECT MAX(C_PaymentTerm_ID) FROM C_PaymentTerm p")
-			  .append(" WHERE p.IsDefault='Y' AND o.AD_Client_ID=p.AD_Client_ID) ")
-			  .append("WHERE C_PaymentTerm_ID IS NULL AND o.PaymentTermValue IS NULL AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Default PaymentTerm=" + no);
-		//
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
-			  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=No PaymentTerm, ' ")
-			  .append("WHERE C_PaymentTerm_ID IS NULL")
-			  .append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (no != 0)
-			log.warning ("No PaymentTerm=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+//			  .append("SET C_PaymentTerm_ID=(SELECT C_PaymentTerm_ID FROM C_PaymentTerm p")
+//			  .append(" WHERE o.PaymentTermValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
+//			  .append("WHERE C_PaymentTerm_ID IS NULL AND PaymentTermValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set PaymentTerm=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+//			  .append("SET C_PaymentTerm_ID=(SELECT MAX(C_PaymentTerm_ID) FROM C_PaymentTerm p")
+//			  .append(" WHERE p.IsDefault='Y' AND o.AD_Client_ID=p.AD_Client_ID) ")
+//			  .append("WHERE C_PaymentTerm_ID IS NULL AND o.PaymentTermValue IS NULL AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Default PaymentTerm=" + no);
+//		//
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
+//			  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=No PaymentTerm, ' ")
+//			  .append("WHERE C_PaymentTerm_ID IS NULL")
+//			  .append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (no != 0)
+//			log.warning ("No PaymentTerm=" + no);
 
 		// globalqss - Add project and activity
 		//	Project
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
-			  .append("SET C_Project_ID=(SELECT C_Project_ID FROM C_Project p")
-			  .append(" WHERE o.ProjectValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
-			  .append("WHERE C_Project_ID IS NULL AND ProjectValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Project=" + no);
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
-				  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Project, ' ")
-				  .append("WHERE C_Project_ID IS NULL AND (ProjectValue IS NOT NULL)")
-				  .append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (no != 0)
-			log.warning ("Invalid Project=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+//			  .append("SET C_Project_ID=(SELECT C_Project_ID FROM C_Project p")
+//			  .append(" WHERE o.ProjectValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
+//			  .append("WHERE C_Project_ID IS NULL AND ProjectValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Project=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
+//				  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Project, ' ")
+//				  .append("WHERE C_Project_ID IS NULL AND (ProjectValue IS NOT NULL)")
+//				  .append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (no != 0)
+//			log.warning ("Invalid Project=" + no);
 		//	Activity
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
-			  .append("SET C_Activity_ID=(SELECT C_Activity_ID FROM C_Activity p")
-			  .append(" WHERE o.ActivityValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
-			  .append("WHERE C_Activity_ID IS NULL AND ActivityValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.FINE)) log.fine("Set Activity=" + no);
-		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
-				  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Activity, ' ")
-				  .append("WHERE C_Activity_ID IS NULL AND (ActivityValue IS NOT NULL)")
-				  .append(" AND I_IsImported<>'Y'").append (clientCheck);
-		no = DB.executeUpdate(sql.toString(), get_TrxName());
-		if (no != 0)
-			log.warning ("Invalid Activity=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+//			  .append("SET C_Activity_ID=(SELECT C_Activity_ID FROM C_Activity p")
+//			  .append(" WHERE o.ActivityValue=p.Value AND o.AD_Client_ID=p.AD_Client_ID) ")
+//			  .append("WHERE C_Activity_ID IS NULL AND ActivityValue IS NOT NULL AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (log.isLoggable(Level.FINE)) log.fine("Set Activity=" + no);
+//		sql = new StringBuilder ("UPDATE I_InvoicePurchase ")
+//				  .append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Invalid Activity, ' ")
+//				  .append("WHERE C_Activity_ID IS NULL AND (ActivityValue IS NOT NULL)")
+//				  .append(" AND I_IsImported<>'Y'").append (clientCheck);
+//		no = DB.executeUpdate(sql.toString(), get_TrxName());
+//		if (no != 0)
+//			log.warning ("Invalid Activity=" + no);
 		// globalqss - add charge
 		//	Charge
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
