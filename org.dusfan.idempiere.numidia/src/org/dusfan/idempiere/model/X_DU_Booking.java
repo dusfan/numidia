@@ -33,7 +33,7 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180813L;
+	private static final long serialVersionUID = 20181004L;
 
     /** Standard Constructor */
     public X_DU_Booking (Properties ctx, int DU_Booking_ID, String trxName)
@@ -147,6 +147,26 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		if (ii == null)
 			 return 0;
 		return ii.intValue();
+	}
+
+	/** Set Commission Amount.
+		@param CommissionAmt 
+		Commission Amount
+	  */
+	public void setCommissionAmt (BigDecimal CommissionAmt)
+	{
+		set_Value (COLUMNNAME_CommissionAmt, CommissionAmt);
+	}
+
+	/** Get Commission Amount.
+		@return Commission Amount
+	  */
+	public BigDecimal getCommissionAmt () 
+	{
+		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_CommissionAmt);
+		if (bd == null)
+			 return Env.ZERO;
+		return bd;
 	}
 
 	/** Set Cost Price.
@@ -307,6 +327,20 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		return ii.intValue();
 	}
 
+	/** Set DU_Booking_UU.
+		@param DU_Booking_UU DU_Booking_UU	  */
+	public void setDU_Booking_UU (String DU_Booking_UU)
+	{
+		set_Value (COLUMNNAME_DU_Booking_UU, DU_Booking_UU);
+	}
+
+	/** Get DU_Booking_UU.
+		@return DU_Booking_UU	  */
+	public String getDU_Booking_UU () 
+	{
+		return (String)get_Value(COLUMNNAME_DU_Booking_UU);
+	}
+
 	/** Set General Profit.
 		@param GeneralProfit 
 		General Profit
@@ -341,7 +375,7 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		return (String)get_Value(COLUMNNAME_LeadPassenger);
 	}
 
-	/** Set Net Sales Price USD.
+	/** Set Net Sales Price.
 		@param NetSalesPriceUsd 
 		Actual Price 
 	  */
@@ -350,7 +384,7 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		set_Value (COLUMNNAME_NetSalesPriceUsd, NetSalesPriceUsd);
 	}
 
-	/** Get Net Sales Price USD.
+	/** Get Net Sales Price.
 		@return Actual Price 
 	  */
 	public BigDecimal getNetSalesPriceUsd () 

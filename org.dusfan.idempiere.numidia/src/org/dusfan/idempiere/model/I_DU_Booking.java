@@ -107,6 +107,19 @@ public interface I_DU_Booking
 
 	public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException;
 
+    /** Column name CommissionAmt */
+    public static final String COLUMNNAME_CommissionAmt = "CommissionAmt";
+
+	/** Set Commission Amount.
+	  * Commission Amount
+	  */
+	public void setCommissionAmt (BigDecimal CommissionAmt);
+
+	/** Get Commission Amount.
+	  * Commission Amount
+	  */
+	public BigDecimal getCommissionAmt();
+
     /** Column name CostPrice */
     public static final String COLUMNNAME_CostPrice = "CostPrice";
 
@@ -216,6 +229,15 @@ public interface I_DU_Booking
 	/** Get Booking	  */
 	public int getDU_Booking_ID();
 
+    /** Column name DU_Booking_UU */
+    public static final String COLUMNNAME_DU_Booking_UU = "DU_Booking_UU";
+
+	/** Set DU_Booking_UU	  */
+	public void setDU_Booking_UU (String DU_Booking_UU);
+
+	/** Get DU_Booking_UU	  */
+	public String getDU_Booking_UU();
+
     /** Column name GeneralProfit */
     public static final String COLUMNNAME_GeneralProfit = "GeneralProfit";
 
@@ -254,12 +276,12 @@ public interface I_DU_Booking
     /** Column name NetSalesPriceUsd */
     public static final String COLUMNNAME_NetSalesPriceUsd = "NetSalesPriceUsd";
 
-	/** Set Net Sales Price USD.
+	/** Set Net Sales Price.
 	  * Actual Price 
 	  */
 	public void setNetSalesPriceUsd (BigDecimal NetSalesPriceUsd);
 
-	/** Get Net Sales Price USD.
+	/** Get Net Sales Price.
 	  * Actual Price 
 	  */
 	public BigDecimal getNetSalesPriceUsd();

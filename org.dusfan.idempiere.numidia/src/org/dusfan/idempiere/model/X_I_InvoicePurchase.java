@@ -33,7 +33,7 @@ public class X_I_InvoicePurchase extends PO implements I_I_InvoicePurchase, I_Pe
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20180804L;
+	private static final long serialVersionUID = 20181004L;
 
     /** Standard Constructor */
     public X_I_InvoicePurchase (Properties ctx, int I_InvoicePurchase_ID, String trxName)
@@ -938,6 +938,30 @@ public class X_I_InvoicePurchase extends PO implements I_I_InvoicePurchase, I_Pe
 	public boolean isI_IsImported () 
 	{
 		Object oo = get_Value(COLUMNNAME_I_IsImported);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
+	/** Set Commission.
+		@param isCommission 
+		Indicate that the extrat price is commision
+	  */
+	public void setisCommission (boolean isCommission)
+	{
+		set_Value (COLUMNNAME_isCommission, Boolean.valueOf(isCommission));
+	}
+
+	/** Get Commission.
+		@return Indicate that the extrat price is commision
+	  */
+	public boolean isCommission () 
+	{
+		Object oo = get_Value(COLUMNNAME_isCommission);
 		if (oo != null) 
 		{
 			 if (oo instanceof Boolean) 
