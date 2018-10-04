@@ -616,6 +616,19 @@ public interface I_I_InvoicePurchase
 	  */
 	public boolean isActive();
 
+    /** Column name isCommission */
+    public static final String COLUMNNAME_isCommission = "isCommission";
+
+	/** Set Commission.
+	  * Indicate that the extrat price is commision
+	  */
+	public void setisCommission (boolean isCommission);
+
+	/** Get Commission.
+	  * Indicate that the extrat price is commision
+	  */
+	public boolean isCommission();
+
     /** Column name IsSOTrx */
     public static final String COLUMNNAME_IsSOTrx = "IsSOTrx";
 
