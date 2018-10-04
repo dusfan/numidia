@@ -132,7 +132,7 @@ public class ImportInvoicePurchase extends SvrProcess
 		// Set Error for changed booking price
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
 				.append(" SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Verifier prix de vente, '")
-				.append(" WHERE EXISTS (SELECT documentno FROM DU_Booking oo WHERE oo.documentno = o.documentno and o.PendingPayment != oo.priceactual)")
+				.append(" WHERE EXISTS (SELECT documentno FROM DU_Booking oo WHERE o.isCommission = 'N' and oo.documentno = o.documentno and o.PendingPayment != oo.priceactual)")
 				.append(" AND I_IsImported<>'Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)

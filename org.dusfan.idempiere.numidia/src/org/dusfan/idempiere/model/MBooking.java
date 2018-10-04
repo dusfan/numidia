@@ -40,10 +40,16 @@ public class MBooking extends X_DU_Booking {
 		setC_BPartner_ID(impBooking.getC_BPartner_ID());
 		setC_SalesInvoice_ID(impBooking.getC_Invoice_ID());
 	}
-	public static void updateBooking (X_I_InvoicePurchase i_invoice){
-		int no = DB.executeUpdate("update du_booking set C_PurchaseInvoice_ID = ? , PendingPayment = ?, ReceiptAmount = ? where documentno = ?",
-					new Object[]{new Integer(i_invoice.getC_Invoice_ID()), i_invoice.getPriceActual(), i_invoice.getReceiptAmount(), i_invoice.getDocumentNo()}, false,null);
-		System.out.println(no);
+	public static void updateBooking (X_I_InvoicePurchase imp){
+		DB.executeUpdate("update du_booking set C_PurchaseInvoice_ID = ? , PendingPayment = ?, ReceiptAmount = ?, commissionAmt = priceActual - ? where documentno = ?",
+					new Object[]{new Integer(imp.getC_Invoice_ID()), imp.getPriceActual(), imp.getReceiptAmount(), imp.getPendingPayment(), imp.getDocumentNo()}, false,null);
+	}
+
+	@Override
+	protected boolean beforeSave(boolean newRecord) {
+		if(getPendingPayment()!=null)
+			setCommissionAmt(getPriceActual().subtract(getPendingPayment()));
+		return super.beforeSave(newRecord);
 	}
 
 }
