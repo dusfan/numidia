@@ -66,7 +66,9 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 				long diffDays = (startDate.getTime() - current_date.getTime()) / (24 * 60 * 60 * 1000);
 				int mounth = (int) diffDays;
 				mounth = mounth/30;
-				if (mounth <= 7)
+				if (mounth < 0) 
+					mTab.fireDataStatusEEvent("ATTENTION le passeport est expirer", null, false);
+				else if (mounth <= 7)
 					mTab.fireDataStatusEEvent("ATTENTION le passeport expirera dans environ "+ mounth +" mois,"
 							+ " a compter depuis la date d'aujourd'hui", null, false);
 			} else
@@ -99,7 +101,9 @@ public class CalloutNumidiaPartner implements IColumnCallout {
 			long diffDays = (end_date.getTime() - current_date.getTime()) / (24 * 60 * 60 * 1000);
 			int mounth = (int) diffDays;
 			mounth = mounth/30;
-			if (mounth <= 7)
+			if (mounth < 0) 
+				mTab.fireDataStatusEEvent("ATTENTION le passeport est expirer", null, false);
+			else if (mounth <= 7)
 				mTab.fireDataStatusEEvent("ATTENTION le passeport expirera dans environ "+ mounth +" mois,"
 						+ " a compter depuis la date d'aujourd'hui", null, false);
 		}
