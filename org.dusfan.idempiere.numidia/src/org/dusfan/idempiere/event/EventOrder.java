@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.compiere.model.MBPartner;
+import org.compiere.model.MCharge;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
@@ -529,5 +530,29 @@ public class EventOrder {
 			}
 		}
 		return true;
+	}
+	
+	public static void addExistTax (PO po, Properties ctx, String trxName) {
+		MOrderLine line = (MOrderLine) po;
+		MOrder od = new MOrder(ctx, line.getC_Order_ID(), trxName);
+		MBPartner bp = new MBPartner(ctx,od.getC_BPartner_ID(),trxName);
+		if (od.getC_DocTypeTarget_ID() == 1000047 || od.getC_DocTypeTarget_ID() == 1000048) {
+			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
+			if (pr.getM_Product_Category_ID()==1000001
+					&& pr.get_ValueAsString("TypeService").equals("0")) {
+				int l [] = PO.getAllIDs(MOrderLine.Table_Name, 
+						"C_Charge_ID =1000000 AND C_Order_ID ="+od.getC_Order_ID(), trxName);
+				int exitTax = DB.getSQLValue(null, "Select count(1) from I_DU_CheckVisa "
+						+ " where trim(value)='"+bp.getValue().trim()+"'");
+				if (l.length == 0 && exitTax > 0) {
+					MOrderLine l2 = new MOrderLine(od);
+					l2.setC_Charge_ID(1000000);
+					MCharge ch = new MCharge(ctx, 1000000, trxName);
+					l2.setQty(Env.ONE);
+					l2.setPrice(ch.getChargeAmt());
+					l2.saveEx();
+				}
+			}
+		}
 	}
 }

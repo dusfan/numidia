@@ -180,6 +180,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (po.getAD_Org_ID() == 1000002) {
 						if (!EventOrder.checkDuplicatePackage(po, ctx, trxName))
 							throw new AdempiereUserError("Il y a deux package pour le meme client");
+						EventOrder.addExistTax(po, ctx, trxName);
 					}
 				}
 				else if (po instanceof MProduct) {
