@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class MBooking extends X_DU_Booking {
 
@@ -41,8 +42,8 @@ public class MBooking extends X_DU_Booking {
 		setC_SalesInvoice_ID(impBooking.getC_Invoice_ID());
 	}
 	public static void updateBooking (X_I_InvoicePurchase imp){
-		DB.executeUpdate("update du_booking set C_PurchaseInvoice_ID = ? , PendingPayment = ?, ReceiptAmount = ?, commissionAmt = priceActual - ? where documentno = ?",
-					new Object[]{new Integer(imp.getC_Invoice_ID()), imp.getPriceActual(), imp.getReceiptAmount(), imp.getPendingPayment(), imp.getDocumentNo()}, false,null);
+		DB.executeUpdate("update du_booking set updated = current_timestamp, updatedby = ?, C_PurchaseInvoice_ID = ? , PendingPayment = ?, ReceiptAmount = ?, commissionAmt = priceActual - ? where documentno = ?",
+					new Object[]{Env.getAD_User_ID(imp.getCtx()), new Integer(imp.getC_Invoice_ID()), imp.getPriceActual(), imp.getReceiptAmount(), imp.getPendingPayment(), imp.getDocumentNo()}, false,null);
 	}
 
 	@Override
