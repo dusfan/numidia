@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="statindividuel" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6c72bfa-4d80-4b45-951a-19cc6c74ae57">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Prod230"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -18,6 +18,8 @@
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
+	<parameter name="DateOrdered_f" class="java.sql.Timestamp"/>
+	<parameter name="DateOrdered_t" class="java.sql.Timestamp"/>
 	<queryString>
 		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, (coalesce(od.grandtotal,0) + (select coalesce(sum(i.GRANDTOTAL),0)
 from C_INVOICE i
@@ -49,7 +51,7 @@ od.c_bpartnerrelation_id,
 od.du_vol_id,
 od.docstatus
 from c_order od 
-inner join du_vol v on v.du_vol_id = od.du_vol_id
+left join du_vol v on v.du_vol_id = od.du_vol_id
 inner join c_bpartner bp on bp.c_bpartner_id = od.c_bpartner_id
 inner join c_bpartner cod on cod.c_bpartner_id = od.c_bpartnerrelation_id
 where docstatus in ('IP','CO','CL') and od.c_bpartnerrelation_id not in (1002081)
@@ -58,6 +60,8 @@ and od.c_bpartnerrelation_id in
 and ($P{DU_Vol_ID} is null or od.du_vol_id = $P{DU_Vol_ID}) 
  and ($P{C_BPartnerRelation_ID} is null or od.c_bpartnerrelation_id = $P{C_BPartnerRelation_ID})
  and ($P{C_BPartner_ID} is null or od.C_BPartner_ID = $P{C_BPartner_ID})
+ and ($P{DateOrdered_f}=null or od.DateOrdered >= $P{DateOrdered_f})
+ and ($P{DateOrdered_t}=null or od.DateOrdered <= $P{DateOrdered_t} )
  and od.AD_Org_ID =  $P{AD_Org_ID}
 order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	</queryString>
@@ -442,7 +446,7 @@ order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grandtotal}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="646" y="0" width="58" height="34" uuid="5154471f-7faf-4fca-8cf8-479bd2a8e02f"/>
 				<box>
 					<topPen lineWidth="1.0"/>
