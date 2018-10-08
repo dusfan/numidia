@@ -37,10 +37,7 @@ public class EventInvoice {
 
 	public static void changeDocumentNo(PO po, Properties ctx, String trxName) {
 		MInvoice invoice = (MInvoice) po;
-		if (invoice.isSOTrx()){
-			invoice.setDocumentNo(invoice.getDocumentNo().concat("-RE"));
-			invoice.saveEx();
-		}
-		
+		invoice.setDocumentNo(invoice.getDocumentNo().concat("-RE"));
+		invoice.saveEx();
 	}
 }
