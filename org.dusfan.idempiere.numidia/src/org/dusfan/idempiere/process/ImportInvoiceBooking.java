@@ -1044,7 +1044,7 @@ public class ImportInvoiceBooking extends SvrProcess
 				//
 				if (imp.save()){
 					noInsertLine++;
-					no = DB.executeUpdate("update DU_Booking set priceActual ="+ imp.getPriceActual()+", C_SalesInvoice_ID = " +imp.getC_Invoice_ID() +" where C_PurchaseInvoice_ID is not null and DocumentNo = '" + imp.getDocumentNo()+"'", null);
+					no = DB.executeUpdate("update DU_Booking set priceActual ="+ imp.getPriceActual()+", C_SalesInvoice_ID = " +imp.getC_Invoice_ID() +" , commissionAmt = priceActual - PendingPayment where C_PurchaseInvoice_ID is not null and DocumentNo = '" + imp.getDocumentNo()+"'", null);
 					if (no>0)
 						continue;
 					MBooking booking = new MBooking(imp);
