@@ -33,7 +33,7 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = 20181004L;
+	private static final long serialVersionUID = 20181011L;
 
     /** Standard Constructor */
     public X_DU_Booking (Properties ctx, int DU_Booking_ID, String trxName)
@@ -361,6 +361,27 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		return bd;
 	}
 
+	/** Set isPaidByCard.
+		@param isPaidByCard isPaidByCard	  */
+	public void setisPaidByCard (boolean isPaidByCard)
+	{
+		set_Value (COLUMNNAME_isPaidByCard, Boolean.valueOf(isPaidByCard));
+	}
+
+	/** Get isPaidByCard.
+		@return isPaidByCard	  */
+	public boolean isPaidByCard () 
+	{
+		Object oo = get_Value(COLUMNNAME_isPaidByCard);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
+	}
+
 	/** Set LeadPassenger.
 		@param LeadPassenger LeadPassenger	  */
 	public void setLeadPassenger (String LeadPassenger)
@@ -472,6 +493,27 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		if (bd == null)
 			 return Env.ZERO;
 		return bd;
+	}
+
+	/** Set Process Now.
+		@param Processing Process Now	  */
+	public void setProcessing (boolean Processing)
+	{
+		set_Value (COLUMNNAME_Processing, Boolean.valueOf(Processing));
+	}
+
+	/** Get Process Now.
+		@return Process Now	  */
+	public boolean isProcessing () 
+	{
+		Object oo = get_Value(COLUMNNAME_Processing);
+		if (oo != null) 
+		{
+			 if (oo instanceof Boolean) 
+				 return ((Boolean)oo).booleanValue(); 
+			return "Y".equals(oo);
+		}
+		return false;
 	}
 
 	/** Set Receipt Amount.
