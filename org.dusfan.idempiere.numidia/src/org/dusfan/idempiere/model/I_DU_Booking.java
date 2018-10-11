@@ -264,6 +264,15 @@ public interface I_DU_Booking
 	  */
 	public boolean isActive();
 
+    /** Column name isPaidByCard */
+    public static final String COLUMNNAME_isPaidByCard = "isPaidByCard";
+
+	/** Set isPaidByCard	  */
+	public void setisPaidByCard (boolean isPaidByCard);
+
+	/** Get isPaidByCard	  */
+	public boolean isPaidByCard();
+
     /** Column name LeadPassenger */
     public static final String COLUMNNAME_LeadPassenger = "LeadPassenger";
 
@@ -337,6 +346,15 @@ public interface I_DU_Booking
 	  * Actual Price 
 	  */
 	public BigDecimal getPriceActualNet();
+
+    /** Column name Processing */
+    public static final String COLUMNNAME_Processing = "Processing";
+
+	/** Set Process Now	  */
+	public void setProcessing (boolean Processing);
+
+	/** Get Process Now	  */
+	public boolean isProcessing();
 
     /** Column name ReceiptAmount */
     public static final String COLUMNNAME_ReceiptAmount = "ReceiptAmount";

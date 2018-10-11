@@ -4,6 +4,7 @@ import org.compiere.process.ProcessCall;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
+import org.dusfan.idempiere.process.CreateOpositeDoc;
 import org.dusfan.idempiere.process.CreatePackage;
 import org.dusfan.idempiere.process.DUInvoiceGenerate;
 import org.dusfan.idempiere.process.DeleteOldDataByPeriode;
@@ -102,6 +103,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ImportMarginSharing();
 		else if (className.equals(ExtourneOmraInvoiceByflight.class.getName()))
 			return new ExtourneOmraInvoiceByflight ();
+		else if (className.equals(CreateOpositeDoc.class.getName()))
+			return new CreateOpositeDoc();
 		
 		return null;
 	}
