@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 import org.dusfan.idempiere.model.X_I_MarginSharing;
 
 public class ImportMarginSharing extends SvrProcess {
@@ -19,6 +20,7 @@ public class ImportMarginSharing extends SvrProcess {
 	private int				m_AD_Org_ID = 0;
 	/**	Delete old Imported				*/
 	private boolean				m_deleteOldImported = false;
+	private int 				m_user =0;
 
 
 	/** Effective						*/
@@ -31,6 +33,7 @@ public class ImportMarginSharing extends SvrProcess {
 	 */
 	@Override
 	protected void prepare() {
+		m_user = Env.getAD_User_ID(getCtx());
 		ProcessInfoParameter[] para = getParameter();
 		for (int i = 0; i < para.length; i++)
 		{
@@ -63,7 +66,7 @@ public class ImportMarginSharing extends SvrProcess {
 			sql = new StringBuilder ("DELETE I_InvoiceBooking ")
 					.append("WHERE I_IsImported='Y'").append (clientCheck);
 			no = DB.executeUpdate(sql.toString(), get_TrxName());
-			if (log.isLoggable(Level.FINE)) log.fine("Delete Old Impored =" + no);
+			if (log.isLoggable(Level.FINE)) log.fine("Delete Old Imported =" + no);
 		}
 		
 		
@@ -161,14 +164,14 @@ public class ImportMarginSharing extends SvrProcess {
 
 	public  void updateBooking (X_I_MarginSharing imp){
 		
-		String sql = " update du_booking set C_PurchaseCurrency_ID = ?, ReceiptAmount = ?, "
+		String sql = " update du_booking set updated = current_timestamp, updatedby = ?, C_PurchaseCurrency_ID = ?, ReceiptAmount = ?, "
 				+ " PriceActualNet=?, NetSalesPriceUsd = ?, "
 				+ " CostPrice=?, GeneralProfit=?, AgencyProfit = ?"
 				+ " where documentno = ?";
 
-		Object[] obj = new Object[]{new Integer(imp.getC_Currency_ID()), imp.getReceiptAmount(), 
+		Object[] obj = new Object[]{m_user, new Integer(imp.getC_Currency_ID()), imp.getReceiptAmount(), 
 				imp.getPriceActualNet(), imp.getNetSalesPriceUsd(), imp.getCostPrice(), 
-				imp.getCostPrice(), imp.getGeneralProfit().divide(new BigDecimal(2)), imp.getDocumentNo()};
+				imp.getGeneralProfit(), imp.getGeneralProfit().divide(new BigDecimal(2)), imp.getDocumentNo()};
 		int no = DB.executeUpdate(sql, obj, false,null);
 		if (no<0) log.warning("Booking didn't updated =" + imp.getDocumentNo());
 		else {
