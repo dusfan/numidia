@@ -7,7 +7,6 @@ import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
 import org.compiere.model.MProduct;
-import org.compiere.model.MQuery;
 import org.compiere.model.MTax;
 import org.compiere.model.Query;
 import org.compiere.util.Env;
@@ -36,7 +35,5 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 		}
 		return null;
 	}
-
-	
 
 }
