@@ -48,7 +48,7 @@ public class MBooking extends X_DU_Booking {
 
 	@Override
 	protected boolean beforeSave(boolean newRecord) {
-		if(getPendingPayment()!=null)
+		if(getPendingPayment().compareTo(Env.ZERO)>0)
 			setCommissionAmt(getPriceActual().subtract(getPendingPayment()));
 		return super.beforeSave(newRecord);
 	}
