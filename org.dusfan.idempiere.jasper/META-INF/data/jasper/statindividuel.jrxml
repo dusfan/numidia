@@ -18,8 +18,9 @@
 	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
-	<parameter name="DateOrdered_f" class="java.sql.Timestamp"/>
-	<parameter name="DateOrdered_t" class="java.sql.Timestamp"/>
+	<parameter name="DateOrdered_f" class="java.util.Date"/>
+	<parameter name="DateOrdered_t" class="java.util.Date"/>
+	<parameter name="DU_Hotel_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, (coalesce(od.grandtotal,0) + (select coalesce(sum(i.GRANDTOTAL),0)
 from C_INVOICE i
@@ -62,6 +63,7 @@ and ($P{DU_Vol_ID} is null or od.du_vol_id = $P{DU_Vol_ID})
  and ($P{C_BPartner_ID} is null or od.C_BPartner_ID = $P{C_BPartner_ID})
  and ($P{DateOrdered_f}=null or od.DateOrdered >= $P{DateOrdered_f})
  and ($P{DateOrdered_t}=null or od.DateOrdered <= $P{DateOrdered_t} )
+ and ($P{DU_Hotel_ID} is null or od.DU_Hotel_ID = $P{DU_Hotel_ID})
  and od.AD_Org_ID =  $P{AD_Org_ID}
 order by od.c_bpartnerrelation_id, v.departdatetime_direct]]>
 	</queryString>
