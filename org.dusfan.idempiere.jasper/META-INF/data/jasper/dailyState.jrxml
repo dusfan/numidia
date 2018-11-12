@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="printreservation" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8c8a09b-671c-4db3-bb0d-41bb4b8bd010">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="208"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="785"/>
@@ -77,7 +77,7 @@ FROM   c_order o
                ON u.ad_user_id = o.salesrep_id
        inner join du_compa cm
                ON cm.du_compa_id = v.du_compa_id
-where o.docstatus in ('DR','IP','CO') and p.isbom = 'Y'
+where o.docstatus in ('DR','IP','CO')
 and ($P{DU_Vol_ID} is null or o.du_vol_id = $P{DU_Vol_ID})   and ($P{AD_User_ID} is null or o.salesrep_id = $P{AD_User_ID})
 and ($P{M_Sejour_ID} is null or ol.M_Sejour_ID = $P{M_Sejour_ID})
 and ($P{C_BPartner_ID} is null or o.C_BPartnerRelation_ID = $P{C_BPartner_ID})
