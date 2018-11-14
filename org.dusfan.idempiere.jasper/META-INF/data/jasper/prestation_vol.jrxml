@@ -9,7 +9,8 @@
 v.numreturnflight_direct, v.DepartDateTime_Direct, v.returnDateTime_Direct, cp.name2
  , bp.name || ' ' || bp.name2 as bpname, bp.birth_date, bp.value, bp.datestart,
  bp.enddate, bp.delivredby, bp.name_ar || ' ' || bp.name2_ar as bpname2, bp.c_bpartner_id
- ,cc.description as country, v.value as vol, cod.value || '-' || cod.name as codeclient
+ ,cc.description as country, v.value as vol, cod.value || '-' || cod.name as codeclient,
+ (select name from du_hotel where du_hotel.du_hotel_id = o.du_hotel_id) as hotel
  from du_volline vl
 inner join du_vol v on v.du_vol_id = vl.du_vol_id
 inner join DU_Compa cp on cp.DU_Compa_ID = v.DU_Compa_ID
@@ -82,6 +83,7 @@ order by codeclient, bp.name]]>
 	<field name="codeclient" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="codeclient"/>
 	</field>
+	<field name="hotel" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -178,7 +180,7 @@ order by codeclient, bp.name]]>
 	<columnHeader>
 		<band height="24">
 			<staticText>
-				<reportElement x="15" y="0" width="70" height="24" uuid="3e2afa2a-c1f0-4d2d-bbf9-d3857ba7b0be">
+				<reportElement x="15" y="0" width="65" height="24" uuid="3e2afa2a-c1f0-4d2d-bbf9-d3857ba7b0be">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fa3c885e-ab06-418c-9dd9-9b23b3c9e13f"/>
 				</reportElement>
 				<box>
@@ -193,7 +195,7 @@ order by codeclient, bp.name]]>
 				<text><![CDATA[N° Passport]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="220" y="0" width="150" height="24" uuid="a2a49a6e-d29c-430e-ab7c-bd8d3ee7d9f4">
+				<reportElement x="191" y="0" width="125" height="24" uuid="a2a49a6e-d29c-430e-ab7c-bd8d3ee7d9f4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2101cd88-7f69-4a57-805e-81d791b4c39a"/>
 				</reportElement>
 				<box>
@@ -208,7 +210,7 @@ order by codeclient, bp.name]]>
 				<text><![CDATA[Nom & Prenom]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="370" y="0" width="185" height="24" uuid="c3bfb2b9-129c-49a3-9481-d2ef9345b4e7">
+				<reportElement x="400" y="0" width="155" height="24" uuid="c3bfb2b9-129c-49a3-9481-d2ef9345b4e7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="071d6480-5905-486a-be51-320a66261d3d"/>
 				</reportElement>
 				<box>
@@ -223,7 +225,7 @@ order by codeclient, bp.name]]>
 				<text><![CDATA[Prestation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="85" y="0" width="135" height="24" uuid="147db750-ddac-4193-adda-0d02b0f1174e">
+				<reportElement x="80" y="0" width="111" height="24" uuid="147db750-ddac-4193-adda-0d02b0f1174e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf8a6e58-8c09-48fc-ba3a-58170845aad4"/>
 				</reportElement>
 				<box>
@@ -252,25 +254,8 @@ order by codeclient, bp.name]]>
 				</textElement>
 				<text><![CDATA[N]]></text>
 			</staticText>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="20" splitType="Stretch">
-			<textField>
-				<reportElement x="15" y="0" width="70" height="20" uuid="de9e2299-673f-4c83-b160-b2963fea0d50">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fa3c885e-ab06-418c-9dd9-9b23b3c9e13f"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="220" y="0" width="150" height="20" uuid="6f4a7348-66cf-402b-9dd9-e9971d470e2f">
+			<staticText>
+				<reportElement x="316" y="0" width="84" height="24" uuid="24d3c844-ed37-480b-9376-97d07888c3c5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2101cd88-7f69-4a57-805e-81d791b4c39a"/>
 				</reportElement>
 				<box>
@@ -279,11 +264,47 @@ order by codeclient, bp.name]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="0" width="65" height="20" uuid="de9e2299-673f-4c83-b160-b2963fea0d50">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fa3c885e-ab06-418c-9dd9-9b23b3c9e13f"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="191" y="0" width="125" height="20" uuid="6f4a7348-66cf-402b-9dd9-e9971d470e2f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2101cd88-7f69-4a57-805e-81d791b4c39a"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{bpname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="185" height="20" uuid="15ff9d1f-de9c-4b45-8203-04fcb7d23c51">
+				<reportElement x="400" y="0" width="155" height="20" uuid="15ff9d1f-de9c-4b45-8203-04fcb7d23c51">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="071d6480-5905-486a-be51-320a66261d3d"/>
 				</reportElement>
 				<box>
@@ -292,11 +313,13 @@ order by codeclient, bp.name]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{prest}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="85" y="0" width="135" height="20" uuid="d038fdac-22cc-4e7f-8a29-e1e8296fe812">
+				<reportElement x="80" y="0" width="111" height="20" uuid="d038fdac-22cc-4e7f-8a29-e1e8296fe812">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf8a6e58-8c09-48fc-ba3a-58170845aad4"/>
 				</reportElement>
 				<box>
@@ -305,7 +328,9 @@ order by codeclient, bp.name]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{codeclient}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -318,6 +343,21 @@ order by codeclient, bp.name]]>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="316" y="0" width="84" height="20" uuid="e6156269-e39d-47e2-ad1a-7dc3fb124601">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2101cd88-7f69-4a57-805e-81d791b4c39a"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
