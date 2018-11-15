@@ -2,10 +2,8 @@ package org.dusfan.idempiere.process;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.logging.Level;
 
-import org.adempiere.exceptions.DBException;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.DB;
 import org.dusfan.idempiere.model.X_I_ImportOmraBP;

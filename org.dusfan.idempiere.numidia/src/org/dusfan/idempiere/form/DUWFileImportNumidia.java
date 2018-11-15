@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.logging.Level;
 
 import org.adempiere.webui.AdempiereWebUI;
@@ -24,14 +23,19 @@ import org.adempiere.webui.util.ReaderInputStream;
 import org.adempiere.webui.util.ZKUpdateUtil;
 import org.adempiere.webui.window.FDialog;
 import org.compiere.impexp.ImpFormatRow;
+import org.compiere.model.MPInstance;
+import org.compiere.model.MProcess;
 import org.compiere.model.MRole;
+import org.compiere.model.Query;
+import org.compiere.process.ProcessInfo;
 import org.compiere.util.CLogger;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Ini;
 import org.compiere.util.Msg;
+import org.compiere.util.Trx;
 import org.dusfan.compiere.impexp.ImpFormatNumidia;
-import org.dusfan.idempiere.model.MVisaGroup;
+import org.dusfan.idempiere.process.ValidateTAxes;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -62,8 +66,8 @@ public class DUWFileImportNumidia extends ADForm implements EventListener<Event>
 	 * 
 	 */
 	private static final long serialVersionUID = -5779187375101512112L;
-	private static final int MAX_LOADED_LINES = 100;
-	private static final int MAX_SHOWN_LINES = 10;
+	private static final int MAX_LOADED_LINES = 300;
+	private static final int MAX_SHOWN_LINES = 50;
 	
 	/**	Logger			*/
 	private static CLogger log = CLogger.getCLogger(DUWFileImportNumidia.class);
@@ -584,7 +588,7 @@ public class DUWFileImportNumidia extends ADForm implements EventListener<Event>
 				imported++;
 		
 		FDialog.info(m_WindowNo, this, "FileImportR/I", row + " / " + imported + "#");
-		
+		validateTaxes ();
 		SessionManager.getAppDesktop().closeActiveWindow();
 	}	//	cmd_process
 	
@@ -599,6 +603,49 @@ public class DUWFileImportNumidia extends ADForm implements EventListener<Event>
 			return true;
 
 		return false;
+	}
+	
+	private void validateTaxes () {
+		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "value=?", null)
+                .setParameters(new Object[]{"ValidateTAxesSystem"})
+                .first();
+		if (pr != null) {
+			String trxName = Trx.createTrxName(pr.getValue());
+			
+			ProcessInfo pi = new ProcessInfo("ValidateTAxesSystem", pr.get_ID(), 0, 0);
+			pi.setAD_Client_ID(1000002);
+
+			// Create an instance of the actual process class.
+			ValidateTAxes process = new ValidateTAxes();
+
+			// Create process instance (mainly for logging/sync purpose)
+			MPInstance mpi = new MPInstance(Env.getCtx(), 0, null);
+			mpi.setAD_Process_ID(pr.get_ID()); 
+			mpi.setRecord_ID(0);
+			mpi.save();
+
+			// Connect the process to the process instance.
+			pi.setAD_PInstance_ID(mpi.get_ID());
+
+			log.info("Starting process " + pr.getName());
+			Trx trx = Trx.get(trxName, true);
+			boolean result = false;
+			try {
+				result = process.startProcess(Env.getCtx(), pi, trx);
+				if (result)
+					trx.commit();
+			} catch (Exception e) {
+				log.severe(e.getMessage());
+				trx.rollback();
+				trx.close();
+				trx = null;
+				result = false;
+			}finally {
+				trx.close();
+				trx = null;
+			}
+		}
+		
 	}
 	
 }
