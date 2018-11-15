@@ -67,7 +67,7 @@ public class DUWFileImportNumidia extends ADForm implements EventListener<Event>
 	 */
 	private static final long serialVersionUID = -5779187375101512112L;
 	private static final int MAX_LOADED_LINES = 300;
-	private static final int MAX_SHOWN_LINES = 50;
+	private static final int MAX_SHOWN_LINES = 10;
 	
 	/**	Logger			*/
 	private static CLogger log = CLogger.getCLogger(DUWFileImportNumidia.class);
@@ -607,12 +607,12 @@ public class DUWFileImportNumidia extends ADForm implements EventListener<Event>
 	
 	private void validateTaxes () {
 		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "value=?", null)
-                .setParameters(new Object[]{"ValidateTAxesSystem"})
+                .setParameters(new Object[]{"ValidateTAxes"})
                 .first();
 		if (pr != null) {
 			String trxName = Trx.createTrxName(pr.getValue());
 			
-			ProcessInfo pi = new ProcessInfo("ValidateTAxesSystem", pr.get_ID(), 0, 0);
+			ProcessInfo pi = new ProcessInfo("ValidateTAxes", pr.get_ID(), 0, 0);
 			pi.setAD_Client_ID(1000002);
 
 			// Create an instance of the actual process class.
