@@ -23,6 +23,7 @@ public class ValidateTAxes extends SvrProcess  {
 		String sql = "Select distinct value from I_DU_CheckVisa";
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
+		int count = 0;
 		try {
 			pstmt = DB.prepareStatement(sql, get_TrxName());
 			rs = pstmt.executeQuery();
@@ -35,6 +36,7 @@ public class ValidateTAxes extends SvrProcess  {
 					X_I_ImportOmraBP imp = new X_I_ImportOmraBP(getCtx(), I_ImportOmraBP_ID, get_TrxName());
 					imp.setC_Charge_ID(1000000);
 					imp.saveEx();
+					count ++;
 				}
 			}
 			
@@ -42,13 +44,14 @@ public class ValidateTAxes extends SvrProcess  {
 		} catch (Exception e) {
 			DB.close(rs, pstmt);
 			log.log(Level.SEVERE,e.getMessage());
+			count = 0;
 		}
 		finally
 		{
 			DB.close(rs, pstmt);
 			rs = null; pstmt = null;
 		}
-		return null;
+		return count + " Taxes generer";
 	}
 	
 
