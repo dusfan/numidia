@@ -14,7 +14,7 @@ import org.dusfan.idempiere.process.ExportSrdox;
 import org.dusfan.idempiere.process.ExportSrdox2;
 import org.dusfan.idempiere.process.GenerateInvoiceTourisme;
 import org.dusfan.idempiere.process.ImportBPartnerOmra;
-import org.dusfan.idempiere.process.ImportBPartnerOmraGuide;
+import org.dusfan.idempiere.process.ValidateTAxes;
 import org.dusfan.idempiere.process.ImportInvoiceBooking;
 import org.dusfan.idempiere.process.ImportInvoicePurchase;
 import org.dusfan.idempiere.process.ImportMarginSharing;
@@ -45,8 +45,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new ImportBPartnerOmra();
 		else if (className.equals(DUInvoiceGenerate.class.getName()))
 			return new DUInvoiceGenerate();
-		else if (className.equals(ImportBPartnerOmraGuide.class.getName())) {
-			return new ImportBPartnerOmraGuide();
+		else if (className.equals(ValidateTAxes.class.getName())) {
+			return new ValidateTAxes();
 		}
 		else if (className.equals(GenerateInvoiceTourisme.class.getName())) {
 			return new GenerateInvoiceTourisme ();
