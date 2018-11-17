@@ -18,6 +18,10 @@ public class ValidateTAxes extends SvrProcess  {
 
 	@Override
 	protected String doIt() throws Exception {
+		// Delete Duplicate rows with DELETE USING
+		int deleteRows = DB.getSQLValue(null, "DELETE FROM I_DU_CheckVisa a USING I_DU_CheckVisa b "
+										+ " WHERE a.I_DU_CheckVisa_id < b.I_DU_CheckVisa_id AND a.Value = b.Value");
+		if (log.isLoggable(Level.FINE)) log.fine("Delete rows from I_DU_CheckVisa = " + deleteRows);
 		String sql = "Select distinct value from I_DU_CheckVisa";
 		PreparedStatement pstmt =  null;
 		ResultSet rs = null;
