@@ -107,20 +107,6 @@ public interface I_DU_Booking
 
 	public org.compiere.model.I_C_Currency getC_Currency() throws RuntimeException;
 
-    /** Column name CommissionAmt */
-    public static final String COLUMNNAME_CommissionAmt = "CommissionAmt";
-
-	/** Set Commission Amount.
-	  * Commission Amount
-	  */
-	public void setCommissionAmt (BigDecimal CommissionAmt);
-
-	/** Get Commission Amount.
-	  * Commission Amount
-	  */
-	public BigDecimal getCommissionAmt();
-
-    /** Column name CostPrice */
     public static final String COLUMNNAME_CostPrice = "CostPrice";
 
 	/** Set Cost Price.

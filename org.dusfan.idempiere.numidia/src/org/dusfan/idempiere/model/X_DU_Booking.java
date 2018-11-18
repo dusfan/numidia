@@ -149,26 +149,6 @@ public class X_DU_Booking extends PO implements I_DU_Booking, I_Persistent
 		return ii.intValue();
 	}
 
-	/** Set Commission Amount.
-		@param CommissionAmt 
-		Commission Amount
-	  */
-	public void setCommissionAmt (BigDecimal CommissionAmt)
-	{
-		set_Value (COLUMNNAME_CommissionAmt, CommissionAmt);
-	}
-
-	/** Get Commission Amount.
-		@return Commission Amount
-	  */
-	public BigDecimal getCommissionAmt () 
-	{
-		BigDecimal bd = (BigDecimal)get_Value(COLUMNNAME_CommissionAmt);
-		if (bd == null)
-			 return Env.ZERO;
-		return bd;
-	}
-
 	/** Set Cost Price.
 		@param CostPrice 
 		Cost Price
