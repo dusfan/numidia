@@ -94,6 +94,14 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Delete lines without data =" + no);
 		
+		// Delete duplicate record with same ppno and group Name
+		sql = new StringBuilder("DELETE FROM I_ImportOmraBP a USING I_ImportOmraBP b ")
+				.append(" WHERE a.I_ImportOmraBP_id < b.I_ImportOmraBP_id AND a.ppno = b.ppno ")
+				.append(" AND a.I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
+		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.CONFIG))
+			log.config("Enregistrement en double supprimer =" + no);
+		
 		// Set Client, Org, IsActive, Created/Updated
 		sql = new StringBuilder("UPDATE I_ImportOmraBP ").append("SET AD_Client_ID = COALESCE (AD_Client_ID, ")
 				.append(m_AD_Client_ID).append("),").append(" AD_Org_ID = COALESCE (AD_Org_ID, 0),")
@@ -121,7 +129,15 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE))
 			log.fine("Set Code client=" + no);
-
+		
+		// update the lines with taxes
+		sql = new StringBuilder("UPDATE I_ImportOmraBP i ")
+				.append(" SET C_Charge_ID= 1000000 where exists (select 1 from I_DU_CheckVisa where I_DU_CheckVisa.value = i.ppno) ")
+				.append(" AND I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
+		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.FINE))
+			log.fine("Set Taxes=" + no);
+		
 		// Erreur le code client est obligatoire
 		sql = new StringBuilder("UPDATE I_ImportOmraBP i ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg||'ERR=Le code client est obligatoire, ' ")
@@ -213,16 +229,6 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.CONFIG))
 			log.config("Nombre d'enregistrement deja importer =" + no);
-		
-		// Delete duplicate record with same ppno and group Name
-		sql = new StringBuilder("DELETE From I_ImportOmraBP o ")
-				.append(" where exists ( select 'x' from i_importomrabp i where i.ppno = o.ppno and ")
-				.append(" o.du_visa_group_id = i.du_visa_group_id and i.i_importomrabp_id < o.i_importomrabp_id) ")
-				.append(" AND I_IsImported<>'Y'")
-				.append(clientCheck).append(groupCheck);
-		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.CONFIG))
-		log.config("Enregistrement en double supprimer =" + no);
 		
 		// If any records of the same groupe have error then call of the import process
 		sql = new StringBuilder("UPDATE I_ImportOmraBP i ")
