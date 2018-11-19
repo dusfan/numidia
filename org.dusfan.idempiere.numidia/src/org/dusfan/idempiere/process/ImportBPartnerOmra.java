@@ -95,9 +95,10 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		if (log.isLoggable(Level.FINE)) log.fine("Delete lines without data =" + no);
 		
 		// Delete duplicate record with same ppno and group Name
-		sql = new StringBuilder("DELETE FROM I_ImportOmraBP a USING I_ImportOmraBP b ")
-				.append(" WHERE a.I_ImportOmraBP_id < b.I_ImportOmraBP_id AND a.ppno = b.ppno ")
-				.append(" AND a.I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
+		sql = new StringBuilder("DELETE From I_ImportOmraBP o ")
+				.append(" where exists ( select 'x' from i_importomrabp i where i.ppno = o.ppno and ")
+				.append(" o.du_visa_group_id = i.du_visa_group_id and i.i_importomrabp_id < o.i_importomrabp_id) ")
+				.append(" AND I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.CONFIG))
 			log.config("Enregistrement en double supprimer =" + no);
