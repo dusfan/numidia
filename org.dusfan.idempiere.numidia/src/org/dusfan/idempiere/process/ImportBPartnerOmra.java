@@ -94,15 +94,6 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Delete lines without data =" + no);
 		
-		// Delete duplicate record with same ppno and group Name
-		sql = new StringBuilder("DELETE From I_ImportOmraBP o ")
-				.append(" where exists ( select 'x' from i_importomrabp i where i.ppno = o.ppno and ")
-				.append(" o.du_visa_group_id = i.du_visa_group_id and i.i_importomrabp_id < o.i_importomrabp_id) ")
-				.append(" AND I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
-		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
-		if (log.isLoggable(Level.CONFIG))
-			log.config("Enregistrement en double supprimer =" + no);
-		
 		// Set Client, Org, IsActive, Created/Updated
 		sql = new StringBuilder("UPDATE I_ImportOmraBP ").append("SET AD_Client_ID = COALESCE (AD_Client_ID, ")
 				.append(m_AD_Client_ID).append("),").append(" AD_Org_ID = COALESCE (AD_Org_ID, 0),")
@@ -241,6 +232,15 @@ public class ImportBPartnerOmra extends SvrProcess implements ImportProcess {
 		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.CONFIG))
 		log.config("il y a un enregistrment de ce groupe en erreur =" + no);
+		
+		// Delete duplicate record with same ppno and group Name
+		sql = new StringBuilder("DELETE From I_ImportOmraBP o ")
+				.append(" where exists ( select 'x' from i_importomrabp i where i.ppno = o.ppno and ")
+				.append(" o.du_visa_group_id = i.du_visa_group_id and i.i_importomrabp_id < o.i_importomrabp_id) ")
+				.append(" AND I_IsImported<>'Y'").append(clientCheck).append(groupCheck);
+		no = DB.executeUpdateEx(sql.toString(), get_TrxName());
+		if (log.isLoggable(Level.CONFIG))
+			log.config("Enregistrement en double supprimer =" + no);
 		
 			
 		commitEx();
