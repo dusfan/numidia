@@ -241,17 +241,17 @@ public class PluginDocEvent extends AbstractEventHandler {
 			}
 			// End After change 
 			
-			// After Delete
+			// BEFORE_PREPARE
 			if (type.equals(IEventTopics.DOC_BEFORE_PREPARE)) {
 				if (po instanceof MOrder) {
 					if (po.getAD_Org_ID() == 1000002) {
-						EventOrder.addExistTax(po, ctx, trxName);
 						if (!EventOrder.checkExitRelation(po, ctx, trxName))
 							throw new AdempiereUserError("Attention la relation tiers n'existe pas, il faut la créer");
+						EventOrder.addExistTax(po, ctx, trxName);
 					}
 				}
 			}
-			// End After delete
+			// End BEFORE_PREPARE
 			
 			// Before Complete
 			if (type.equals(IEventTopics.DOC_BEFORE_COMPLETE)) {
