@@ -199,7 +199,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
 						EventOrder.setC_Activity_ID(MOrderLine.Table_Name, po, ctx,trxName);
 					if (po.getAD_Org_ID() == 1000002) {
-						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
+//						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
 						EventOrder.setremiseBillet(po,ctx,trxName);
 						EventOrder.setPackage(po, ctx, trxName);
 					}
