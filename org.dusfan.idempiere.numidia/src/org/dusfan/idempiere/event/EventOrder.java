@@ -542,12 +542,12 @@ public class EventOrder {
 		return true;
 	}
 	
+	// Check exit tax
 	public static void addExistTax (PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
 		MOrder od = new MOrder(ctx, line.getC_Order_ID(), trxName);
 		MBPartner bp = new MBPartner(ctx,od.getC_BPartner_ID(),trxName);
-//		if (od.getC_DocTypeTarget_ID() == 1000047 || od.getC_DocTypeTarget_ID() == 1000048) {//check only for direct sales
-		if (od.getC_DocTypeTarget_ID() == 1000047) {
+		if (od.getC_DocTypeTarget_ID() == 1000047 || od.getC_DocTypeTarget_ID() == 1000048) {//check only for direct sales
 			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
 			if (pr.getM_Product_Category_ID()==1000001
 					&& pr.get_ValueAsString("TypeService").equals("0")) {
