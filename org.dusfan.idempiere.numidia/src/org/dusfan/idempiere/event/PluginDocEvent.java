@@ -115,7 +115,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
 						EventOrder.setremiseBillet(po,ctx,trxName);
 						EventOrder.setPackage(po, ctx, trxName);
-						EventOrder.setRemise(po, ctx, trxName);
+//						EventOrder.setRemise(po, ctx, trxName);
 					}
 				} else if (po instanceof MInvoiceLine) {
 					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
@@ -203,7 +203,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 //						EventOrder.setRemiseMargeCodeClient(po,ctx,trxName);
 						EventOrder.setremiseBillet(po,ctx,trxName);
 						EventOrder.setPackage(po, ctx, trxName);
-						EventOrder.setRemise(po, ctx, trxName);
+//						EventOrder.setRemise(po, ctx, trxName);
 					}
 				} else if (po instanceof MInvoiceLine) {
 					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
