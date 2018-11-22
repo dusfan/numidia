@@ -151,6 +151,16 @@ public class EventOrder {
 		}
 
 	}
+	
+	// set remise 
+	public static void setRemise (PO po, Properties ctx, String trxName) {
+		MOrderLine line = (MOrderLine) po;
+		MProduct pr = null;
+		if (line.getM_Product_ID() > 0)
+			pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
+		if (pr.get_ValueAsString("TypeService").equals("0"))
+			line.set_ValueNoCheck("RemiseCompt", line.getPriceList().subtract(line.getPriceActual()));
+	}
 
 	// if product is not ticket reset ticket line
 	public static void setremiseBillet(PO po, Properties ctx, String trxName) {
