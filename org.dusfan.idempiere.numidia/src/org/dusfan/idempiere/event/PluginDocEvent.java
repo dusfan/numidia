@@ -181,7 +181,6 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (po.getAD_Org_ID() == 1000002) {
 						if (!EventOrder.checkDuplicatePackage(po, ctx, trxName))
 							throw new AdempiereUserError("Il y a deux package pour le meme client");
-						EventOrder.addExistTax(po, ctx, trxName);
 					}
 				}
 				else if (po instanceof MProduct) {
@@ -246,6 +245,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 			if (type.equals(IEventTopics.DOC_BEFORE_PREPARE)) {
 				if (po instanceof MOrder) {
 					if (po.getAD_Org_ID() == 1000002) {
+						EventOrder.addExistTax(po, ctx, trxName);
 						if (!EventOrder.checkExitRelation(po, ctx, trxName))
 							throw new AdempiereUserError("Attention la relation tiers n'existe pas, il faut la créer");
 					}
