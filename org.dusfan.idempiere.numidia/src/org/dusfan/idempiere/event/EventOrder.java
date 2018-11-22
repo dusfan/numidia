@@ -544,26 +544,24 @@ public class EventOrder {
 	
 	// Check exit tax
 	public static void addExistTax (PO po, Properties ctx, String trxName) {
-		MOrderLine line = (MOrderLine) po;
-		MOrder od = new MOrder(ctx, line.getC_Order_ID(), trxName);
+		MOrder od = (MOrder) po;
 		MBPartner bp = new MBPartner(ctx,od.getC_BPartner_ID(),trxName);
 		if (od.getC_DocTypeTarget_ID() == 1000047 || od.getC_DocTypeTarget_ID() == 1000048) {//check only for direct sales
-			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
-			if (pr.getM_Product_Category_ID()==1000001
-					&& pr.get_ValueAsString("TypeService").equals("0")) {
-				int l [] = PO.getAllIDs(MOrderLine.Table_Name, 
+			int l [] = PO.getAllIDs(MOrderLine.Table_Name, 
 						"C_Charge_ID =1000000 AND C_Order_ID ="+od.getC_Order_ID(), trxName);
-				int exitTax = DB.getSQLValue(null, "Select count(1) from I_DU_CheckVisa "
+			int exitTax = DB.getSQLValue(null, "Select count(1) from I_DU_CheckVisa "
 						+ " where trim(value)='"+bp.getValue().trim()+"'");
-				if (l.length == 0 && exitTax > 0) {
-					MOrderLine l2 = new MOrderLine(od);
-					l2.setC_Charge_ID(1000000);
-					MCharge ch = new MCharge(ctx, 1000000, trxName);
-					l2.setQty(Env.ONE);
-					l2.setPrice(ch.getChargeAmt());
-					l2.saveEx();
-				}
+			if (l.length == 0 && exitTax > 0) {
+				MOrderLine l2 = new MOrderLine(od);
+				l2.setC_Charge_ID(1000000);
+				MCharge ch = new MCharge(ctx, 1000000, trxName);
+				l2.setQty(Env.ONE);
+				l2.setPrice(ch.getChargeAmt());
+				l2.setLineNetAmt();
+				l2.saveEx();
 			}
 		}
 	}
+	
+	
 }
