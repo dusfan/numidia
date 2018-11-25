@@ -502,7 +502,7 @@ public class EventOrder {
 					&& (cancelcause.equals("3") && mount.compareTo(Env.ZERO)==0)))
 				return false;
 			else {
-				if (mount != null) {
+				if (mount != null && cancelcause.equals("3")) {
 					MInvoice inv =  new MInvoice(ctx, 0, trxName);
 					inv.setAD_Org_ID(order.getAD_Org_ID());
 					inv.setC_BPartner_ID(order.getBill_BPartner_ID());
