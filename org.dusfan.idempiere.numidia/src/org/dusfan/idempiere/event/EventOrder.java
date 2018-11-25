@@ -496,7 +496,7 @@ public class EventOrder {
 		if(order.isSOTrx() && (order.getC_DocTypeTarget_ID() == 1000047
 				|| order.getC_DocTypeTarget_ID() == 1000048)) {
 			String cancelcause = order.get_ValueAsString("CancelCause");
-			BigDecimal mount = (BigDecimal) order.get_Value("MountOther");
+			BigDecimal mount = order.get_Value("MountOther")!=null ? (BigDecimal) order.get_Value("MountOther") : Env.ZERO;
 			if ((cancelcause == null || cancelcause.length() == 0) ||
 					((cancelcause!=null || cancelcause.length()>0) 
 					&& (cancelcause.equals("3") && mount.compareTo(Env.ZERO)==0)))
