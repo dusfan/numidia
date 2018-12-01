@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="grapheventevol" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9b780c2f-83a7-4fb6-8563-b2429c93ea46">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="DateOrdered_From" class="java.util.Date"/>
+	<parameter name="DateOrdered_To" class="java.util.Date"/>
+	<parameter name="AD_Org_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
+	</parameter>
+	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
+	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select EXTRACT(MONTH FROM od.dateordered) as mnt,
+to_char(to_timestamp (EXTRACT(MONTH FROM od.dateordered)::text, 'MM'), 'TMmon') as namemnt,
+EXTRACT(YEAR FROM od.dateordered) as yyyy, sum(od.grandtotal) as grandtotal,
+to_char(to_timestamp (EXTRACT(MONTH FROM od.dateordered)::text, 'MM'), 'TMmon')||'-'|| EXTRACT(YEAR FROM od.dateordered)
+as mounth from c_order od
+inner join du_vol  v on v.du_vol_id = od.du_vol_id
+inner join c_bpartner cd on cd.c_bpartner_id = od.c_bpartnerrelation_id
+where docstatus in ('CO', 'CL')
+and od.c_doctype_id in (1000047,1000048)
+and (od.dateordered >= $P{DateOrdered_From}  and od.dateordered <=$P{DateOrdered_To})
+and ($P{C_BPartner_ID} is null or od.c_bpartnerrelation_id = $P{C_BPartner_ID})
+and od.ad_org_id = $P{AD_Org_ID}
+group by yyyy,mnt
+order by yyyy,mnt]]>
+	</queryString>
+	<field name="mnt" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mnt"/>
+	</field>
+	<field name="namemnt" class="java.lang.String"/>
+	<field name="yyyy" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="yyyy"/>
+	</field>
+	<field name="grandtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="grandtotal"/>
+	</field>
+	<field name="mounth" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="mounth"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68">
+			<textField>
+				<reportElement x="261" y="23" width="280" height="20" uuid="5d4bc931-8dfd-4585-80e6-9e66df3c1c94"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Périod du "+new SimpleDateFormat("dd/MM/yyyy").format($P{DateOrdered_From}) + " Au " +new SimpleDateFormat("dd/MM/yyyy").format($P{DateOrdered_To})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="261" y="43" width="280" height="20" uuid="395102a6-869a-428b-a0dd-38bcf2950a7c">
+					<printWhenExpression><![CDATA[$P{C_BPartner_ID} == null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Client : Tous les clients]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="111" y="43" width="283" height="21" uuid="e0255bda-e494-43a9-a7e9-8b82d6f9e29c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{C_BPartner_ID} != null]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="AD_Org_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="C_BPartner_ID">
+					<subreportParameterExpression><![CDATA[$P{C_BPartner_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"graphclientName.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="261" y="3" width="280" height="20" uuid="a0356304-9c7b-4293-9f5d-cf5622a427bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Graphe des Ventes par Mois (OMRA)]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="272" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<barChart>
+				<chart evaluationTime="Report">
+					<reportElement x="10" y="2" width="210" height="268" uuid="21b984db-586d-4024-9410-7036da8410ff"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{mounth}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{mnt}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{grandtotal}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="3" y="0" width="77" height="20" uuid="24ad4f58-9ec1-407b-b6a5-24dc47eefc59">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Mois]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="84" height="20" uuid="1bbb0ca0-18f8-4ef9-8e08-e8554edddae9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Année]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="0" width="206" height="20" uuid="b92c94be-7866-4698-a771-dad36fc0dd0b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="2">
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Vente]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="##">
+				<reportElement x="80" y="0" width="84" height="20" uuid="a5e7f7e2-2465-4f29-b1b6-1d0a81218780">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{yyyy}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="77" height="20" uuid="78ba82d8-e6b5-4f0d-9985-6e3b0a74ac31">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{namemnt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##">
+				<reportElement x="164" y="0" width="206" height="20" uuid="6bdbbf1c-29ba-47a6-be83-42e53ac71b0c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<pen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grandtotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
