@@ -1,6 +1,7 @@
 package org.dusfan.idempiere.component;
 import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
+import org.dusfan.idempiere.process.AllocationAuto;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
@@ -105,7 +106,9 @@ public class ProcessFactory implements IProcessFactory {
 			return new ExtourneOmraInvoiceByflight ();
 		else if (className.equals(CreateOpositeDoc.class.getName()))
 			return new CreateOpositeDoc();
-		
+		else if (className.equals(AllocationAuto.class.getName()))
+			return new AllocationAuto();
+					
 		return null;
 	}
 }
