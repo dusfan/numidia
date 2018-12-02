@@ -27,7 +27,7 @@ import org.compiere.util.Msg;
  *  @author Jorg Janke
  *  @version $Id: AllocationAuto.java,v 1.2 2006/07/30 00:51:01 jjanke Exp $
  */
-public class AllocationAuto extends SvrProcess
+public class DUAllocationAuto extends SvrProcess
 {
 	/**	BP Group					*/
 	private int			p_C_BP_Group_ID = 0;
