@@ -270,6 +270,7 @@ public class DUAllocationAuto extends SvrProcess
 			{
 				MPayment payment = new MPayment (getCtx(), rs, get_TrxName());
 				BigDecimal allocated = payment.getAllocatedAmt(); 
+				allocated = allocated != null ? allocated : Env.ZERO;
 				if (allocated != null && allocated.compareTo(payment.getPayAmt()) == 0)
 				{
 					payment.setIsAllocated(true);
@@ -357,6 +358,7 @@ public class DUAllocationAuto extends SvrProcess
 			if (payment.isAllocated())
 				continue;
 			BigDecimal allocatedAmt = payment.getAllocatedAmt();
+			allocatedAmt = allocatedAmt != null ? allocatedAmt : Env.ZERO;
 			if (log.isLoggable(Level.INFO)) log.info(payment + ", Allocated=" + allocatedAmt);
 			if (allocatedAmt != null && allocatedAmt.signum() != 0)
 				continue;
@@ -460,6 +462,7 @@ public class DUAllocationAuto extends SvrProcess
 			if (payment.isAllocated())
 				continue;
 			BigDecimal allocatedAmt = payment.getAllocatedAmt();
+			allocatedAmt = allocatedAmt != null ? allocatedAmt : Env.ZERO;
 			if (log.isLoggable(Level.INFO)) log.info(payment + ", Allocated=" + allocatedAmt);
 			if (allocatedAmt != null && allocatedAmt.signum() != 0)
 				continue;
@@ -527,6 +530,7 @@ public class DUAllocationAuto extends SvrProcess
 			if (payment.isAllocated())
 				continue;
 			BigDecimal allocatedAmt = payment.getAllocatedAmt();
+			allocatedAmt = allocatedAmt != null ? allocatedAmt : Env.ZERO;
 		//	log.info("allocateBPartnerAll - " + payment + ", Allocated=" + allocatedAmt);
 			if (allocatedAmt != null && allocatedAmt.signum() != 0)
 				continue;
@@ -577,6 +581,7 @@ public class DUAllocationAuto extends SvrProcess
 				if (payment.isAllocated())
 					continue;
 				BigDecimal allocatedAmt = payment.getAllocatedAmt();
+				allocatedAmt = allocatedAmt != null ? allocatedAmt : Env.ZERO;
 				if (allocatedAmt != null && allocatedAmt.signum() != 0)
 					continue;
 				BigDecimal availableAmt = payment.getPayAmt()
@@ -701,6 +706,7 @@ public class DUAllocationAuto extends SvrProcess
 			if (payment.getC_Currency_ID() != C_Currency_ID)
 				continue;
 			BigDecimal allocatedAmt = payment.getAllocatedAmt();
+			allocatedAmt = allocatedAmt != null ? allocatedAmt : Env.ZERO;
 			// comment following lines to allow partial allocation
 			// if (allocatedAmt != null && allocatedAmt.signum() != 0)
 			// 	continue;
