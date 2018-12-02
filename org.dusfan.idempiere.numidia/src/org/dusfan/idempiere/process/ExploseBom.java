@@ -56,6 +56,7 @@ public class ExploseBom extends SvrProcess {
 					bprel.saveEx();
 					// Mettre la relation tiers
 					ord.setBill_BPartner_ID(clientCode.getC_BPartner_ID());
+					ord.setBill_Location_ID(bprel.getC_BPartnerRelation_Location_ID());
 					ord.saveEx();
 				}
 			}
