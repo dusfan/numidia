@@ -1,6 +1,5 @@
 package org.dusfan.idempiere.event;
 
-import java.math.BigDecimal;
 import java.util.Properties;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MBankAccount;
@@ -69,6 +68,10 @@ public class EventPayment {
 	public static boolean checkindividualPayment (PO po, Properties ctx, String trxName) {
 		MPayment pay = (MPayment)po;
 		MBPartner bp = new MBPartner(ctx, pay.getC_BPartner_ID(), trxName);
+		int current_role_id = Env.getAD_Role_ID(Env.getCtx());
+		if (bp.get_Value("TypeCodeClient").equals("2") && (current_role_id==1000007 || current_role_id==1000016))
+			return false; // don't let payment for individual if comptoir agent
+		
 		if (bp.getAD_Org_ID() == 1000002 && bp.get_Value("TypeClient")!=null
 				&& bp.get_ValueAsString("TypeClient").equals("1")
 				&& bp.get_Value("C_BPartnerRelation_ID")!=null) {
