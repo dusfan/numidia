@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.adempiere.base.IColumnCallout;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
+import org.compiere.model.MBPartner;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
@@ -29,6 +30,10 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 						else
 							mTab.setValue("C_BPartnerRelation_ID", c_bpartner_id); // mettre le code client
 					}
+					
+					MBPartner bp = new MBPartner(ctx, c_bpartner_id, null);
+					if (bp.get_Value("TypeCodeClient").equals("2"))
+						mTab.fireDataStatusEEvent("ATTENTION Le tiers est code client individuel", null, false);
 	 				
 				}
 			}

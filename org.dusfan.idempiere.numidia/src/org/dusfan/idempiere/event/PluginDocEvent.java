@@ -154,7 +154,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 					if (po.getAD_Org_ID() == 1000002)
 						if (!EventPayment.checkindividualPayment(po, ctx, trxName))
 						throw new AdempiereUserError("le code client du tiers n est pas individuel, "
-								+ "vous ne pouvez pas effectuer ce paiement");
+								+ "vous ne pouvez pas effectuer ce paiement/Contacter Admin");
 				}
 				else if (po instanceof X_I_ImportOmraBP) {
 					EventImportOmra.setPackageFromImport(po, ctx, trxName);
