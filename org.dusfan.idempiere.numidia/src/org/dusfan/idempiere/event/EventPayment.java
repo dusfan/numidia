@@ -69,7 +69,7 @@ public class EventPayment {
 		MPayment pay = (MPayment)po;
 		MBPartner bp = new MBPartner(ctx, pay.getC_BPartner_ID(), trxName);
 		int current_role_id = Env.getAD_Role_ID(Env.getCtx());
-		if (bp.get_Value("TypeCodeClient").equals("2") && (current_role_id==1000007 || current_role_id==1000016))
+		if ((bp.get_Value("TypeCodeClient")!=null && bp.get_Value("TypeCodeClient").equals("2")) && (current_role_id==1000007 || current_role_id==1000016))
 			return false; // don't let payment for individual if comptoir agent
 		
 		if (bp.getAD_Org_ID() == 1000002 && bp.get_Value("TypeClient")!=null

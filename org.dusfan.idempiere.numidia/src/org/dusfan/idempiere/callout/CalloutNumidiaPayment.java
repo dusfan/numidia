@@ -32,7 +32,7 @@ public class CalloutNumidiaPayment implements IColumnCallout{
 					}
 					
 					MBPartner bp = new MBPartner(ctx, c_bpartner_id, null);
-					if (bp.get_Value("TypeCodeClient").equals("2"))
+					if (bp.get_Value("TypeCodeClient")!=null && bp.get_Value("TypeCodeClient").equals("2"))
 						mTab.fireDataStatusEEvent("ATTENTION Le tiers est code client individuel", null, false);
 	 				
 				}
