@@ -22,6 +22,7 @@ import org.dusfan.idempiere.process.ImportMarginSharing;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.ImportTourismeBP;
 import org.dusfan.idempiere.process.ProcessOrder;
+import org.dusfan.idempiere.process.ServerProcess;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
 import org.dusfan.idempiere.process.SetGratuiteSV;
 import org.dusfan.idempiere.process.SetPrinted;
@@ -108,7 +109,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new CreateOpositeDoc();
 		else if (className.equals(DUAllocationAuto.class.getName()))
 			return new DUAllocationAuto();
-					
+			else if (className.equals(ServerProcess.class.getName()))
+				return new ServerProcess();			
 		return null;
 	}
 }
