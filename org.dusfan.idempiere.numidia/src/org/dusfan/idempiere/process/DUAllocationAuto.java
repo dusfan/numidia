@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import org.compiere.model.MAllocationHdr;
 import org.compiere.model.MAllocationLine;
+import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MPaySelectionCheck;
@@ -93,8 +94,12 @@ public class DUAllocationAuto extends SvrProcess
 		if (p_C_BPartner_ID != 0)
 		{
 			countAlloc = allocateBP (p_C_BPartner_ID);
-			if (countAlloc > 0)
+			if (countAlloc > 0) {
 				countBP++;
+				MBPartner bp = new MBPartner(getCtx(), p_C_BPartner_ID, get_TrxName());
+				bp.setTotalOpenBalance();
+				bp.saveEx();
+			}
 		}
 		else if (p_C_BP_Group_ID != 0)
 		{
@@ -115,6 +120,9 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
+						MBPartner bp = new MBPartner(getCtx(), C_BPartner_ID, get_TrxName());
+						bp.setTotalOpenBalance();
+						bp.saveEx();
 						commitEx();
 					}
 				}
@@ -147,6 +155,9 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
+						MBPartner bp = new MBPartner(getCtx(), C_BPartner_ID, get_TrxName());
+						bp.setTotalOpenBalance();
+						bp.saveEx();
 						commitEx();
 					}
 				}
