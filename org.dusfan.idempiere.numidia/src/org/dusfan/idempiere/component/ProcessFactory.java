@@ -2,6 +2,7 @@ package org.dusfan.idempiere.component;
 import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
 import org.dusfan.idempiere.process.DUAllocationAuto;
+import org.dusfan.idempiere.process.BPartnerValidateDU;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
@@ -109,8 +110,11 @@ public class ProcessFactory implements IProcessFactory {
 			return new CreateOpositeDoc();
 		else if (className.equals(DUAllocationAuto.class.getName()))
 			return new DUAllocationAuto();
-			else if (className.equals(ServerProcess.class.getName()))
-				return new ServerProcess();			
+		else if (className.equals(ServerProcess.class.getName()))
+				return new ServerProcess();	
+		else if (className.equals(BPartnerValidateDU.class.getName())) {
+				return new BPartnerValidateDU ();
+		}
 		return null;
 	}
 }

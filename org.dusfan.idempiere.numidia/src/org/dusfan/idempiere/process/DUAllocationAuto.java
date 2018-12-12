@@ -9,18 +9,22 @@ import java.util.logging.Level;
 
 import org.compiere.model.MAllocationHdr;
 import org.compiere.model.MAllocationLine;
-import org.compiere.model.MBPartner;
 import org.compiere.model.MClient;
 import org.compiere.model.MInvoice;
+import org.compiere.model.MPInstance;
 import org.compiere.model.MPaySelectionCheck;
 import org.compiere.model.MPaySelectionLine;
 import org.compiere.model.MPayment;
+import org.compiere.model.MProcess;
+import org.compiere.model.Query;
+import org.compiere.process.ProcessInfo;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.AdempiereSystemError;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
+import org.compiere.util.Trx;
 
 /**
  *	Automatic Allocation Process
@@ -96,10 +100,8 @@ public class DUAllocationAuto extends SvrProcess
 			countAlloc = allocateBP (p_C_BPartner_ID);
 			if (countAlloc > 0) {
 				countBP++;
-				MBPartner bp = new MBPartner(getCtx(), p_C_BPartner_ID, get_TrxName());
-				bp.setTotalOpenBalance();
-				bp.saveEx();
 			}
+			validateBP(p_C_BPartner_ID);
 		}
 		else if (p_C_BP_Group_ID != 0)
 		{
@@ -120,11 +122,9 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
-						MBPartner bp = new MBPartner(getCtx(), C_BPartner_ID, get_TrxName());
-						bp.setTotalOpenBalance();
-						bp.saveEx();
 						commitEx();
 					}
+					validateBP(C_BPartner_ID);
 				}
 			}
 			catch (Exception e)
@@ -155,9 +155,7 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
-						MBPartner bp = new MBPartner(getCtx(), C_BPartner_ID, get_TrxName());
-						bp.setTotalOpenBalance();
-						bp.saveEx();
+						validateBP(C_BPartner_ID);
 						commitEx();
 					}
 				}
@@ -854,5 +852,54 @@ public class DUAllocationAuto extends SvrProcess
 		m_allocation = null;
 		return success;
 	}	//	processAllocation
+	
+	
+	private void validateBP (int c_bpartner_id) {
+		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "Classname=?", null)
+                .setParameters(new Object[]{"org.dusfan.idempiere.process.BPartnerValidateDU"})
+                .first();
+		if (pr == null) {
+			log.severe("Process does not exist. Have you installed and started it?");
+		}
+		else {
+			ProcessInfoParameter pi1 = new ProcessInfoParameter("C_BPartner_ID", c_bpartner_id, "","","");
+			
+			ProcessInfo pi = new ProcessInfo("Validate BP", pr.get_ID(), 0, 0);
+			pi.setAD_Client_ID(1000002);
+			pi.setParameter(new ProcessInfoParameter[] {pi1});
+
+			// Create an instance of the actual process class.
+			BPartnerValidateDU process = new BPartnerValidateDU();
+
+			// Create process instance (mainly for logging/sync purpose)
+			MPInstance mpi = new MPInstance(Env.getCtx(), 0, null);
+			mpi.setAD_Process_ID(pr.get_ID()); 
+			mpi.setRecord_ID(0);
+			mpi.save();
+
+			// Connect the process to the process instance.
+			pi.setAD_PInstance_ID(mpi.get_ID());
+
+			log.info("Starting process " + pr.getName());
+			Trx trx = Trx.get(get_TrxName(), true);
+			boolean result = false;
+			try {
+				result = process.startProcess(Env.getCtx(), pi, trx);
+				if (result)
+					trx.commit();
+			} catch (Exception e) {
+				log.severe(e.getMessage());
+				trx.rollback();
+				trx.close();
+				trx = null;
+				result = false;
+			}finally {
+				trx.close();
+				trx = null;
+			}
+		}
+		
+	}
+	
 	
 }	//	AllocationAuto
