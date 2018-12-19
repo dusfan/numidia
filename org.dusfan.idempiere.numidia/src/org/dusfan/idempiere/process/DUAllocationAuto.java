@@ -100,8 +100,9 @@ public class DUAllocationAuto extends SvrProcess
 			countAlloc = allocateBP (p_C_BPartner_ID);
 			if (countAlloc > 0) {
 				countBP++;
+				validateBP(p_C_BPartner_ID);
 			}
-			validateBP(p_C_BPartner_ID);
+			
 		}
 		else if (p_C_BP_Group_ID != 0)
 		{
@@ -123,8 +124,9 @@ public class DUAllocationAuto extends SvrProcess
 						countBP++;
 						countAlloc += count;
 						commitEx();
+						validateBP(C_BPartner_ID);
 					}
-					validateBP(C_BPartner_ID);
+					
 				}
 			}
 			catch (Exception e)
