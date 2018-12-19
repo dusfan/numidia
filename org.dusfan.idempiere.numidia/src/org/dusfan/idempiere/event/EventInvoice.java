@@ -1,12 +1,16 @@
 package org.dusfan.idempiere.event;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Properties;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MInvoice;
+import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrder;
 import org.compiere.model.PO;
 import org.compiere.util.DB;
+import org.compiere.util.Env;
 
 public class EventInvoice {
 
@@ -39,5 +43,15 @@ public class EventInvoice {
 		MInvoice invoice = (MInvoice) po;
 		invoice.setDocumentNo(invoice.getDocumentNo().concat("-RE"));
 		invoice.saveEx();
+	}
+
+	public static void checkDateInvoiced(String tableName, PO po, Properties ctx, String trxName) {
+		MInvoiceLine invoiceLine = (MInvoiceLine) po;
+		Timestamp date = (Timestamp) Env.getContextAsDate(Env.getCtx(), 1, "DateInvoiced");
+		LocalDate dateInvoiced = date.toLocalDateTime().toLocalDate();
+		LocalDate dateBooking = ((Timestamp) invoiceLine.get_Value("DateFrom")).toLocalDateTime().toLocalDate();
+		if (!dateInvoiced.equals(dateBooking)){
+			throw new AdempiereException( "la date d'entrée est différente au date de facturation!");
+		}
 	}
 }
