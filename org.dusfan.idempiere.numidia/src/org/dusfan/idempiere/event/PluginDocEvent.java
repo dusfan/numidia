@@ -120,6 +120,8 @@ public class PluginDocEvent extends AbstractEventHandler {
 				} else if (po instanceof MInvoiceLine) {
 					if (po.getAD_Org_ID()!=1000002 && po.getAD_Client_ID() == 1000002)
 						EventOrder.setC_Activity_ID(MInvoiceLine.Table_Name, po, ctx,trxName);
+					if (po.getAD_Org_ID()==1000004)
+						EventInvoice.checkDateInvoiced(MInvoiceLine.Table_Name, po, ctx,trxName);
 					
 				} else if (po instanceof MOrder) {
 					

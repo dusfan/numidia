@@ -22,6 +22,7 @@ import org.dusfan.idempiere.process.ImportInvoicePurchase;
 import org.dusfan.idempiere.process.ImportMarginSharing;
 import org.dusfan.idempiere.process.ImportPartnerOnly;
 import org.dusfan.idempiere.process.ImportTourismeBP;
+import org.dusfan.idempiere.process.InvoicePrintDU;
 import org.dusfan.idempiere.process.ProcessOrder;
 import org.dusfan.idempiere.process.ServerProcess;
 import org.dusfan.idempiere.process.SetDateRetourVisa;
@@ -111,10 +112,11 @@ public class ProcessFactory implements IProcessFactory {
 		else if (className.equals(DUAllocationAuto.class.getName()))
 			return new DUAllocationAuto();
 		else if (className.equals(ServerProcess.class.getName()))
-				return new ServerProcess();	
+			return new ServerProcess();	
 		else if (className.equals(BPartnerValidateDU.class.getName())) {
-				return new BPartnerValidateDU ();
-		}
+			return new BPartnerValidateDU ();
+		}else if (className.equals(InvoicePrintDU.class.getName()))
+			return new InvoicePrintDU();
 		return null;
 	}
 }
