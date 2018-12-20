@@ -47,11 +47,14 @@ public class EventInvoice {
 
 	public static void checkDateInvoiced(String tableName, PO po, Properties ctx, String trxName) {
 		MInvoiceLine invoiceLine = (MInvoiceLine) po;
-		Timestamp date = (Timestamp) Env.getContextAsDate(Env.getCtx(), 1, "DateInvoiced");
-		LocalDate dateInvoiced = date.toLocalDateTime().toLocalDate();
-		LocalDate dateBooking = ((Timestamp) invoiceLine.get_Value("DateFrom")).toLocalDateTime().toLocalDate();
-		if (!dateInvoiced.equals(dateBooking)){
-			throw new AdempiereException( "la date d'entrée est différente au date de facturation!");
+		if (invoiceLine.get_ValueAsInt("DU_Service_ID") > 0) { // only with service is mentioned
+			Timestamp date = (Timestamp) Env.getContextAsDate(Env.getCtx(), 1, "DateInvoiced");
+			LocalDate dateInvoiced = date.toLocalDateTime().toLocalDate();
+			LocalDate dateBooking = ((Timestamp) invoiceLine.get_Value("DateFrom")).toLocalDateTime().toLocalDate();
+			if (!dateInvoiced.equals(dateBooking)){
+				throw new AdempiereException( "la date d'entrée est différente de la date de facturation!");
+			}
 		}
+		
 	}
 }
