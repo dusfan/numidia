@@ -106,7 +106,7 @@ public class ImportInvoicePurchase extends SvrProcess
 //		Customization LoH
 		// delete record where there no amount neither booking refrence
 		sql = new StringBuilder ("delete from I_InvoicePurchase o ")
-				.append("WHERE DocumentNo is NULL or PendingPayment is null or DocumentNo ='Booking ref.'")
+				.append("WHERE DocumentNo is NULL or PendingPayment is null or DocumentNo like 'Booking%'")
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='N'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
