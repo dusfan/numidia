@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import org.compiere.model.MAllocationHdr;
@@ -54,6 +55,7 @@ public class DUAllocationAuto extends SvrProcess
 	private MAllocationHdr	m_allocation = null;
 	
 	private String typeClient = "1";
+	private ArrayList<Integer> listallocatedBp = null;
 	
 	
 	/**
@@ -80,6 +82,7 @@ public class DUAllocationAuto extends SvrProcess
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
 		}
+		listallocatedBp = new ArrayList<Integer>();
 	}	//	prepare
 
 	/**
@@ -100,14 +103,14 @@ public class DUAllocationAuto extends SvrProcess
 			countAlloc = allocateBP (p_C_BPartner_ID);
 			if (countAlloc > 0) {
 				countBP++;
-				validateBP(p_C_BPartner_ID);
+				listallocatedBp.add(p_C_BPartner_ID);
 			}
 			
 		}
 		else if (p_C_BP_Group_ID != 0)
 		{
 			String sql = "SELECT C_BPartner_ID FROM C_BPartner WHERE C_BP_Group_ID=?"
-					+ " AND TypeClient ='"+ typeClient +"' ORDER BY Value";
+					+ " AND totalopenbalance <> 0 AND TypeClient ='"+ typeClient +"' ORDER BY Value";
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			try
@@ -124,7 +127,7 @@ public class DUAllocationAuto extends SvrProcess
 						countBP++;
 						countAlloc += count;
 						commitEx();
-						validateBP(C_BPartner_ID);
+						listallocatedBp.add(C_BPartner_ID);
 					}
 					
 				}
@@ -157,7 +160,7 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
-						validateBP(C_BPartner_ID);
+						listallocatedBp.add(C_BPartner_ID);
 						commitEx();
 					}
 				}
@@ -174,6 +177,9 @@ public class DUAllocationAuto extends SvrProcess
 		}
 		//
 		StringBuilder msgreturn = new StringBuilder("@Created@ #").append(countBP).append("/").append(countAlloc);
+		// Validate bp
+		validateBpAllocated ();
+		// End Validate BP
 		return msgreturn.toString();
 	}	//	doIt
 
@@ -855,6 +861,14 @@ public class DUAllocationAuto extends SvrProcess
 		return success;
 	}	//	processAllocation
 	
+	
+	private void validateBpAllocated () {
+		if (listallocatedBp.size() > 0) {
+			for (int i = 0; i < listallocatedBp.size(); i++) {
+				validateBP(listallocatedBp.get(i));
+			}
+		}
+	}
 	
 	private void validateBP (int c_bpartner_id) {
 		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "Classname=?", null)
