@@ -110,7 +110,7 @@ public class DUAllocationAuto extends SvrProcess
 		else if (p_C_BP_Group_ID != 0)
 		{
 			String sql = "SELECT C_BPartner_ID FROM C_BPartner WHERE C_BP_Group_ID=?"
-					+ " AND totalopenbalance <> 0 AND TypeClient ='"+ typeClient +"' ORDER BY Value";
+					+ " AND TypeClient ='"+ typeClient +"' ORDER BY Value"; // get only bp client normal
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			try
