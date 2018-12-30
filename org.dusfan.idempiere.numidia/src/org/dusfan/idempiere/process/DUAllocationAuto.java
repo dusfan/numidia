@@ -178,7 +178,7 @@ public class DUAllocationAuto extends SvrProcess
 		//
 		StringBuilder msgreturn = new StringBuilder("@Created@ #").append(countBP).append("/").append(countAlloc);
 		// Validate bp
-		validateBpAllocated ();
+//		validateBpAllocated ();
 		// End Validate BP
 		return msgreturn.toString();
 	}	//	doIt
@@ -862,60 +862,60 @@ public class DUAllocationAuto extends SvrProcess
 	}	//	processAllocation
 	
 	
-	private void validateBpAllocated () {
-		if (listallocatedBp.size() > 0) {
-			for (int i = 0; i < listallocatedBp.size(); i++) {
-				validateBP(listallocatedBp.get(i));
-			}
-		}
-	}
+//	private void validateBpAllocated () {
+//		if (listallocatedBp.size() > 0) {
+//			for (int i = 0; i < listallocatedBp.size(); i++) {
+//				validateBP(listallocatedBp.get(i));
+//			}
+//		}
+//	}
 	
-	private void validateBP (int c_bpartner_id) {
-		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "Classname=?", null)
-                .setParameters(new Object[]{"org.dusfan.idempiere.process.BPartnerValidateDU"})
-                .first();
-		if (pr == null) {
-			log.severe("Process does not exist. Have you installed and started it?");
-		}
-		else {
-			ProcessInfoParameter pi1 = new ProcessInfoParameter("C_BPartner_ID", c_bpartner_id, "","","");
-			
-			ProcessInfo pi = new ProcessInfo("Validate BP", pr.get_ID(), 0, 0);
-			pi.setAD_Client_ID(1000002);
-			pi.setParameter(new ProcessInfoParameter[] {pi1});
-
-			// Create an instance of the actual process class.
-			BPartnerValidateDU process = new BPartnerValidateDU();
-
-			// Create process instance (mainly for logging/sync purpose)
-			MPInstance mpi = new MPInstance(Env.getCtx(), 0, null);
-			mpi.setAD_Process_ID(pr.get_ID()); 
-			mpi.setRecord_ID(0);
-			mpi.save();
-
-			// Connect the process to the process instance.
-			pi.setAD_PInstance_ID(mpi.get_ID());
-
-			log.info("Starting process " + pr.getName());
-			Trx trx = Trx.get(get_TrxName(), true);
-			boolean result = false;
-			try {
-				result = process.startProcess(Env.getCtx(), pi, trx);
-				if (result)
-					trx.commit();
-			} catch (Exception e) {
-				log.severe(e.getMessage());
-				trx.rollback();
-				trx.close();
-				trx = null;
-				result = false;
-			}finally {
-				trx.close();
-				trx = null;
-			}
-		}
-		
-	}
+//	private void validateBP (int c_bpartner_id) {
+//		MProcess pr = new Query(Env.getCtx(), MProcess.Table_Name, "Classname=?", null)
+//                .setParameters(new Object[]{"org.dusfan.idempiere.process.BPartnerValidateDU"})
+//                .first();
+//		if (pr == null) {
+//			log.severe("Process does not exist. Have you installed and started it?");
+//		}
+//		else {
+//			ProcessInfoParameter pi1 = new ProcessInfoParameter("C_BPartner_ID", c_bpartner_id, "","","");
+//			
+//			ProcessInfo pi = new ProcessInfo("Validate BP", pr.get_ID(), 0, 0);
+//			pi.setAD_Client_ID(1000002);
+//			pi.setParameter(new ProcessInfoParameter[] {pi1});
+//
+//			// Create an instance of the actual process class.
+//			BPartnerValidateDU process = new BPartnerValidateDU();
+//
+//			// Create process instance (mainly for logging/sync purpose)
+//			MPInstance mpi = new MPInstance(Env.getCtx(), 0, null);
+//			mpi.setAD_Process_ID(pr.get_ID()); 
+//			mpi.setRecord_ID(0);
+//			mpi.save();
+//
+//			// Connect the process to the process instance.
+//			pi.setAD_PInstance_ID(mpi.get_ID());
+//
+//			log.info("Starting process " + pr.getName());
+//			Trx trx = Trx.get(get_TrxName(), true);
+//			boolean result = false;
+//			try {
+//				result = process.startProcess(Env.getCtx(), pi, trx);
+//				if (result)
+//					trx.commit();
+//			} catch (Exception e) {
+//				log.severe(e.getMessage());
+//				trx.rollback();
+//				trx.close();
+//				trx = null;
+//				result = false;
+//			}finally {
+//				trx.close();
+//				trx = null;
+//			}
+//		}
+//		
+//	}
 	
 	
 }	//	AllocationAuto
