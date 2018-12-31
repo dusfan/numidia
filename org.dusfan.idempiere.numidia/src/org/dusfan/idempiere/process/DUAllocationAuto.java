@@ -92,6 +92,10 @@ public class DUAllocationAuto extends SvrProcess
 	 */
 	protected String doIt() throws Exception
 	{
+		if (getProcessInfo().getAD_Process_ID() == 1000105) {
+			Env.setContext(getCtx(), "#AD_Client_ID", 1000002);
+			Env.setContext(getCtx(), "#AD_Org_ID", 1000002);
+		}
 		if (log.isLoggable(Level.INFO)) log.info ("C_BP_Group_ID=" + p_C_BP_Group_ID 
 			+ ", C_BPartner_ID=" + p_C_BPartner_ID 
 			+ ", Oldest=" + p_AllocateOldest
