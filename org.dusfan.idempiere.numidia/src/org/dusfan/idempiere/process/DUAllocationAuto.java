@@ -55,7 +55,6 @@ public class DUAllocationAuto extends SvrProcess
 	private MAllocationHdr	m_allocation = null;
 	
 	private String typeClient = "1";
-	private ArrayList<Integer> listallocatedBp = null;
 	
 	
 	/**
@@ -82,7 +81,6 @@ public class DUAllocationAuto extends SvrProcess
 			else
 				log.log(Level.SEVERE, "Unknown Parameter: " + name);
 		}
-		listallocatedBp = new ArrayList<Integer>();
 	}	//	prepare
 
 	/**
@@ -107,7 +105,6 @@ public class DUAllocationAuto extends SvrProcess
 			countAlloc = allocateBP (p_C_BPartner_ID);
 			if (countAlloc > 0) {
 				countBP++;
-				listallocatedBp.add(p_C_BPartner_ID);
 			}
 			
 		}
@@ -131,7 +128,6 @@ public class DUAllocationAuto extends SvrProcess
 						countBP++;
 						countAlloc += count;
 						commitEx();
-						listallocatedBp.add(C_BPartner_ID);
 					}
 					
 				}
@@ -164,7 +160,6 @@ public class DUAllocationAuto extends SvrProcess
 					{
 						countBP++;
 						countAlloc += count;
-						listallocatedBp.add(C_BPartner_ID);
 						commitEx();
 					}
 				}
