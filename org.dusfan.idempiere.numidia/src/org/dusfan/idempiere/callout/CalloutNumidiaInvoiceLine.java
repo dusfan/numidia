@@ -10,12 +10,10 @@ import org.adempiere.base.IColumnCallout;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.GridField;
 import org.compiere.model.GridTab;
-import org.compiere.model.MInvoice;
 import org.compiere.model.MProduct;
 import org.compiere.model.MTax;
 import org.compiere.model.Query;
 import org.compiere.util.Env;
-import org.dusfan.idempiere.model.MService;
 
 public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 
@@ -42,42 +40,64 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 				}
 			}
 
-			if (mField.getColumnName().equals("DateFrom") || mField.getColumnName().equals("DateTo")) {
+			if (mField.getColumnName().equals("DateFrom") || mField.getColumnName().equals("DateTo") || mField.getColumnName().equals("M_Pax")) {
 				Timestamp date1 = (Timestamp) mTab.getValue("DateFrom");
 				Timestamp date2 = (Timestamp) mTab.getValue("DateTo");
-				if (date1!=null && date2!=null){
+				if (date1!=null && date2!=null && mTab.get_ValueAsString("M_Pax")!=""){
+					BigDecimal nbrGroup =  new BigDecimal(mTab.get_ValueAsString("M_Pax"));
 					LocalDate dateFrom = date1.toLocalDateTime().toLocalDate();
 					LocalDate dateTo = date2.toLocalDateTime().toLocalDate();
 					Period period = Period.between(dateFrom, dateTo);
 					int diff = period.getDays();
 					if (diff <= 0 )
 						throw new AdempiereException("Vérifier la date entrée et la date sortie!");
-					mTab.setValue("QtyEntered", BigDecimal.valueOf(diff));
-					mTab.setValue("QtyInvoiced", BigDecimal.valueOf(diff));
+					mTab.setValue("NBR", BigDecimal.valueOf(diff));
+					mTab.setValue("QtyEntered", BigDecimal.valueOf(diff).multiply(nbrGroup));
+					mTab.setValue("QtyInvoiced", BigDecimal.valueOf(diff).multiply(nbrGroup));
+					setPurchaseSalesPrice(mTab);
 				}
 			}
-			
-			if (mField.getColumnName().equals("DU_Service_ID")) {
-				Integer du_Service_ID = (Integer) mTab.getValue("DU_Service_ID");
-				if (du_Service_ID != null){
-					MService service = new MService(Env.getCtx(), du_Service_ID, null);
-					MInvoice invoice = new MInvoice(Env.getCtx(), (int) mTab.getValue("C_Invoice_ID"), null);
-					BigDecimal taxEUR = Env.ZERO;
-					BigDecimal taxDZD = Env.ZERO;
-					if (invoice.get_ValueAsBoolean("IsInclude")){
-						MProduct product = new MProduct(Env.getCtx(), (int) mTab.getValue("M_Product_ID"), null);
-						taxEUR = (BigDecimal) product.get_Value("PriceEuro");
-						taxDZD = (BigDecimal) product.get_Value("PriceActual");
-					}
-					//					mTab.setValue("C_Charge_ID", 1000012);
-					mTab.setValue("PriceEuro", service.getPriceEuro().add(taxEUR));
-					mTab.setValue("AgencyProfit", service.getAgencyProfit());
-					mTab.setValue("PriceEntered", service.getPriceActual().add(taxDZD));
-					mTab.setValue("PriceActual", service.getPriceActual().add(taxDZD));
-				}
+			//T_Marge tax de séjour
+			if (mField.getColumnName().equals("T_PriceHotel") || mField.getColumnName().equals("T_PriceVente")
+					|| mField.getColumnName().equals("T_Marge") || mField.getColumnName().equals("T_OtherDZD")) {
+				setPurchaseSalesPrice(mTab);
 			}
 		}
 		return null;
+	}
+
+	private void setPurchaseSalesPrice(GridTab mTab) {
+		//Prix d'achat 
+		BigDecimal purchasePrice = mTab.getValue("T_PriceHotel") != null ? (BigDecimal)mTab.getValue("T_PriceHotel")
+				: Env.ZERO;
+		//Prix De vente 
+		BigDecimal salesPrice = mTab.getValue("T_PriceVente") != null ? (BigDecimal)mTab.getValue("T_PriceVente")
+				: Env.ZERO;
+		//Taxe de séjours 
+		BigDecimal taxSej = mTab.getValue("T_Marge") != null ? (BigDecimal)mTab.getValue("T_Marge")
+				: Env.ZERO;
+		//Autre frais 
+		BigDecimal other = mTab.getValue("T_OtherDZD") != null ? (BigDecimal)mTab.getValue("T_OtherDZD")
+				: Env.ZERO;
+		//commission agence
+		BigDecimal commission = (salesPrice.subtract(purchasePrice).add(other)).multiply((BigDecimal)mTab.getValue("QtyEntered"));
+
+		//Total achat
+		BigDecimal totalAchat = purchasePrice.add(taxSej);
+
+		//Total vente
+		BigDecimal totalVente = (salesPrice.add(taxSej.add(other))).multiply((BigDecimal)mTab.getValue("QtyEntered"));
+
+		//Les champs customizer
+		mTab.setValue("AgencyProfit", commission);
+
+		//Les champs customizer
+		mTab.setValue("SalesPrice", totalVente);
+
+		//Les Valeur standard du system
+		mTab.setValue("PriceEntered", totalAchat);
+		mTab.setValue("PriceActual", totalAchat);
+
 	}
 
 }
