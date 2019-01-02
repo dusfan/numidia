@@ -137,7 +137,7 @@ public class DUWAllocateFromImportUI extends DUAllocateFromImport implements Eve
 		//  VOL		
 		lookup = MLookupFactory.get(Env.getCtx(), p_WindowNo, DisplayType.TableDir ,
 				1000425, Env.getLanguage(Env.getCtx()), "DU_Vol_ID", -1 ,
-				false, " DU_Vol.isActive='Y' AND trunc(DU_Vol.departdatetime_direct) >= trunc(current_date-10)");
+				false, " DU_Vol.isActive='Y' AND trunc(DU_Vol.departdatetime_direct) >= trunc(current_date-80)");
 		volField = new WTableDirEditor ("DU_Vol_ID", true, false, true, lookup);
 		
 		// Prestation
