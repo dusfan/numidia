@@ -78,6 +78,9 @@ public class GenerateInvoiceTourisme extends SvrProcess {
 			line.setLineNetAmt();
 			line.saveEx();
 			// Complete Invoice
+			// set date checkIN
+			inv.setDateInvoiced((Timestamp) pay.get_Value("ChekInDate"));
+			inv.setDateAcct((Timestamp) pay.get_Value("ChekInDate"));
 			inv.processIt(DocAction.ACTION_Complete);
 			inv.saveEx();
 			pay.setC_Invoice_ID(inv.getC_Invoice_ID());
