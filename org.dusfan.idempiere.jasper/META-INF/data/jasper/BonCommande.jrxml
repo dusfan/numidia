@@ -39,17 +39,10 @@
 		<parameter name="C_Invoice_ID" class="java.lang.Integer"/>
 		<parameter name="ISINCLUDE" class="java.lang.String"/>
 		<queryString language="SQL">
-			<![CDATA[select il.qtyinvoiced, il.priceactual, il.linenetamt, il.DateFrom, il.DateTo, il.LeadPassenger, sert.name, 
-case (ser.Board) 
-	when 'RO' then 'Sans petit déjeuner'
-	when 'BB' then 'Avec petit déjeuner'
-	when 'HB' then 'En Demi pension'
-	when 'FB' then 'En Pension Complète'
-	end as board, ser.view
+			<![CDATA[select il.qtyinvoiced, il.priceactual, il.linenetamt, il.DateFrom, il.DateTo, il.LeadPassenger,
+il.M_Pax,il.T_Marge,il.Description
 from c_invoiceline il
 inner join c_invoice i on i.c_invoice_id = il.c_invoice_id
-inner join du_service ser on ser.du_service_id = il.du_service_id
-LEFT OUTER JOIN DU_ServiceType SERT on sert.du_serviceType_id = ser.du_serviceType_id
 where il.c_invoice_id = $P{C_Invoice_ID}]]>
 		</queryString>
 		<field name="qtyinvoiced" class="java.math.BigDecimal">
@@ -70,15 +63,9 @@ where il.c_invoice_id = $P{C_Invoice_ID}]]>
 		<field name="leadpassenger" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="leadpassenger"/>
 		</field>
-		<field name="name" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="name"/>
-		</field>
-		<field name="board" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="board"/>
-		</field>
-		<field name="view" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="view"/>
-		</field>
+		<field name="M_Pax" class="java.lang.Integer"/>
+		<field name="T_Marge" class="java.math.BigDecimal"/>
+		<field name="Description" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="RECORD_ID" class="java.lang.Integer"/>
 	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
@@ -245,7 +232,7 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="18" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Bon de Commande N° :  " + $F{poreference}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Bon de Commande N° :  " + $F{documentno}]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement x="450" y="0" width="104" height="44" uuid="a29830a4-0fa5-476f-9cf8-ef973c0e4286"/>
@@ -264,12 +251,9 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="InvoiceLines" uuid="a561bc41-39d2-45ec-891c-c949fbbaba68">
+					<datasetRun subDataset="InvoiceLines" uuid="a4d2592f-1895-455f-b244-e3a01d90a9f4">
 						<datasetParameter name="C_Invoice_ID">
 							<datasetParameterExpression><![CDATA[$P{RECORD_ID}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="ISINCLUDE">
-							<datasetParameterExpression><![CDATA[$F{isinclude}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -292,7 +276,7 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 								<textElement verticalAlignment="Middle">
 									<font size="14"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{qtyinvoiced}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{M_Pax}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -312,14 +296,9 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 							<textField>
 								<reportElement x="0" y="0" width="370" height="130" uuid="6dbad567-c9e9-49c5-8a69-500a92375c6b"/>
 								<textElement verticalAlignment="Middle">
-									<font size="12"/>
+									<font size="12" isBold="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{name} + " " + ($F{board}!=null  ? $F{board} : "")+ "\n "+
- "\n "+
-"Du "+ new SimpleDateFormat("dd/MM/yyyy").format($F{datefrom})+" au "+ new SimpleDateFormat("dd/MM/yyyy").format($F{dateto})+ "\n "+
- "\n "+
- "Au nom de : "+ ($F{leadpassenger}!=null  ? $F{leadpassenger} : "")+ "\n "+
- "\n "+"Taxe de séjour : "+($P{ISINCLUDE}.contentEquals( "Y" ) ? "incluse" : "non incluse")]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -335,14 +314,7 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 								<text><![CDATA[Prix Unitaire]]></text>
 							</staticText>
 						</jr:tableHeader>
-						<jr:detailCell style="Table_TD" height="130">
-							<textField>
-								<reportElement x="0" y="0" width="60" height="130" uuid="31b171b2-0f09-4a57-843a-b78d6324f656"/>
-								<box rightPadding="1"/>
-								<textElement textAlignment="Right" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{priceactual}.setScale(2)]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
+						<jr:detailCell style="Table_TD" height="130"/>
 					</jr:column>
 					<jr:column width="60" uuid="7c340614-1d07-4096-a412-45f243a925df">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
@@ -356,14 +328,7 @@ WHERE I.C_INVOICE_ID = $P{RECORD_ID}]]>
 								<text><![CDATA[Prix]]></text>
 							</staticText>
 						</jr:tableHeader>
-						<jr:detailCell style="Table_TD" height="130">
-							<textField>
-								<reportElement x="0" y="0" width="60" height="130" uuid="f05a3d63-e3a2-4294-a07b-8f660298646d"/>
-								<box rightPadding="1"/>
-								<textElement textAlignment="Right" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{linenetamt}.setScale(2)]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
+						<jr:detailCell style="Table_TD" height="130"/>
 					</jr:column>
 				</jr:table>
 			</componentElement>
