@@ -1,5 +1,6 @@
 package org.dusfan.idempiere.event;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Properties;
@@ -47,7 +48,7 @@ public class EventInvoice {
 
 	public static void checkDateInvoiced(String tableName, PO po, Properties ctx, String trxName) {
 		MInvoiceLine invoiceLine = (MInvoiceLine) po;
-		if (invoiceLine.get_ValueAsInt("DU_Service_ID") > 0) { // only with service is mentioned
+		if (((BigDecimal) invoiceLine.get_Value("T_PriceHotel")).compareTo(Env.ZERO)>0 ) { // only with service is mentioned
 			Timestamp date = (Timestamp) Env.getContextAsDate(Env.getCtx(), 1, "DateInvoiced");
 			LocalDate dateInvoiced = date.toLocalDateTime().toLocalDate();
 			LocalDate dateBooking = ((Timestamp) invoiceLine.get_Value("DateFrom")).toLocalDateTime().toLocalDate();
