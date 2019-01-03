@@ -49,7 +49,7 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 					LocalDate dateTo = date2.toLocalDateTime().toLocalDate();
 					Period period = Period.between(dateFrom, dateTo);
 					int diff = period.getDays();
-					if (diff <= 0 )
+					if (diff < 0 )
 						throw new AdempiereException("Vérifier la date entrée et la date sortie!");
 					mTab.setValue("NBR", BigDecimal.valueOf(diff));
 					mTab.setValue("QtyEntered", BigDecimal.valueOf(diff).multiply(nbrGroup));
@@ -62,6 +62,12 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 					|| mField.getColumnName().equals("T_Marge") || mField.getColumnName().equals("T_OtherDZD")) {
 				setPurchaseSalesPrice(mTab);
 			}
+		}
+		if (mField.getColumnName().equals("NBR")){
+			BigDecimal nbrGroup =  new BigDecimal(mTab.get_ValueAsString("M_Pax"));
+			BigDecimal diff = new BigDecimal(mTab.get_ValueAsString("NBR"));
+			mTab.setValue("QtyEntered", diff.multiply(nbrGroup));
+			mTab.setValue("QtyInvoiced", diff.multiply(nbrGroup));
 		}
 		return null;
 	}
