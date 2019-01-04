@@ -68,6 +68,7 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 			BigDecimal diff = new BigDecimal(mTab.get_ValueAsString("NBR"));
 			mTab.setValue("QtyEntered", diff.multiply(nbrGroup));
 			mTab.setValue("QtyInvoiced", diff.multiply(nbrGroup));
+			setPurchaseSalesPrice(mTab);
 		}
 		return null;
 	}
