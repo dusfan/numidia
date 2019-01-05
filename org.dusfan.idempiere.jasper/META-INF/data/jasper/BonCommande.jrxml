@@ -300,7 +300,7 @@ WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="60" splitType="Stretch">
+		<band height="61" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="60" uuid="75c4dc3f-6e07-4ddb-9858-f0f41a9665a5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="188a8ae2-ede0-4256-98e8-ab0801ef232b"/>
@@ -336,7 +336,7 @@ WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
  ("Taxe de séjour  " + ($F{t_marge}.compareTo(new BigDecimal(0))  == 1  ? "incluse" : "non incluse"))+ "\n "+"\n "+ ($F{description}!=null ? $F{description}:"")) :
 $F{description}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="480" y="0" width="64" height="60" uuid="c88fbec3-5bf5-4729-b2d6-5d69f102bf75">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f370c5b-ef1b-46df-9763-a47d7c84d79d"/>
 					<printWhenExpression><![CDATA[$F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364]]></printWhenExpression>
@@ -347,13 +347,25 @@ $F{description}]]></textFieldExpression>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Middle"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{totallines}]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="480" y="0" width="64" height="60" backcolor="rgba(255, 255, 255, 0.0)" uuid="ec1062dc-c6b4-463f-b9a7-4e38d2654453">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="99">
+		<band height="140">
 			<staticText>
 				<reportElement key="" x="331" y="2" width="214" height="16" uuid="1200afd4-74e6-4e58-95ff-50bd72578307"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
