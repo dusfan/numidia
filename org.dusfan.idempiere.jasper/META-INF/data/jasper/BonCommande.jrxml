@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoiceStandard" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="25" rightMargin="25" topMargin="20" bottomMargin="20" uuid="d2b42497-cec7-4097-ad33-9660c0b89175">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192-168-0-242.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -300,7 +300,7 @@ WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="61" splitType="Stretch">
+		<band height="60" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="60" uuid="75c4dc3f-6e07-4ddb-9858-f0f41a9665a5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="188a8ae2-ede0-4256-98e8-ab0801ef232b"/>
@@ -336,8 +336,18 @@ WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
  ("Taxe de séjour  " + ($F{t_marge}.compareTo(new BigDecimal(0))  == 1  ? "incluse" : "non incluse"))+ "\n "+"\n "+ ($F{description}!=null ? $F{description}:"")) :
 $F{description}]]></textFieldExpression>
 			</textField>
+			<rectangle radius="0">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="480" y="0" width="64" height="60" uuid="b58fd560-a2eb-45c9-bda4-c9f72f8cf508">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
 			<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="480" y="0" width="64" height="60" uuid="c88fbec3-5bf5-4729-b2d6-5d69f102bf75">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="64" height="60" uuid="c88fbec3-5bf5-4729-b2d6-5d69f102bf75">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f370c5b-ef1b-46df-9763-a47d7c84d79d"/>
 					<printWhenExpression><![CDATA[$F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364]]></printWhenExpression>
 				</reportElement>
@@ -350,18 +360,8 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totallines}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364)? $F{totallines} :" "]]></textFieldExpression>
 			</textField>
-			<rectangle>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="480" y="0" width="64" height="60" backcolor="rgba(255, 255, 255, 0.0)" uuid="ec1062dc-c6b4-463f-b9a7-4e38d2654453">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineStyle="Solid"/>
-				</graphicElement>
-			</rectangle>
 		</band>
 	</detail>
 	<pageFooter>
@@ -373,6 +373,10 @@ $F{description}]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[P/Le chef d'agence]]></text>
 			</staticText>
+			<image>
+				<reportElement x="304" y="18" width="237" height="122" uuid="2a8263b5-d416-4b62-b9b0-ba831f20707c"/>
+				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/Signature_1.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageFooter>
 </jasperReport>
