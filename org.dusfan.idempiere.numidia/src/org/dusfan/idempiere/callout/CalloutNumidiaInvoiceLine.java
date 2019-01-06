@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Properties;
 
 import org.adempiere.base.IColumnCallout;
@@ -13,6 +14,7 @@ import org.compiere.model.GridTab;
 import org.compiere.model.MProduct;
 import org.compiere.model.MTax;
 import org.compiere.model.Query;
+import org.compiere.util.DB;
 import org.compiere.util.Env;
 
 public class CalloutNumidiaInvoiceLine implements IColumnCallout{
@@ -62,13 +64,32 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 					|| mField.getColumnName().equals("T_Marge") || mField.getColumnName().equals("T_OtherDZD")) {
 				setPurchaseSalesPrice(mTab);
 			}
-		}
-		if (mField.getColumnName().equals("NBR")){
-			BigDecimal nbrGroup =  new BigDecimal(mTab.get_ValueAsString("M_Pax"));
-			BigDecimal diff = new BigDecimal(mTab.get_ValueAsString("NBR"));
-			mTab.setValue("QtyEntered", diff.multiply(nbrGroup));
-			mTab.setValue("QtyInvoiced", diff.multiply(nbrGroup));
-			setPurchaseSalesPrice(mTab);
+			if (mField.getColumnName().equals("NBR")){
+				BigDecimal nbrGroup =  new BigDecimal(mTab.get_ValueAsString("M_Pax"));
+				BigDecimal diff = new BigDecimal(mTab.get_ValueAsString("NBR"));
+				mTab.setValue("QtyEntered", diff.multiply(nbrGroup));
+				mTab.setValue("QtyInvoiced", diff.multiply(nbrGroup));
+				setPurchaseSalesPrice(mTab);
+			}
+			//Calculer le prix automatique si le service sous l'article est parametré
+			if(mField.getColumnName().equals("IsCalculated") && (boolean) mTab.getValue("IsCalculated")==true){
+				StringBuilder sql;
+				List<Object> rowsArray;
+				sql = new StringBuilder("SELECT PriceActual, SalesPrice, PriceEuro FROM DU_Service WHERE M_Product_ID = ? and DU_ServiceType_ID = ? AND Board = ?");
+				if(mTab.getValue("View")==null){
+					sql.append(" AND View is null");
+					rowsArray = DB.getSQLValueObjectsEx(null, sql.toString(), mTab.getValue("M_Product_ID"), mTab.getValue("DU_ServiceType_ID"), mTab.getValue("Board"));
+				}else{
+					sql.append(" AND View = ?");
+					rowsArray = DB.getSQLValueObjectsEx(null, sql.toString(), mTab.getValue("M_Product_ID"), mTab.getValue("DU_ServiceType_ID"), mTab.getValue("Board"), mTab.getValue("View"));
+				}
+				if(rowsArray!=null){
+					mTab.setValue("T_PriceHotel", (BigDecimal)rowsArray.get(0));
+					mTab.setValue("T_PriceVente", (BigDecimal)rowsArray.get(1));
+					mTab.setValue("PriceEuro", (BigDecimal)rowsArray.get(2));
+					setPurchaseSalesPrice(mTab);
+				}
+			}
 		}
 		return null;
 	}
