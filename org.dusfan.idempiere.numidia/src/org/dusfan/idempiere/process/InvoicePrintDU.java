@@ -223,6 +223,7 @@ public class InvoicePrintDU extends SvrProcess
 				if (p_EMailPDF)
 				{
 					String subject = mText.getMailHeader() + " - " + DocumentNo;
+					String message = mText.getMailText();
 					EMail email = client.createEMail(to.getEMail(), subject, null);
 					if (!email.isValid())
 					{
@@ -234,7 +235,6 @@ public class InvoicePrintDU extends SvrProcess
 					mText.setUser(to);					//	Context
 					mText.setBPartner(C_BPartner_ID);	//	Context
 					mText.setPO(new MInvoice(getCtx(), C_Invoice_ID, get_TrxName()));
-					String message = invoicePO.getDescription();
 					if (mText.isHtml())
 						email.setMessageHTML(subject, message);
 					else
