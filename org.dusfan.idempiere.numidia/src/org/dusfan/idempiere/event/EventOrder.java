@@ -40,17 +40,29 @@ public class EventOrder {
 	// Set INFO Package
 	public static void setPackage(PO po, Properties ctx, String trxName) {
 		MOrderLine line = (MOrderLine) po;
+		MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
 		if (line.getM_Product_ID() > 0 ) {
 			MProduct pr = new MProduct(ctx, line.getM_Product_ID(), trxName);
 			if (pr.get_ValueAsString("TypeService").equals("0")) {
 				line.set_ValueNoCheck("M_Sejour_ID", pr.getM_Product_ID());
 				line.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
-				MOrder ord = new MOrder(ctx, line.getC_Order_ID(), trxName);
 				ord.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
 				ord.set_ValueNoCheck("DU_Hotel_ID", pr.get_Value("DU_Hotel_ID"));
 				ord.set_ValueNoCheck("ClassHotel", pr.get_ValueAsString("ClassHotel"));
 				ord.set_ValueNoCheck("Saison_Omra", pr.get_ValueAsString("Saison_Omra"));
 				ord.saveEx();
+			}
+			
+			if (ord.getC_DocTypeTarget_ID() == 1000057) {
+				if (pr.get_ValueAsString("TypeRoom").equals("10") || pr.get_ValueAsString("TypeRoom").equals("20") ||
+					pr.get_ValueAsString("TypeRoom").equals("30") || pr.get_ValueAsString("TypeRoom").equals("40") ||
+					pr.get_ValueAsString("TypeRoom").equals("50") || pr.get_ValueAsString("TypeRoom").equals("60") ||
+					pr.get_ValueAsString("TypeRoom").equals("70") || pr.get_ValueAsString("TypeRoom").equals("80")) {
+					ord.set_ValueNoCheck("TypeRoom", pr.get_ValueAsString("TypeRoom"));
+					ord.set_ValueNoCheck("DU_Hotel_ID", pr.get_Value("DU_Hotel_ID"));
+					ord.set_ValueNoCheck("ClassHotel", pr.get_ValueAsString("ClassHotel"));
+					ord.saveEx();
+				}
 			}
 		}
 	}
