@@ -59,12 +59,14 @@
 	when 'FB' then 'En Pension Complète'
 	end as board, 
   il.view,
-  i.C_BPartner_PR_ID
+  i.C_BPartner_PR_ID,
+  U.DESCRIPTION AS acheteur
 FROM c_invoice i
 inner join c_invoiceline il on il.C_INVOICE_ID = i.C_INVOICE_ID
 left join DU_ServiceType st on st.DU_ServiceType_ID = il.DU_ServiceType_ID
 INNER JOIN c_bpartner b
 ON ( b.c_bpartner_id = i.c_bpartner_id)
+INNER JOIN AD_USER U ON U.AD_USER_ID = I.SALESREP_ID
 INNER JOIN C_Bpartner_Location bploc
 ON Bploc.C_Bpartner_Location_Id = I.C_Bpartner_Location_Id
 INNER JOIN C_Location loc
@@ -150,6 +152,7 @@ WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
 		<property name="com.jaspersoft.studio.field.label" value="view"/>
 	</field>
 	<field name="C_BPartner_PR_ID" class="java.lang.Integer"/>
+	<field name="acheteur" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -377,6 +380,16 @@ $F{description}]]></textFieldExpression>
 				<reportElement x="304" y="18" width="237" height="122" uuid="2a8263b5-d416-4b62-b9b0-ba831f20707c"/>
 				<imageExpression><![CDATA[$P{RESOURCE_DIR} + "img/Signature_1.jpg"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="51" y="110" width="140" height="30" uuid="b573bceb-57f3-4ea3-a30e-d7e50e64c671"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{acheteur}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="51" height="30" uuid="98a2bb77-3814-4354-8786-cc4f0ab28be0"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Crée par : ]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>
