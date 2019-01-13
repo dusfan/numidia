@@ -71,7 +71,8 @@ INNER JOIN C_Bpartner_Location bploc
 ON Bploc.C_Bpartner_Location_Id = I.C_Bpartner_Location_Id
 INNER JOIN C_Location loc
 ON Bploc.C_Location_Id = Loc.C_Location_Id
-WHERE I.C_INVOICE_ID =  $P{RECORD_ID}]]>
+WHERE I.C_INVOICE_ID =  $P{RECORD_ID}
+order by il.line]]>
 	</queryString>
 	<field name="documentno" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="documentno"/>
