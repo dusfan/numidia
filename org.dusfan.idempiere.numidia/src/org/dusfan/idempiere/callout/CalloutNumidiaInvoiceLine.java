@@ -125,6 +125,7 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 		//Les Valeur standard du system
 		mTab.setValue("PriceEntered", totalAchat);
 		mTab.setValue("PriceActual", totalAchat);
+		mTab.setValue("PriceList", totalAchat);
 	}
 
 }
