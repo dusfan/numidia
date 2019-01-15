@@ -364,7 +364,7 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364)? $F{totallines} :" "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364)? $F{linenetamt} :" "]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
