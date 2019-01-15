@@ -51,6 +51,8 @@ public class EventInvoice {
 		if (invoiceLine.get_Value("T_PriceHotel")!=null && ((BigDecimal) invoiceLine.get_Value("T_PriceHotel")).compareTo(Env.ZERO)>0 ) { // only with service is mentioned
 			String sql = "Select DateInvoiced from C_Invoice where C_Invoice_ID = ?";
 			Timestamp date =  DB.getSQLValueTS(null, sql, invoiceLine.getC_Invoice_ID());
+			if (date==null)// null point exception when reverse the invoice
+				return;
 			LocalDate dateInvoiced = date.toLocalDateTime().toLocalDate();
 			LocalDate dateBooking = ((Timestamp) invoiceLine.get_Value("DateFrom")).toLocalDateTime().toLocalDate();
 			if (!dateInvoiced.equals(dateBooking)){
