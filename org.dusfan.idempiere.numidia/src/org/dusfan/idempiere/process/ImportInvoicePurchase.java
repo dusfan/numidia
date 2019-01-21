@@ -147,6 +147,15 @@ public class ImportInvoicePurchase extends SvrProcess
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("Currency Set=" + no);
 		
+		// Set Error for the different currency inmport
+		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
+				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Devise achat et vente pas la même, '")
+				.append(" WHERE o.C_Currency_ID != (SELECT C_Currency_ID FROM 	DU_Booking oo WHERE oo.documentno = o.documentno) ")
+				.append(" AND I_IsImported<>'Y'").append (clientCheck);
+		no = DB.executeUpdate(sql.toString(), get_TrxName());
+		if (no != 0)
+			log.warning ("Diffrent currency between sales and purchase=" + no);
+
 		// update the accounting and invoiced date and PriceActual
 		sql = new StringBuilder ("UPDATE I_InvoicePurchase o ")
 				.append(" SET DateInvoiced = (SELECT DateInvoiced FROM DU_BOOKING B WHERE B.DOCUMENTNO = o.DOCUMENTNO) , dateacct = (SELECT DateInvoiced FROM DU_BOOKING B WHERE B.DOCUMENTNO = o.DOCUMENTNO) ")
