@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoiceStandard" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="25" rightMargin="25" topMargin="20" bottomMargin="20" uuid="d2b42497-cec7-4097-ad33-9660c0b89175">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192-168-0-242.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -276,7 +276,7 @@ order by il.line]]>
 				<text><![CDATA[Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="0" width="420" height="30" backcolor="rgba(1, 143, 54, 0.63529414)" uuid="5d7a5749-5692-4576-a260-1ca9b547da3a"/>
+				<reportElement mode="Opaque" x="60" y="0" width="410" height="30" backcolor="rgba(1, 143, 54, 0.63529414)" uuid="5d7a5749-5692-4576-a260-1ca9b547da3a"/>
 				<box leftPadding="2">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -289,7 +289,7 @@ order by il.line]]>
 				<text><![CDATA[Désignation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="480" y="0" width="64" height="30" backcolor="rgba(1, 143, 54, 0.63529414)" uuid="373b281d-acdb-4480-a60c-8679359e5fe0"/>
+				<reportElement mode="Opaque" x="470" y="0" width="74" height="30" backcolor="rgba(1, 143, 54, 0.63529414)" uuid="373b281d-acdb-4480-a60c-8679359e5fe0"/>
 				<box leftPadding="2">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -321,7 +321,7 @@ order by il.line]]>
 				<textFieldExpression><![CDATA[$F{m_pax}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="60" y="0" width="420" height="60" uuid="fe15fae9-fc1c-4fd3-b318-b0eae3084a5f">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="60" y="0" width="410" height="60" uuid="fe15fae9-fc1c-4fd3-b318-b0eae3084a5f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5524f135-4319-4075-83e1-dcdfe7768d6f"/>
 				</reportElement>
 				<box leftPadding="1">
@@ -340,22 +340,11 @@ order by il.line]]>
  ("Taxe de séjour  " + ($F{t_marge}.compareTo(new BigDecimal(0))  == 1  ? "incluse" : "non incluse"))+ "\n "+"\n "+ ($F{description}!=null ? $F{description}:"")) :
 $F{description}]]></textFieldExpression>
 			</textField>
-			<rectangle radius="0">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="480" y="0" width="64" height="60" uuid="b58fd560-a2eb-45c9-bda4-c9f72f8cf508">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineStyle="Solid"/>
-				</graphicElement>
-			</rectangle>
 			<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="64" height="60" uuid="c88fbec3-5bf5-4729-b2d6-5d69f102bf75">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="470" y="0" width="74" height="60" uuid="c88fbec3-5bf5-4729-b2d6-5d69f102bf75">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f370c5b-ef1b-46df-9763-a47d7c84d79d"/>
-					<printWhenExpression><![CDATA[$F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364]]></printWhenExpression>
 				</reportElement>
-				<box leftPadding="1">
+				<box leftPadding="1" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
@@ -364,7 +353,7 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{C_BPartner_PR_ID} == 1013363 || $F{C_BPartner_PR_ID} == 1013364)? $F{linenetamt} :" "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{linenetamt} ]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
