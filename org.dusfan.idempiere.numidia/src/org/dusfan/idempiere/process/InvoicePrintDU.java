@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class InvoicePrintDU extends SvrProcess
 	protected boolean		p_EMailPDF = false;
 	/** Mail Template		*/
 	protected int			p_R_MailText_ID = 0;
-	
+
 	protected Timestamp	m_dateInvoiced_From = null;
 	protected Timestamp	m_dateInvoiced_To = null;
 	protected int		m_C_BPartner_ID = 0;
@@ -111,13 +112,13 @@ public class InvoicePrintDU extends SvrProcess
 		if (p_EMailPDF && p_R_MailText_ID == 0)
 			throw new AdempiereUserError ("@NotFound@: @R_MailText_ID@");
 		if (log.isLoggable(Level.INFO)) log.info ("C_BPartner_ID=" + m_C_BPartner_ID
-			+ ", C_Invoice_ID=" + m_C_Invoice_ID
-			+ ", EmailPDF=" + p_EMailPDF + ",R_MailText_ID=" + p_R_MailText_ID
-			+ ", DateInvoiced=" + m_dateInvoiced_From + "-" + m_dateInvoiced_To
-			+ ", DocumentNo=" + m_DocumentNo_From + "-" + m_DocumentNo_To
-			+ ", IsPaid=" + p_IsPaid
-			+ ", C_DocType_ID=" + m_C_DocType_ID);
-		
+				+ ", C_Invoice_ID=" + m_C_Invoice_ID
+				+ ", EmailPDF=" + p_EMailPDF + ",R_MailText_ID=" + p_R_MailText_ID
+				+ ", DateInvoiced=" + m_dateInvoiced_From + "-" + m_dateInvoiced_To
+				+ ", DocumentNo=" + m_DocumentNo_From + "-" + m_DocumentNo_To
+				+ ", IsPaid=" + p_IsPaid
+				+ ", C_DocType_ID=" + m_C_DocType_ID);
+
 		MMailText mText = null;
 		if (p_R_MailText_ID != 0)
 		{
@@ -128,7 +129,7 @@ public class InvoicePrintDU extends SvrProcess
 
 		//	Too broad selection
 		if (m_C_BPartner_ID == 0 && m_C_Invoice_ID == 0 && m_dateInvoiced_From == null && m_dateInvoiced_To == null
-			&& m_DocumentNo_From == null && m_DocumentNo_To == null)
+				&& m_DocumentNo_From == null && m_DocumentNo_To == null)
 			throw new AdempiereUserError ("@RestrictSelection@");
 
 		MClient client = MClient.get(getCtx());
@@ -144,7 +145,7 @@ public class InvoicePrintDU extends SvrProcess
 		int errors = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		
+
 		final List<File> pdfList = new ArrayList<File>();
 		try
 		{
@@ -160,11 +161,10 @@ public class InvoicePrintDU extends SvrProcess
 				idx++;
 			}
 			rs = pstmt.executeQuery();
-						
+
 			while (rs.next())
 			{
 				int C_Invoice_ID = rs.getInt(1);
-				MInvoice invoicePO = new MInvoice(getCtx(), C_Invoice_ID, null);
 				if (C_Invoice_ID == old_C_Invoice_ID)	//	multiple pf records
 					continue;
 				old_C_Invoice_ID = C_Invoice_ID;
@@ -213,22 +213,23 @@ public class InvoicePrintDU extends SvrProcess
 
 				//	Engine
 				PrintInfo info = new PrintInfo(
-					DocumentNo,
-					MInvoice.Table_ID,
-					C_Invoice_ID,
-					C_BPartner_ID);
+						DocumentNo,
+						MInvoice.Table_ID,
+						C_Invoice_ID,
+						C_BPartner_ID);
 				info.setCopies(copies);
 				ReportEngine re = new ReportEngine(getCtx(), format, query, info);
 				boolean printed = false;
 				if (p_EMailPDF)
 				{
 					String subject = mText.getMailHeader() + " - " + DocumentNo;
-					String message = mText.getMailText();
+					//					String message = mText.getMailText();
+					String message = createMessage(mText, C_Invoice_ID);
 					EMail email = client.createEMail(to.getEMail(), subject, null);
 					if (!email.isValid())
 					{
 						addLog (C_Invoice_ID, null, null,
-						  DocumentNo + " @RequestActionEMailError@ Invalid EMail: " + to);
+								DocumentNo + " @RequestActionEMailError@ Invalid EMail: " + to);
 						errors++;
 						continue;
 					}
@@ -256,15 +257,15 @@ public class InvoicePrintDU extends SvrProcess
 					if (msg.equals(EMail.SENT_OK))
 					{
 						addLog (C_Invoice_ID, null, null,
-						  DocumentNo + " @RequestActionEMailOK@ - " + to.getEMail());
+								DocumentNo + " @RequestActionEMailOK@ - " + to.getEMail());
 						count++;
 						printed = true;
 					}
 					else
 					{
 						addLog (C_Invoice_ID, null, null,
-						  DocumentNo + " @RequestActionEMailError@ " + msg
-						  + " - " + to.getEMail());
+								DocumentNo + " @RequestActionEMailError@ " + msg
+								+ " - " + to.getEMail());
 						errors++;
 					}
 				}
@@ -278,8 +279,8 @@ public class InvoicePrintDU extends SvrProcess
 				if (printed)
 				{
 					StringBuffer sb = new StringBuffer ("UPDATE C_Invoice "
-						+ "SET DatePrinted=SysDate, IsPrinted='Y' WHERE C_Invoice_ID=")
-						.append (C_Invoice_ID);
+							+ "SET DatePrinted=SysDate, IsPrinted='Y' WHERE C_Invoice_ID=")
+							.append (C_Invoice_ID);
 					DB.executeUpdateEx(sb.toString(), get_TrxName());
 				}
 			}	//	for all entries						
@@ -292,7 +293,7 @@ public class InvoicePrintDU extends SvrProcess
 		finally {
 			DB.close(rs, pstmt);
 		}
-		
+
 		AEnv.executeAsyncDesktopTask(new Runnable() {
 			@Override
 			public void run() {
@@ -309,20 +310,20 @@ public class InvoicePrintDU extends SvrProcess
 	protected void setSQLAndParams() {
 		//	Get Info
 		sql.append(
-			"SELECT i.C_Invoice_ID,bp.AD_Language,c.IsMultiLingualDocument,"		//	1..3
-			//	Prio: 1. BPartner 2. DocType, 3. PrintFormat (Org)	//	see ReportCtl+MInvoice
-			+ " COALESCE(bp.Invoice_PrintFormat_ID, dt.AD_PrintFormat_ID, pf.Invoice_PrintFormat_ID),"	//	4 
-			+ " dt.DocumentCopies+bp.DocumentCopies,"								//	5
-			+ " bpc.AD_User_ID, i.DocumentNo,"										//	6..7
-			+ " bp.C_BPartner_ID "													//	8
-			+ "FROM C_Invoice i"
-			+ " INNER JOIN C_BPartner bp ON (i.C_BPartner_ID=bp.C_BPartner_ID)"
-			+ " LEFT OUTER JOIN AD_User bpc ON (i.AD_User_ID=bpc.AD_User_ID)"
-			+ " INNER JOIN AD_Client c ON (i.AD_Client_ID=c.AD_Client_ID)"
-			+ " INNER JOIN AD_PrintForm pf ON (i.AD_Client_ID=pf.AD_Client_ID)"
-			+ " INNER JOIN C_DocType dt ON (i.C_DocType_ID=dt.C_DocType_ID)"
-		    + " WHERE i.AD_Client_ID=? AND i.isSOTrx='N' AND "
-		    + "       pf.AD_Org_ID IN (0,i.AD_Org_ID) " );	//	more them 1 PF
+				"SELECT i.C_Invoice_ID,bp.AD_Language,c.IsMultiLingualDocument,"		//	1..3
+				//	Prio: 1. BPartner 2. DocType, 3. PrintFormat (Org)	//	see ReportCtl+MInvoice
+				+ " COALESCE(bp.Invoice_PrintFormat_ID, dt.AD_PrintFormat_ID, pf.Invoice_PrintFormat_ID),"	//	4 
+				+ " dt.DocumentCopies+bp.DocumentCopies,"								//	5
+				+ " bpc.AD_User_ID, i.DocumentNo,"										//	6..7
+				+ " bp.C_BPartner_ID "													//	8
+				+ "FROM C_Invoice i"
+				+ " INNER JOIN C_BPartner bp ON (i.C_BPartner_ID=bp.C_BPartner_ID)"
+				+ " LEFT OUTER JOIN AD_User bpc ON (i.AD_User_ID=bpc.AD_User_ID)"
+				+ " INNER JOIN AD_Client c ON (i.AD_Client_ID=c.AD_Client_ID)"
+				+ " INNER JOIN AD_PrintForm pf ON (i.AD_Client_ID=pf.AD_Client_ID)"
+				+ " INNER JOIN C_DocType dt ON (i.C_DocType_ID=dt.C_DocType_ID)"
+				+ " WHERE i.AD_Client_ID=? AND i.isSOTrx='N' AND "
+				+ "       pf.AD_Org_ID IN (0,i.AD_Org_ID) " );	//	more them 1 PF
 		params.add(Env.getAD_Client_ID(Env.getCtx()));
 		if (m_C_Invoice_ID != 0) {
 			sql.append(" AND i.C_Invoice_ID=?");
@@ -364,7 +365,7 @@ public class InvoicePrintDU extends SvrProcess
 				}
 				params.add(m_DocumentNo_From);
 			}
-			
+
 			if (p_EMailPDF)
 			{
 				/* if emailed to customer only select COmpleted & CLosed invoices */ 
@@ -393,7 +394,7 @@ public class InvoicePrintDU extends SvrProcess
 		if (pdfList.size() > 1) {
 			try {
 				File outFile = File.createTempFile("InvoicePrint", ".pdf");					
-//				AEnv.mergePdf(pdfList, outFile);error
+				//				AEnv.mergePdf(pdfList, outFile);error
 
 				Window win = new SimplePDFViewer(this.getName(), new FileInputStream(outFile));
 				win.setAttribute(Window.MODE_KEY, Window.MODE_HIGHLIGHTED);
@@ -411,7 +412,47 @@ public class InvoicePrintDU extends SvrProcess
 				log.log(Level.SEVERE, e.getLocalizedMessage(), e);
 			}
 		}
-		
+
+	}
+
+	private String createMessage(MMailText mText, int c_Invoice_ID) {
+		StringBuffer message = new StringBuffer(mText.getMailText());
+		String sql1 = "select * from du_boncommande where c_Invoice_ID = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try
+		{
+			pstmt = DB.prepareStatement(sql1, get_TrxName());
+			pstmt.setInt(1, c_Invoice_ID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				message.append("<tr> <td style=\"width: 46px;\">&nbsp;"+rs.getInt("m_pax")
+				+ "</td>");
+				if (rs.getString("isroom").equals("Y")){
+					message.append("<td style=\"width: 46px;\">&nbsp;Chambre&nbsp;"+rs.getString("typeservice")+"&nbsp;"+rs.getString("board")
+					+"<br />Du&nbsp;"+new SimpleDateFormat("dd/MM/yyyy").format(rs.getTimestamp("datefrom"))+"&nbsp;au&nbsp;"+new SimpleDateFormat("dd/MM/yyyy").format(rs.getTimestamp("dateto"))
+					+"<br />Au&nbsp;nom&nbsp;de&nbsp;:&nbsp;"+(rs.getString("leadpassenger")!=null  ? rs.getString("leadpassenger") : "")
+
+				    +"<br />Taxe&nbsp;de&nbsp;séjour&nbsp;"+(rs.getBigDecimal("t_marge").compareTo(Env.ZERO)> 0  ? "incluse" : "non incluse")
+				    +(rs.getString("description")!=null  ? "<br />"+rs.getString("description") : "")
+					+ "</td>");
+				}
+				else{
+					message.append("<td style=\"width: 46px;\">"+rs.getString("description")
+					+ "</td>");
+				}
+				message.append("<td style=\"width: 46px;text-align: right;\">"+rs.getBigDecimal("linenetamt")
+				+ "</td></tr>");
+			}
+		}
+		catch (Exception e) {
+			log.log(Level.SEVERE, "doIt - " + sql1, e);
+		}finally {
+			DB.close(rs, pstmt);
+		}
+		if (message!=null)
+			message.append(mText.getMailText2());
+		return message.toString();
 	}
 
 }	//	InvoicePrint
