@@ -53,9 +53,9 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 							.setParameters(new Object[] { pr.getC_TaxCategory_ID() }).first();
 					BigDecimal divider = tax.getRate();
 					divider = (divider.divide(Env.ONEHUNDRED, 2, BigDecimal.ROUND_HALF_UP)).add(Env.ONE);
-					BigDecimal AgencyProfit = (BigDecimal) mTab.getValue("AgencyProfit");
-					AgencyProfit = AgencyProfit.divide(divider, 2, BigDecimal.ROUND_HALF_UP);
-					mTab.setValue("T_OtherDZD", AgencyProfit);
+					BigDecimal PriceEuro = (BigDecimal) mTab.getValue("AgencyProfit");
+					PriceEuro = PriceEuro.divide(divider, 2, BigDecimal.ROUND_HALF_UP);
+					mTab.setValue("PriceEuro", PriceEuro);
 				}
 			}
 
