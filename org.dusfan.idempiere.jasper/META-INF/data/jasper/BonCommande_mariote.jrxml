@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoiceStandard" pageWidth="595" pageHeight="842" columnWidth="545" leftMargin="25" rightMargin="25" topMargin="20" bottomMargin="20" uuid="d2b42497-cec7-4097-ad33-9660c0b89175">
 	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="289"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -239,7 +239,7 @@ order by il.line]]>
 				<textFieldExpression><![CDATA["Date de commande : " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-1" x="78" y="3" width="361" height="24" forecolor="#000000" uuid="6d140570-27b7-46a0-b057-09c38efc1e8e"/>
+				<reportElement key="textField-1" x="1" y="3" width="541" height="24" forecolor="#000000" uuid="6d140570-27b7-46a0-b057-09c38efc1e8e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -249,7 +249,7 @@ order by il.line]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="18" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Bon de Commande N° :  " + $F{documentno}.substring(3)+"/"+($F{dateinvoiced}.getYear()+1900)]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Bon de Commande N° :  " + $F{documentno}.substring(5)+"/"+($F{dateinvoiced}.getYear()+1900)]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -358,7 +358,7 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[P/Le chef d'agence]]></text>
+				<text><![CDATA[P/Le chef de station]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="153" width="545" height="30" uuid="98a2bb77-3814-4354-8786-cc4f0ab28be0"/>
