@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -58,7 +59,18 @@ public class CalloutNumidiaInvoiceLine implements IColumnCallout{
 					mTab.setValue("PriceEuro", PriceEuro);
 				}
 			}
-
+			if (mField.getColumnName().equals("DateFrom")){
+				Timestamp date1 = (Timestamp) mTab.getValue("DateFrom");
+				if (date1!=null){
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date1);
+					cal.add(Calendar.DAY_OF_WEEK, 1);
+					date1.setTime(cal.getTime().getTime()); // or
+					date1 = new Timestamp(cal.getTime().getTime());
+					mTab.setValue("DateTo", date1);
+				}
+					
+			}
 			if (mField.getColumnName().equals("DateFrom") || mField.getColumnName().equals("DateTo") || mField.getColumnName().equals("M_Pax")) {
 				Timestamp date1 = (Timestamp) mTab.getValue("DateFrom");
 				Timestamp date2 = (Timestamp) mTab.getValue("DateTo");
