@@ -239,7 +239,7 @@ order by il.line]]>
 				<textFieldExpression><![CDATA["Date de commande : " + new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-1" x="78" y="3" width="361" height="24" forecolor="#000000" uuid="6d140570-27b7-46a0-b057-09c38efc1e8e"/>
+				<reportElement key="textField-1" x="20" y="3" width="419" height="24" forecolor="#000000" uuid="6d140570-27b7-46a0-b057-09c38efc1e8e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -353,7 +353,7 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{linenetamt} ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{linenetamt}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
