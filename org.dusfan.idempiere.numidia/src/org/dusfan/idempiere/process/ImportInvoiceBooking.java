@@ -135,7 +135,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		// Indicate the drafted booking code
 		sql = new StringBuilder ("UPDATE I_InvoiceBooking o ")
 				.append("SET I_IsImported='E', I_ErrorMsg=I_ErrorMsg || 'ERR=Booking importer non traiter, '")
-				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('DR')  and oo.isSoTrx = 'Y')")
+				.append(" WHERE EXISTS (SELECT documentno FROM C_Invoice oo WHERE oo.documentno = o.documentno and oo.DocStatus in ('DR', 'IN')  and oo.isSoTrx = 'Y')")
 				.append(" and Statut = 'Confirmed' AND I_IsImported<>'Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (no != 0)
