@@ -574,6 +574,13 @@ public class EventOrder {
 			}
 		}
 	}
+
+	public static boolean checkBeforeDelete(PO po, Properties ctx, String trxName) {
+		MInvoice invoice = (MInvoice) po;
+		if (invoice.getGrandTotal().compareTo(BigDecimal.ZERO)>0)
+			return false;
+		return true;
+	}
 	
 	
 }

@@ -57,6 +57,7 @@ public class PluginDocEvent extends AbstractEventHandler {
 		// Minvoice
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, MInvoice.Table_Name);
+		registerTableEvent(IEventTopics.PO_BEFORE_DELETE, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_COMPLETE, MInvoice.Table_Name);
 		registerTableEvent(IEventTopics.DOC_BEFORE_REVERSECORRECT, MInvoice.Table_Name);
 
@@ -326,6 +327,14 @@ public class PluginDocEvent extends AbstractEventHandler {
 							throw new AdempiereUserError("cette ordre de vente est facturé deja,"
 									+ " il faut annuler d'abord ça facture");
 					}
+				}
+			}
+			// BEFOR DELETE
+			if (type.equals(IEventTopics.PO_BEFORE_DELETE)) {
+				if (po instanceof MInvoice) {
+					if (!EventOrder.checkBeforeDelete(po, ctx, trxName))
+						throw new AdempiereUserError("Vous ne pouvez pas supprimer la facture,"
+								+ " montant > 0");
 				}
 			}
 		}
