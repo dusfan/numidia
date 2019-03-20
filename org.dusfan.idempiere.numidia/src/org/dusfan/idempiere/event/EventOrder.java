@@ -511,10 +511,10 @@ public class EventOrder {
 			BigDecimal mount = order.get_Value("MountOther")!=null ? (BigDecimal) order.get_Value("MountOther") : Env.ZERO;
 			if ((cancelcause == null || cancelcause.length() == 0) ||
 					((cancelcause!=null || cancelcause.length()>0) 
-					&& (cancelcause.equals("3") && mount.compareTo(Env.ZERO)==0)))
+					&& ((cancelcause.equals("3")||cancelcause.equals("2")) && mount.compareTo(Env.ZERO)==0)))
 				return false;
 			else {
-				if (mount != null && cancelcause.equals("3")) {
+				if (mount != null && (cancelcause.equals("3")||cancelcause.equals("2"))) {
 					MInvoice inv =  new MInvoice(ctx, 0, trxName);
 					inv.setAD_Org_ID(order.getAD_Org_ID());
 					inv.setC_BPartner_ID(order.getBill_BPartner_ID());
