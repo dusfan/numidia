@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demandeachat" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="248"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="738"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="743"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="243"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="270"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
 	<parameter name="RECORD_ID" class="java.lang.Integer"/>
@@ -31,7 +31,8 @@
     u.description as agent,
     bk.accountno as banque,
     c.description,
-    cu.ISO_Code as currency
+    cu.ISO_Code as currency,
+    c.c_bankaccount_id as c_bankaccount_id
    FROM c_payment c
    inner join c_currency cu on cu.c_currency_id = c.c_currency_id
    inner join C_BankAccount bk on bk.C_BankAccount_ID = c.C_BankAccount_ID
@@ -85,6 +86,7 @@
 	<field name="currency" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="currency"/>
 	</field>
+	<field name="c_bankaccount_id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -149,6 +151,12 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{banque}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="410" y="61" width="83" height="80" uuid="57cacf8d-87f2-42db-b258-27711b7b3be7">
+					<printWhenExpression><![CDATA[$F{c_bankaccount_id} == 1000026]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{RESOURCE_DIR}+"img/payflight.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
