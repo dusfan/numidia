@@ -118,7 +118,7 @@ public class ImportInvoiceBooking extends SvrProcess
 		
 		// delete record where there no amount neither booking refrence
 		sql = new StringBuilder ("delete from I_InvoiceBooking o ")
-				.append("WHERE total IS NULL or total = 'Total'")
+				.append("WHERE total IS NULL or total = 'Total' OR Statut = 'Quotation' ")
 				.append(" AND I_IsImported<>'Y' AND IsSOTrx='Y'").append (clientCheck);
 		no = DB.executeUpdate(sql.toString(), get_TrxName());
 		if (log.isLoggable(Level.FINE)) log.fine("No amount record Deleted=" + no);
