@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OpenInvoice" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eba959d1-5971-4314-8415-6d97b1d07352">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="181"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="808"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192-168-0-242.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="AD_CLIENT_ID" class="java.lang.Integer">
@@ -17,6 +17,7 @@
 	<parameter name="C_BPartnerRelation_ID" class="java.lang.Integer"/>
 	<parameter name="StartDate" class="java.sql.Timestamp"/>
 	<parameter name="EndDate" class="java.sql.Timestamp"/>
+	<parameter name="TypeCodeClient" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select  rv.ad_client_id, rv.ad_org_id, rv.documentno, rv.docstatus, bp.name, bp.value, rv.grandtotal,cr.iso_code as currency, rv.paidamt,
 rv.openamt, rv.description, rv.dateinvoiced,
@@ -30,7 +31,8 @@ inner join c_currency cr on cr.c_currency_id = rv.c_currency_id
 left join du_vol vol on vol.du_vol_id = inv.du_vol_id
  where rv.ad_org_id = 1000004 and  rv.ad_client_id = $P{AD_CLIENT_ID}  and  inv.du_vol_id is null and bp.totalopenbalance <> 0
  and ($P{C_BPartner_ID} is null or rv.c_bpartner_id = $P{C_BPartner_ID})
- and ($P{isSoTrx} is null or rv.issotrx=$P{isSoTrx})
+ and rv.issotrx='Y'
+ and ( $P{TypeCodeClient}   is null or bp.TypeCodeClient = $P{TypeCodeClient})
  and ($P{C_BPartnerRelation_ID} is null or inv.C_BPartnerRelation_ID = $P{C_BPartnerRelation_ID})
   and (rv.dateinvoiced >= COALESCE($P{StartDate}, current_date-2555))
  and (rv.dateinvoiced <= COALESCE($P{EndDate}, current_date+365))
