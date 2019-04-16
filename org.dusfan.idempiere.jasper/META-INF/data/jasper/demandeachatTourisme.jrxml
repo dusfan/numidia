@@ -21,18 +21,19 @@
     bp.value,
     bp.name,
     round(c.payamt, 2) AS payamt,
-    case when c.tendertype = 'X' then 'EspÃ¨ce'
-    when c.tendertype = 'C' then 'Carte de crÃ©dit' else 'Cheq/Virement' 
+    case when c.tendertype = 'X' then 'Espèce'
+    when c.tendertype = 'C' then 'Carte de crédit' else 'Cheq/Virement' 
     end as modepaiment,
-    case when c.isreceipt = 'Y' and c.payamt > 0 then 'ReÃ§u de Paiement Client'
+    case when c.isreceipt = 'Y' and c.payamt > 0 then 'Reçu de Paiement Client'
     when c.isreceipt = 'Y' and c.payamt < 0 then 'Rembourssement Client'
-    when c.isreceipt = 'N' and c.payamt > 0 then 'DÃ©caissement'
+    when c.isreceipt = 'N' and c.payamt > 0 then 'Décaissement'
     when c.isreceipt = 'N' and c.payamt < 0 then 'Rembourssement Fournisseur' end as typedocument,
     u.description as agent,
     bk.accountno as banque,
     --coalesce(pr.name,ch.name) as product,
     c.description,
-    cu.ISO_Code as currency
+    cu.ISO_Code as currency,
+    c.datetrx
    FROM c_payment c
    inner join c_currency cu on cu.c_currency_id = c.c_currency_id
    inner join C_BankAccount bk on bk.C_BankAccount_ID = c.C_BankAccount_ID
@@ -86,6 +87,7 @@
 	<field name="currency" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="currency"/>
 	</field>
+	<field name="datetrx" class="java.sql.Timestamp"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -119,7 +121,7 @@
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy").format($F{datetrx})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="150" y="9" width="244" height="20" uuid="0b9baada-df79-4d85-88a3-481228a02d8b"/>
@@ -144,7 +146,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["NÂ° de ReÃ§u  :   " + $F{documentno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["N° de Reçu  :   " + $F{documentno}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="77" y="370" width="400" height="29" uuid="2dfa21a1-1ef2-430c-8910-b1a85f08f094"/>
@@ -255,7 +257,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[NÂ°]]></text>
+				<text><![CDATA[N°]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="39" y="0" width="442" height="22" uuid="6ba0b8bd-a3ac-4cb3-ac13-469cd683ccaa">

@@ -53,10 +53,10 @@
   il.qtyinvoiced, il.priceactual, il.linenetamt, il.DateFrom, il.DateTo, il.LeadPassenger,
   il.M_Pax,il.T_Marge,il.Description, il.isRoom, st.name as typeService,
   case (il.Board) 
-	when 'RO' then 'Sans petit dÃ©jeuner'
-	when 'BB' then 'Avec petit dÃ©jeuner'
+	when 'RO' then 'Sans petit déjeuner'
+	when 'BB' then 'Avec petit déjeuner'
 	when 'HB' then 'En Demi pension'
-	when 'FB' then 'En Pension ComplÃ¨te'
+	when 'FB' then 'En Pension Complète'
 	end as board, 
   il.view,
   i.C_BPartner_PR_ID,
@@ -247,9 +247,9 @@ order by il.line]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="18" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+					<font fontName="DejaVu Sans" size="16" isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Bon de Commande NÂ° :  " + $F{documentno}.substring(5)+"/"+($F{dateinvoiced}.getYear()+1900)]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Bon de Commande N° :  " + $F{documentno}.substring(3)+"/"+($F{dateinvoiced}.getYear()+1900)]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -280,7 +280,7 @@ order by il.line]]>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[DÃ©signation]]></text>
+				<text><![CDATA[Désignation]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="470" y="0" width="74" height="30" backcolor="rgba(1, 143, 54, 0.63529414)" uuid="373b281d-acdb-4480-a60c-8679359e5fe0"/>
@@ -331,7 +331,7 @@ order by il.line]]>
 ("Chambre "+$F{typeservice}+" "+$F{board}+"\n "+"\n "+
 "Du "+ new SimpleDateFormat("dd/MM/yyyy").format($F{datefrom})+" au "+ new SimpleDateFormat("dd/MM/yyyy").format($F{dateto})+ "\n "+"\n "+
  "Au nom de : "+ ($F{leadpassenger}!=null  ? $F{leadpassenger} : "")+ "\n "+"\n "+
- ("Taxe de sÃ©jour  " + ($F{t_marge}.compareTo(new BigDecimal(0))  == 1  ? "incluse" : "non incluse"))+ "\n "+"\n "+ ($F{description}!=null ? $F{description}:"")) :
+ ("Taxe de séjour  " + ($F{t_marge}.compareTo(new BigDecimal(0))  == 1  ? "incluse" : "non incluse"))+ "\n "+"\n "+ ($F{description}!=null ? $F{description}:"")) :
 $F{description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.###" isBlankWhenNull="true">
@@ -358,14 +358,14 @@ $F{description}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[P/Le chef de station]]></text>
+				<text><![CDATA[P/Le chef d'agence]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="153" width="545" height="30" uuid="98a2bb77-3814-4354-8786-cc4f0ab28be0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[RCÂ :10 B 0068891-00/25  Art NÂ°Â : 25010901203 NIFÂ : 001025006889122 NISÂ : 001025010036957 NÂ°RIBÂ : 00100850030000036796-BNA Filali Constantine ]]></text>
+				<text><![CDATA[RC :10 B 0068891-00/25  Art N° : 25010901203 NIF : 001025006889122 NIS : 001025010036957 N°RIB : 00100850030000036796-BNA Filali Constantine ]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
