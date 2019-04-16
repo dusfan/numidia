@@ -9,5 +9,4 @@ encoding//META-INF/data/jasper/ZZ_CustomerBalances.jrxml=UTF-8
 encoding//META-INF/data/jasper/invoice.jrxml=UTF-8
 encoding//META-INF/data/jasper/paymentnumidia.jrxml=UTF-8
 encoding//META-INF/data/jasper/shipment.jrxml=UTF-8
-encoding/<project>=ISO-8859-1
 separateDerivedEncodings=true
