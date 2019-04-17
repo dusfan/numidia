@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="demandeachatTourisme" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1e660a62-dc0c-450d-a310-8714bdffe9a4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
@@ -21,12 +21,12 @@
     bp.value,
     bp.name,
     round(c.payamt, 2) AS payamt,
-    case when c.tendertype = 'X' then 'Espèce'
-    when c.tendertype = 'C' then 'Carte de crédit' else 'Cheq/Virement' 
+    case when c.tendertype = 'X' then 'Espece'
+    when c.tendertype = 'C' then 'Carte de credit' else 'Cheq/Virement' 
     end as modepaiment,
-    case when c.isreceipt = 'Y' and c.payamt > 0 then 'Reçu de Paiement Client'
+    case when c.isreceipt = 'Y' and c.payamt > 0 then 'ReÃ§u de Paiement Client'
     when c.isreceipt = 'Y' and c.payamt < 0 then 'Rembourssement Client'
-    when c.isreceipt = 'N' and c.payamt > 0 then 'Décaissement'
+    when c.isreceipt = 'N' and c.payamt > 0 then 'Decaissement'
     when c.isreceipt = 'N' and c.payamt < 0 then 'Rembourssement Fournisseur' end as typedocument,
     u.description as agent,
     bk.accountno as banque,
@@ -146,7 +146,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["N° de Reçu  :   " + $F{documentno}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nï¿½ de Reï¿½u  :   " + $F{documentno}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="77" y="370" width="400" height="29" uuid="2dfa21a1-1ef2-430c-8910-b1a85f08f094"/>
@@ -257,7 +257,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[N°]]></text>
+				<text><![CDATA[Nï¿½]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="39" y="0" width="442" height="22" uuid="6ba0b8bd-a3ac-4cb3-ac13-469cd683ccaa">
