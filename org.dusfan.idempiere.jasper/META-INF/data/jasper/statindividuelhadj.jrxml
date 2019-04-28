@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="statindividuelhadj" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6c72bfa-4d80-4b45-951a-19cc6c74ae57">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Numidia-Prod"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Copylocalhost-0.245"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -21,6 +21,7 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="year" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[Select bp.value as ppno, bp.value||'-'||bp.name||' '|| bp.name2 as nom, od.grandtotal, 
 ((select coalesce(sum(currencyConvert((p.PAYAMT+ p.discountamt+ p.writeoffAMT), p.C_Currency_ID, 235, p.DATETRX, null, p.AD_Client_ID, p.AD_Org_ID)),0) 
@@ -46,6 +47,7 @@ where docstatus in ('DR','IP','CO','CL') and od.C_DocTypeTarget_ID = 1000057
 and ($P{DU_Vol_ID} is null or od.du_vol_id = $P{DU_Vol_ID}) 
 and ($P{C_BPartner_ID} is null or od.C_BPartner_ID = $P{C_BPartner_ID})
 and ($P{DU_Agence_ID} is null or od.DU_Agence_ID = $P{DU_Agence_ID})
+and ($P{year} is null or extract(year from od.created) :: text = $P{year})
 order by cod.value, v.departdatetime_direct]]>
 	</queryString>
 	<field name="ppno" class="java.lang.String">
@@ -490,6 +492,9 @@ order by cod.value, v.departdatetime_direct]]>
 				</reportElement>
 				<subreportParameter name="RESOURCE_DIR">
 					<subreportParameterExpression><![CDATA[$P{RESOURCE_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="year">
+					<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
