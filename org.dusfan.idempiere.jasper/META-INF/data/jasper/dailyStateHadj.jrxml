@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dailyStateHadj" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" uuid="e8c8a09b-671c-4db3-bb0d-41bb4b8bd010">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -17,6 +17,7 @@
 	<parameter name="AD_Org_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
+	<parameter name="year" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select o.docstatus, bp.value, bp.name||' '||bp.name2 as name,
  Coalesce(Extract(year FROM Age(current_date, bp.birth_date)), 0) AS age,
@@ -38,7 +39,8 @@ and (o.du_agence_id =$P{C_BPartner_ID} or $P{C_BPartner_ID} is null)
 and (o.createdby=$P{AD_User_ID} or  $P{AD_User_ID} is null)
 and (o.du_vol_id =$P{DU_Vol_ID} or $P{DU_Vol_ID} is null)
 and o.c_bpartnerrelation_id =1002081
-and o.AD_Org_ID =  $P{AD_Org_ID} 
+and o.AD_Org_ID =  $P{AD_Org_ID}
+and ($P{year} is null or extract(year from o.created) :: text = $P{year})
 order by o.du_agence_id, bp.name, o.createdby,  o.docstatus]]>
 	</queryString>
 	<field name="docstatus" class="java.lang.String">
@@ -551,6 +553,9 @@ order by o.du_agence_id, bp.name, o.createdby,  o.docstatus]]>
 				</subreportParameter>
 				<subreportParameter name="DU_Vol_ID">
 					<subreportParameterExpression><![CDATA[$P{DU_Vol_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="year">
+					<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
