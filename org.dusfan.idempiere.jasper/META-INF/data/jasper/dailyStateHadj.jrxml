@@ -237,6 +237,19 @@ order by o.du_agence_id, bp.name, o.createdby,  o.docstatus]]>
 				</textElement>
 				<textFieldExpression><![CDATA["VOL : "+($P{DU_Vol_ID} !=null ?$F{vol}:"-")]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="494" y="30" width="130" height="20" uuid="a4f92720-0f87-4526-869e-f4083d77a88e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}!=null ? "Année : "+$P{year} : ""]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
