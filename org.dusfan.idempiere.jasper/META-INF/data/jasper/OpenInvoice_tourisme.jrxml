@@ -32,7 +32,7 @@ left join du_vol vol on vol.du_vol_id = inv.du_vol_id
  where rv.ad_org_id = 1000004 and  rv.ad_client_id = $P{AD_CLIENT_ID}  and  inv.du_vol_id is null and bp.totalopenbalance <> 0
  and ($P{C_BPartner_ID} is null or rv.c_bpartner_id = $P{C_BPartner_ID})
  and rv.issotrx='Y'
- and ( $P{TypeCodeClient}   is null or bp.TypeCodeClient = $P{TypeCodeClient})
+ and ( $P{TypeCodeClient}   is null or cd.TypeCodeClient = $P{TypeCodeClient})
  and ($P{C_BPartnerRelation_ID} is null or inv.C_BPartnerRelation_ID = $P{C_BPartnerRelation_ID})
   and (rv.dateinvoiced >= COALESCE($P{StartDate}, current_date-2555))
  and (rv.dateinvoiced <= COALESCE($P{EndDate}, current_date+365))
