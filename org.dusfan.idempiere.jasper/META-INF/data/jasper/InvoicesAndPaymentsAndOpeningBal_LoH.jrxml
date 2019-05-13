@@ -38,7 +38,7 @@
 	<parameter name="C_Currency_ID" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select inv.DATEINVOICED as DateTrx ,inv.DOCUMENTNO,doc.Name,
- (Select ISO_Code from c_currency where inv.C_Currency_id = C_Currency.C_Currency_id) AS DESCRIPTION,
+ description AS DESCRIPTION,
 CASE WHEN doc.docbasetype IN ('ARC') THEN
 	inv.GRANDTOTAL*-1
 ELSE
