@@ -3,7 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tourismpayment" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="71beb481-b0b1-43bb-8130-594ad9ae04ca">
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="202"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="787"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost100.245"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="RECORD_ID" class="java.lang.Integer"/>
 	<parameter name="RESOURCE_DIR" class="java.lang.String">
@@ -36,7 +36,8 @@
     bk.accountno as banque,
     cu.ISO_Code as currency,
     bk.c_bankaccount_id,
-    c.created
+    c.created,
+    c.datetrx
    FROM c_payment c
    inner join c_currency cu on cu.c_currency_id = c.c_currency_id
    inner join C_BankAccount bk on bk.C_BankAccount_ID = c.C_BankAccount_ID
@@ -109,6 +110,7 @@
 	<field name="created" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.label" value="created"/>
 	</field>
+	<field name="datetrx" class="java.sql.Timestamp"/>
 	<title>
 		<band height="56" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -148,7 +150,7 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{created})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Date : " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format($F{datetrx})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="229" y="88" width="100" height="17" uuid="4b87203e-1a60-4151-9e77-9baa76c7aba7">
