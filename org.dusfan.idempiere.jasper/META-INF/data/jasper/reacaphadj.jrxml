@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.3.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reacaphadj" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e8b267a2-f523-400d-a8f2-c4c4941944c2">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="192.168.0.230.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Prod230"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<parameter name="DU_Vol_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="DU_Agence_ID" class="java.lang.Integer"/>
+	<parameter name="DU_Vol_ID" class="java.lang.Integer"/>
+	<parameter name="year" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select count(1), bp.value||'-'||bp.name as value from c_order od 
 inner join c_bpartner bp on bp.c_bpartner_id = od.du_agence_id
 where od.C_DocTypeTarget_ID = 1000057
 and docstatus in ('DR','IP','CO','CL')
 and (od.du_vol_id =$P{DU_Vol_ID} or $P{DU_Vol_ID} is null)
+and ($P{DU_Agence_ID} is null or od.DU_Agence_ID = $P{DU_Agence_ID})
+and ($P{year} is null or extract(year from od.created) :: text = $P{year})
  group by bp.c_bpartner_id
 order by bp.value]]>
 	</queryString>
