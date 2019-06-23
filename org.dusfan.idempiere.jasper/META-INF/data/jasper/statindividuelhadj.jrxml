@@ -512,6 +512,9 @@ order by cod.value, v.departdatetime_direct]]>
 				<subreportParameter name="DU_Agence_ID">
 					<subreportParameterExpression><![CDATA[$P{DU_Agence_ID}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="DU_Vol_ID">
+					<subreportParameterExpression><![CDATA[$P{DU_Vol_ID}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{RESOURCE_DIR}+"reacaphadj.jasper"]]></subreportExpression>
 			</subreport>
