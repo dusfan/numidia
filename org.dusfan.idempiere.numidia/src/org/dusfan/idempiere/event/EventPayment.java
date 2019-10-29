@@ -3,52 +3,25 @@ package org.dusfan.idempiere.event;
 import java.util.Properties;
 import org.compiere.model.MBPartner;
 import org.compiere.model.MBankAccount;
+import org.compiere.model.MDocType;
 import org.compiere.model.MPayment;
 import org.compiere.model.PO;
 import org.compiere.util.Env;
 
 public class EventPayment {
 
-	public static boolean CheckPaymentRules (PO po, Properties ctx, String trxName) {
-		MPayment pay = (MPayment)po;
-		if (pay.getAD_Client_ID() == 1000002) {
-			if (pay.getTenderType().equals("X") && (pay.getC_BankAccount_ID()==1000001 || 
-					pay.getC_BankAccount_ID()==1000013)) {
-				return false;
-			}
-			if (pay.getTenderType().equals("K") && (pay.getC_BankAccount_ID() == 1000000
-					|| pay.getC_BankAccount_ID() == 1000006 || pay.getC_BankAccount_ID() == 1000007
-					|| pay.getC_BankAccount_ID() == 1000004 || pay.getC_BankAccount_ID() == 1000005
-					|| pay.getC_BankAccount_ID() == 1000011 || pay.getC_BankAccount_ID() == 1000012)) {
-				return false;
-			}
-			if ((pay.getC_DocType_ID() == 1000049 || pay.getC_DocType_ID()==1000009) && 
-					(pay.getC_BankAccount_ID()==1000001 || pay.getC_BankAccount_ID()==1000013)
-					&& (Env.getAD_Role_ID(Env.getCtx())==1000007 || Env.getAD_Role_ID(Env.getCtx())==1000016
-					|| Env.getAD_Role_ID(Env.getCtx())==1000020 || Env.getAD_Role_ID(Env.getCtx())==1000022)) {
-				return false;
-			}
-			if ((pay.getC_DocType_ID() == 1000053 || pay.getC_DocType_ID()==1000050) && 
-					(pay.getC_BankAccount_ID()==1000008 || pay.getC_BankAccount_ID()==1000005
-					|| pay.getC_BankAccount_ID()==1000000 || pay.getC_BankAccount_ID()==1000004 || pay.getC_BankAccount_ID()==1000007
-					|| pay.getC_BankAccount_ID()==1000006 || pay.getC_BankAccount_ID()==1000009 || pay.getC_BankAccount_ID()==1000010
-					|| pay.getC_BankAccount_ID()==1000012 || pay.getC_BankAccount_ID()==1000011)
-					&& (Env.getAD_Role_ID(Env.getCtx())==1000007 || Env.getAD_Role_ID(Env.getCtx())==1000016
-					|| Env.getAD_Role_ID(Env.getCtx())==1000020 || Env.getAD_Role_ID(Env.getCtx())==1000022)) {
-				return false;
-			}
+	public static int getCodeError (PO po, String trxName, Properties ctx) {
+		if (po instanceof MPayment) {
+			MPayment pay = (MPayment)po;
+			MBankAccount bk = new MBankAccount(ctx, pay.getC_BankAccount_ID(), trxName);
+			MDocType doc = new MDocType(ctx, pay.getC_DocType_ID(), trxName);
+			if (!pay.getTenderType().equals(doc.get_ValueAsString("TenderType")) || 
+					!pay.getTenderType().equals(bk.get_ValueAsString("TenderType")))
+				return 1;
+			if (pay.getC_Currency_ID() != bk.getC_Currency_ID())
+				return 2;
 		}
-		return true;
-	}
-	
-	public static boolean checkCaisseCurrency (PO po, Properties ctx, String trxName) {
-		MPayment pay = (MPayment)po;
-		MBankAccount bk = new MBankAccount(ctx, pay.getC_BankAccount_ID(), trxName);
-		if (pay.getC_Currency_ID()!=bk.getC_Currency_ID()) {
-				return false;
-		}
-		return true;
-		
+		return 0;
 	}
 	
 	public static boolean checkHadjPayment (PO po, Properties ctx, String trxName) {
