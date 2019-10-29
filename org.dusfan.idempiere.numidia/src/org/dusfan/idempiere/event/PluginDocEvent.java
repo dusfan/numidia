@@ -143,14 +143,13 @@ public class PluginDocEvent extends AbstractEventHandler {
 							throw new AdempiereUserError("Il exite Deja un Ordre de vente pour ce client");
 					}
 				} else if (po instanceof MPayment) {
-					if (!EventPayment.CheckPaymentRules(po, ctx, trxName)) {
-						throw new AdempiereUserError("Attention "
-								+ "Le mode de paiement et la banque ne sont pas compatible");
-					}
-					if (!EventPayment.checkCaisseCurrency(po, ctx, trxName)) {
-						throw new AdempiereUserError("Attention "
-								+ "La caisse et la devise du paiement ne sont pas compatible");
-					}
+					int code = EventPayment.getCodeError(po, trxName, ctx);
+					if (code == 1)
+						throw new AdempiereUserError("Le mode paiement n'est pas compatible avec "
+								+ "la banque ou le type de document");
+					if (code == 2)
+						throw new AdempiereUserError("La devise de la Caisse/banque est differente de la devise du paiement");
+
 					if (!EventPayment.checkHadjPayment(po, ctx, trxName))
 						throw new AdempiereUserError("Attention "
 								+ "Le code client Hadj et la caisse ne sont pas compatible");
@@ -227,6 +226,15 @@ public class PluginDocEvent extends AbstractEventHandler {
 				}
 				else if (po instanceof X_I_ImportOmraBP) {
 					EventImportOmra.setPackageFromImport(po, ctx, trxName);
+				}
+				else if (po instanceof MPayment) {
+					int code = EventPayment.getCodeError(po, trxName, ctx);
+					if (code == 1)
+						throw new AdempiereUserError("Le mode paiement n'est pas compatible avec "
+								+ "la banque ou le type de document");
+					if (code == 2)
+						throw new AdempiereUserError("La devise de la Caisse/banque est differente de la devise du paiement");
+
 				}
 
 			} // before change

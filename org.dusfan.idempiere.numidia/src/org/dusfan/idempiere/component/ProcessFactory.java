@@ -3,6 +3,7 @@ import org.adempiere.base.IProcessFactory;
 import org.compiere.process.ProcessCall;
 import org.dusfan.idempiere.process.DUAllocationAuto;
 import org.dusfan.idempiere.process.BPartnerValidateDU;
+import org.dusfan.idempiere.process.BankTransferFixced;
 import org.dusfan.idempiere.process.ChangeVolFromTo;
 import org.dusfan.idempiere.process.ConfirmAchatSar;
 import org.dusfan.idempiere.process.CreateAffectationLineVol;
@@ -117,6 +118,8 @@ public class ProcessFactory implements IProcessFactory {
 			return new BPartnerValidateDU ();
 		}else if (className.equals(InvoicePrintDU.class.getName()))
 			return new InvoicePrintDU();
+		else if (className.equals(BankTransferFixced.class.getName()))
+			return new BankTransferFixced();
 		return null;
 	}
 }
