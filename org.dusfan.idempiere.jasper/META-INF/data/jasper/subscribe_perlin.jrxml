@@ -98,18 +98,14 @@ WHERE C_BPartner_ID = $P{C_BPartner_ID}]]>
 				<textFieldExpression><![CDATA["Constantine le :  " +new SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="79" y="315" width="380" height="30" uuid="cc8be4f6-48ee-40db-8c58-2a6b1d7183ae">
-					<printWhenExpression><![CDATA[$P{TypeActivity}.equals("2")]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="79" y="315" width="380" height="30" uuid="cc8be4f6-48ee-40db-8c58-2a6b1d7183ae"/>
 				<textElement verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["-Date de Départ : "+new SimpleDateFormat("dd/MM/yyyy").format($P{StartDate})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="" x="79" y="365" width="380" height="30" uuid="34e840ea-565e-41e5-84a9-e3bb7687e6ce">
-					<printWhenExpression><![CDATA[$P{TypeActivity}.equals("2")]]></printWhenExpression>
-				</reportElement>
+				<reportElement key="" x="79" y="365" width="380" height="30" uuid="34e840ea-565e-41e5-84a9-e3bb7687e6ce"/>
 				<textElement verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
