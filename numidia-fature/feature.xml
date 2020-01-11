@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="numidia.fature"
+      label="Fature"
+      version="1.0.0.qualifier">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.adempiere.base"/>
+      <import plugin="org.adempiere.plugin.utils" version="2.1.0" match="greaterOrEqual"/>
+      <import plugin="com.ibm.icu"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="org.adempiere.ui"/>
+      <import plugin="org.adempiere.ui.zk"/>
+      <import plugin="zk"/>
+      <import plugin="org.apache.poi"/>
+      <import plugin="org.adempiere.base.callout"/>
+      <import plugin="joda-time"/>
+      <import plugin="zcommon"/>
+      <import plugin="zul"/>
+      <import plugin="org.adempiere.report.jasper.library" version="1.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.dusfan.idempiere.jasper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.dusfan.idempiere.numidia"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.dusfan.idempiere.fragment.library.jasper"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+</feature>
