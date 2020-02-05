@@ -86,11 +86,45 @@ order by bp.value, rv.dateinvoiced]]>
 	<field name="name2" class="java.lang.String"/>
 	<field name="LeadPassenger" class="java.lang.String"/>
 	<variable name="SUM_EUR" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{c_currency_id} == 100 ?  0 :$F{grandtotal}.subtract($F{paidamt} )]]></variableExpression>
+		<variableExpression><![CDATA[$F{c_currency_id} == 100 ?  0 :$F{openamt}]]></variableExpression>
 	</variable>
 	<variable name="SUM_USD" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{c_currency_id} == 102 ?  0 :$F{grandtotal}.subtract($F{paidamt} )]]></variableExpression>
+		<variableExpression><![CDATA[$F{c_currency_id} == 102 ?  0 :$F{openamt}]]></variableExpression>
 	</variable>
+	<variable name="EURO_BP_CREDIT" class="java.math.BigDecimal" resetType="Group" resetGroup="Group1" calculation="Sum">
+		<variableExpression><![CDATA[$F{c_currency_id} == 100 ?  0 :$F{openamt}]]></variableExpression>
+	</variable>
+	<variable name="USD_BP_CREDIT" class="java.math.BigDecimal" resetType="Group" resetGroup="Group1" calculation="Sum">
+		<variableExpression><![CDATA[$F{c_currency_id} == 100 ?  $F{openamt}:0 ]]></variableExpression>
+	</variable>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{value}]]></groupExpression>
+		<groupFooter>
+			<band height="23">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="171" y="1" width="110" height="20" uuid="64e12145-6796-45b6-ab54-d9fe1fabfa74"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{EURO_BP_CREDIT}+" €"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="281" y="1" width="104" height="20" uuid="b83b0e90-8de3-4050-8a48-8775d8287bcf"/>
+					<box>
+						<pen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{USD_BP_CREDIT}+" $"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
 	<title>
 		<band height="40" splitType="Stretch">
 			<subreport isUsingCache="true">
@@ -181,11 +215,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -198,10 +228,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -214,10 +241,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -225,15 +249,12 @@ order by bp.value, rv.dateinvoiced]]>
 				<text><![CDATA[Agence]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="6" width="55" height="25" uuid="0e71f829-73bb-452f-bfb0-2d218e4e9f56">
+				<reportElement x="360" y="6" width="70" height="25" uuid="0e71f829-73bb-452f-bfb0-2d218e4e9f56">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -246,10 +267,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -257,15 +275,12 @@ order by bp.value, rv.dateinvoiced]]>
 				<text><![CDATA[€/$]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="415" y="6" width="45" height="25" uuid="f828f694-20d7-49de-b461-23b6a3f46a10">
+				<reportElement x="430" y="6" width="60" height="25" uuid="f828f694-20d7-49de-b461-23b6a3f46a10">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -273,31 +288,12 @@ order by bp.value, rv.dateinvoiced]]>
 				<text><![CDATA[Payé]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="511" y="6" width="35" height="25" uuid="57adbcf0-fc57-4af0-bea5-cf3401395ecd">
+				<reportElement x="490" y="6" width="56" height="25" uuid="cfee7ce1-2fea-447c-96e0-43c96fb769c6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Soldé]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="460" y="6" width="51" height="25" uuid="cfee7ce1-2fea-447c-96e0-43c96fb769c6">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -310,10 +306,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<pen lineWidth="0.51"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
@@ -330,9 +323,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -345,25 +336,23 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name2} != null ? $F{value}+"-"+$F{name2} :$F{name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="360" y="0" width="55" height="24" uuid="7a31482c-2d70-4ab7-aaa1-a09950f761f8">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="360" y="0" width="70" height="24" uuid="7a31482c-2d70-4ab7-aaa1-a09950f761f8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box rightPadding="2">
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grandtotal}]]></textFieldExpression>
 			</textField>
@@ -374,26 +363,24 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="415" y="0" width="45" height="24" uuid="f3887199-caac-4413-82b9-a31dc080aed5">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="60" height="24" uuid="f3887199-caac-4413-82b9-a31dc080aed5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box rightPadding="2">
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paidamt}]]></textFieldExpression>
 			</textField>
@@ -403,43 +390,26 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{dateinvoiced})]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="511" y="-1" width="35" height="25" uuid="a293f38c-30d1-4387-b4b9-b18d62738ed7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{totalopenbalance}.compareTo( new BigDecimal(0) ) <=  0  ? "Y" : "N"]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.###" isBlankWhenNull="true">
-				<reportElement x="460" y="0" width="51" height="24" uuid="2493dd92-03cd-4889-b7c8-0f71f7ce3503">
+			<textField pattern="#,##0.##" isBlankWhenNull="true">
+				<reportElement x="490" y="0" width="56" height="24" uuid="2493dd92-03cd-4889-b7c8-0f71f7ce3503">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box rightPadding="2">
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{grandtotal}.subtract( $F{paidamt})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{openamt}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="250" y="0" width="110" height="24" uuid="f0c13014-a315-4a43-a3ce-7d944ab3e33b">
@@ -447,8 +417,7 @@ order by bp.value, rv.dateinvoiced]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
+					<pen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
@@ -491,7 +460,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{SUM_USD}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{SUM_USD}+" $"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
 				<reportElement x="150" y="20" width="131" height="20" uuid="6a5a8df7-d073-40a1-8f0a-10ec149f3745"/>
@@ -501,7 +470,7 @@ order by bp.value, rv.dateinvoiced]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{SUM_EUR}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{SUM_EUR}+" €"]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>
