@@ -8,6 +8,7 @@ import org.adempiere.base.event.LoginEventData;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.acct.FactLine;
 import org.compiere.model.MBPartner;
+import org.compiere.model.MBankStatement;
 import org.compiere.model.MFactAcct;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
@@ -87,6 +88,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 		registerTableEvent(IEventTopics.PO_BEFORE_NEW, X_I_ImportOmraBP.Table_Name);
 		registerTableEvent(IEventTopics.PO_BEFORE_CHANGE, X_I_ImportOmraBP.Table_Name);
 		
+		//MBankStatement
+		registerTableEvent(IEventTopics.PO_BEFORE_NEW, MBankStatement.Table_Name);
+		
 		log.info("PluginDocEvent .. IS NOW INITIALIZED");
 	}
 
@@ -161,6 +165,9 @@ public class PluginDocEvent extends AbstractEventHandler {
 				else if (po instanceof X_I_ImportOmraBP) {
 					EventImportOmra.setPackageFromImport(po, ctx, trxName);
 					
+				}
+				else if (po instanceof MBankStatement) {
+					EventBankStatement.checkExistingStatement(po, ctx, trxName);
 				}
 				
 			} // End BEFORE NEW
